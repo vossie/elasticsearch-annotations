@@ -45,9 +45,3 @@ Usage:
          }
      }
 
-
- Getting the mapping:
-     String s = ElasticsearchMapping.getMapping(Tweet.class).toJson();
-     CreateIndexRequestBuilder createIndexRequestBuilder = getClient().admin().indices().prepareCreate(index);
-     createIndexRequestBuilder.execute().actionGet();
-     indexes.add(index)
