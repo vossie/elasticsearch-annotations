@@ -15,35 +15,35 @@ import java.util.Map;
  * Date: 06/12/2013
  * Time: 09:34
  */
-public class ElasticsearchTypeMetaData {
+public class ElasticsearchTypeMetadataOLD {
 
     private Class clazz;
     private XContentBuilder xContentBuilder;
     private ElasticsearchType elasticsearchType;
-    private Map<String,ElasticsearchFieldMetaData> elasticsearchFields = new HashMap<>();
+    private Map<String,ElasticsearchFieldMetadataTemp> elasticsearchFields = new HashMap<>();
 
-    public ElasticsearchTypeMetaData(Class clazz, XContentBuilder xContentBuilder, ElasticsearchType elasticsearchType) {
-        this(clazz, xContentBuilder, elasticsearchType, null);
-    }
+//    public ElasticsearchTypeMetadataOLD(Class clazz, XContentBuilder xContentBuilder, ElasticsearchType elasticsearchType) {
+//        this(clazz, xContentBuilder, elasticsearchType, null);
+//    }
 
-    public ElasticsearchTypeMetaData(Class clazz, XContentBuilder xContentBuilder, ElasticsearchType elasticsearchType, ElasticsearchFieldMetaData... elasticsearchFieldMetaData) {
+    public ElasticsearchTypeMetadataOLD(Class clazz, XContentBuilder xContentBuilder, ElasticsearchType elasticsearchType, ElasticsearchFieldMetadataTemp... elasticsearchFieldMetadataTemp) {
 
         this.elasticsearchType = elasticsearchType;
         this.xContentBuilder = xContentBuilder;
         this.clazz = clazz;
 
-        if(elasticsearchFieldMetaData != null)
-            for(ElasticsearchFieldMetaData field : elasticsearchFieldMetaData)
+        if(elasticsearchFieldMetadataTemp != null)
+            for(ElasticsearchFieldMetadataTemp field : elasticsearchFieldMetadataTemp)
                 this.elasticsearchFields.put(field.getFieldName(), field);
     }
 
-    public Map<String, ElasticsearchFieldMetaData> getElasticsearchFields() {
+    public Map<String, ElasticsearchFieldMetadataTemp> getElasticsearchFields() {
         return elasticsearchFields;
     }
 
-    public ElasticsearchTypeMetaData putAllElasticsearchFields(List<ElasticsearchFieldMetaData> fields) {
+    public ElasticsearchTypeMetadataOLD putAllElasticsearchFields(List<ElasticsearchFieldMetadataTemp> fields) {
 
-        for(ElasticsearchFieldMetaData field : fields)
+        for(ElasticsearchFieldMetadataTemp field : fields)
             this.elasticsearchFields.put(field.getFieldName(), field);
 
         return this;
@@ -73,7 +73,7 @@ public class ElasticsearchTypeMetaData {
      * Get the parent type name
      * @return Parent type name.
      */
-    public ElasticsearchTypeMetaData getParent() throws ClassNotAnnotated, InvalidParentTypeSpecified {
+    public ElasticsearchTypeMetadataOLD getParent() throws ClassNotAnnotated, InvalidParentTypeSpecified {
         return ElasticsearchMapping.getMapping(this.elasticsearchType.parent());
     }
 
@@ -120,7 +120,7 @@ public class ElasticsearchTypeMetaData {
      * Get all the fields in this mapping.
      * @return Map of indexed fields.
      */
-    public Map<String, ElasticsearchFieldMetaData> getFields() {
+    public Map<String, ElasticsearchFieldMetadataTemp> getFields() {
         return this.elasticsearchFields;
     }
 
@@ -129,7 +129,7 @@ public class ElasticsearchTypeMetaData {
      * @param fieldName The name of the field to retrieve.
      * @return The meta data if found otherwise null.
      */
-    public ElasticsearchFieldMetaData getFieldMetaData(String fieldName) {
+    public ElasticsearchFieldMetadataTemp getFieldMetaData(String fieldName) {
 
         if(this.elasticsearchFields.containsKey(fieldName))
             return this.elasticsearchFields.get(fieldName);

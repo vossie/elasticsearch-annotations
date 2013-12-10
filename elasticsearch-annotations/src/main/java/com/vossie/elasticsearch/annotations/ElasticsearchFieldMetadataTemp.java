@@ -10,14 +10,14 @@ import java.util.ArrayList;
  * Date: 06/12/2013
  * Time: 09:36
  */
-public class ElasticsearchFieldMetaData {
+public class ElasticsearchFieldMetadataTemp {
 
     private boolean isArray;
     private String fieldName;
     private ElasticsearchField elasticsearchField;
-    private ArrayList<ElasticsearchFieldMetaData> children = new ArrayList<>();
+    private ArrayList<ElasticsearchFieldMetadataTemp> children = new ArrayList<>();
 
-    public ElasticsearchFieldMetaData(String fieldName, ElasticsearchField elasticsearchField){
+    public ElasticsearchFieldMetadataTemp(String fieldName, ElasticsearchField elasticsearchField){
         this.fieldName = fieldName;
         this.elasticsearchField = elasticsearchField;
     }
@@ -38,7 +38,7 @@ public class ElasticsearchFieldMetaData {
         return this.elasticsearchField.isParentId();
     }
 
-    public ArrayList<ElasticsearchFieldMetaData> getChildren() {
+    public ArrayList<ElasticsearchFieldMetadataTemp> getChildren() {
         return children;
     }
 
@@ -46,7 +46,7 @@ public class ElasticsearchFieldMetaData {
         return isArray;
     }
 
-    public ElasticsearchFieldMetaData setArray(boolean array) {
+    public ElasticsearchFieldMetadataTemp setArray(boolean array) {
         isArray = array;
         return this;
     }
@@ -67,7 +67,7 @@ public class ElasticsearchFieldMetaData {
         return this.elasticsearchField.defaultSortOrder();
     }
 
-    public ElasticsearchFieldMetaData setChildren(ArrayList<ElasticsearchFieldMetaData> children) {
+    public ElasticsearchFieldMetadataTemp setChildren(ArrayList<ElasticsearchFieldMetadataTemp> children) {
         this.children = children;
         return this;
     }

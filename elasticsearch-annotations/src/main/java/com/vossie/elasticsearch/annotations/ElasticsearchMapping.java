@@ -22,7 +22,7 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 public abstract class ElasticsearchMapping {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ElasticsearchMapping.class);
-    private static HashMap<String, ElasticsearchTypeMetaData> mappingCache = new HashMap<>();
+    private static HashMap<String, ElasticsearchTypeMetadataOLD> mappingCache = new HashMap<>();
 
     public static final String OBJECT_TTL       = "_ttl";
     public static final String OBJECT_PARENT    = "_parent";
@@ -57,7 +57,7 @@ public abstract class ElasticsearchMapping {
      * @throws InvalidParentTypeSpecified
      * @throws ClassNotAnnotated
      */
-    public static ElasticsearchTypeMetaData getMapping(Class clazz) throws InvalidParentTypeSpecified, ClassNotAnnotated {
+    public static ElasticsearchTypeMetadataOLD getMapping(Class clazz) throws InvalidParentTypeSpecified, ClassNotAnnotated {
 
         ElasticsearchType elasticsearchType = getElasticsearchType(clazz);
 
@@ -113,14 +113,14 @@ public abstract class ElasticsearchMapping {
                 xbMapping.startObject(OBJECT_SOURCE).field(FIELD_ENABLED, elasticsearchType.source()).endObject();
 
             // Add the child fields.
-            ArrayList<ElasticsearchFieldMetaData> elasticsearchFieldMappings = addFields(clazz, xbMapping);
+            ArrayList<ElasticsearchFieldMetadataTemp> elasticsearchFieldMappings = addFields(clazz, xbMapping);
 
             xbMapping
                     .endObject()
                     .endObject();
 
 
-            ElasticsearchTypeMetaData elasticsearchTypeMapping = new ElasticsearchTypeMetaData(clazz, xbMapping, elasticsearchType).putAllElasticsearchFields(elasticsearchFieldMappings);
+            ElasticsearchTypeMetadataOLD elasticsearchTypeMapping = new ElasticsearchTypeMetadataOLD(clazz, xbMapping, elasticsearchType).putAllElasticsearchFields(elasticsearchFieldMappings);
             mappingCache.put(clazz.getName(), elasticsearchTypeMapping);
 
             return elasticsearchTypeMapping;
@@ -131,7 +131,14 @@ public abstract class ElasticsearchMapping {
         }
     }
 
-    private static ArrayList<ElasticsearchFieldMetaData> addFields(Class clazz, XContentBuilder xbMapping) throws IOException {
+    /**
+     * Add a field to the fields list and update the content  builder.
+     * @param clazz The class to scan for annotations.
+     * @param xbMapping The content builder to append to.
+     * @return The list of field metadata.
+     * @throws IOException
+     */
+    private static ArrayList<ElasticsearchFieldMetadataTemp> addFields(Class clazz, XContentBuilder xbMapping) throws IOException {
 
         Field[] fieldsFromClass = clazz.getDeclaredFields();
         // Also get the super class fields
@@ -147,7 +154,7 @@ public abstract class ElasticsearchMapping {
         if(fieldsFromSuper.length > 0)
             System.arraycopy(fieldsFromSuper,0,fields,fieldsFromClass.length,fieldsFromSuper.length);
 
-        ArrayList<ElasticsearchFieldMetaData> elasticsearchFieldMappings = new ArrayList<>();
+        ArrayList<ElasticsearchFieldMetadataTemp> elasticsearchFieldMappings = new ArrayList<>();
 
         xbMapping.startObject(OBJECT_PROPERTIES);
 
@@ -161,7 +168,7 @@ public abstract class ElasticsearchMapping {
                 if(a instanceof ElasticsearchField) {
 
                     ElasticsearchField elasticsearchField = (ElasticsearchField) a;
-                    ElasticsearchFieldMetaData fieldMapping = new ElasticsearchFieldMetaData(field.getName(), elasticsearchField);
+                    ElasticsearchFieldMetadataTemp fieldMapping = new ElasticsearchFieldMetadataTemp(field.getName(), elasticsearchField);
 
                     xbMapping.startObject(field.getName());
 
