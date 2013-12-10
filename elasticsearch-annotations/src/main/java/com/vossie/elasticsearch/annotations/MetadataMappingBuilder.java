@@ -22,7 +22,7 @@ public class MetadataMappingBuilder {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MetadataMappingBuilder.class);
     private static HashMap<String, XContentBuilder> cache = new HashMap<>();
 
-    public static XContentBuilder getXContentBuilder(ElasticsearchTypeMetadata elasticsearchTypeMetadata) throws ClassNotAnnotated, InvalidParentTypeSpecified {
+    protected static XContentBuilder getXContentBuilder(ElasticsearchTypeMetadata elasticsearchTypeMetadata) throws ClassNotAnnotated, InvalidParentTypeSpecified {
 
         String key = String.format("%s-%s", elasticsearchTypeMetadata.getIndexName(), elasticsearchTypeMetadata.getTypeName());
 

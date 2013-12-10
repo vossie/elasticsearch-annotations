@@ -22,7 +22,6 @@ public class ElasticsearchTypeMetadata {
     private Map<String,ElasticsearchFieldMetadata> elasticsearchFields;
 
     public ElasticsearchTypeMetadata(ElasticsearchType elasticsearchType, Map<String, ElasticsearchFieldMetadata> elasticsearchFields) throws ClassNotAnnotated, InvalidParentTypeSpecified {
-
         this.elasticsearchType = elasticsearchType;
         this.elasticsearchFields = Collections.unmodifiableMap(elasticsearchFields);
         this.xContentBuilder = MetadataMappingBuilder.getXContentBuilder(this);

@@ -42,11 +42,11 @@ public class ElasticsearchFieldMetadata {
     }
 
     public Map<String, ElasticsearchFieldMetadata> getChildren() {
-        return children;
+        return this.children;
     }
 
     public boolean isArray() {
-        return isArray;
+        return this.isArray;
     }
 
     /**
