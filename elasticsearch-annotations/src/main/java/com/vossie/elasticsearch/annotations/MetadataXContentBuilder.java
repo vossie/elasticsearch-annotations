@@ -17,9 +17,9 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
  * Date: 10/12/2013
  * Time: 10:02
  */
-public class MetadataMappingBuilder {
+public class MetadataXContentBuilder {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MetadataMappingBuilder.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MetadataXContentBuilder.class);
     private static HashMap<String, XContentBuilder> cache = new HashMap<>();
 
     protected static XContentBuilder getXContentBuilder(ElasticsearchTypeMetadata elasticsearchTypeMetadata) throws ClassNotAnnotated, InvalidParentTypeSpecified {
