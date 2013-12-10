@@ -2,7 +2,8 @@ package com.vossie.elasticsearch.annotations;
 
 import org.elasticsearch.search.sort.SortOrder;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Copyright © 2013 Carel Vosloo.
@@ -10,16 +11,18 @@ import java.util.ArrayList;
  * Date: 06/12/2013
  * Time: 09:36
  */
-public class ElasticsearchFieldMetadataTemp {
+public class ElasticsearchFieldMetadata {
 
     private boolean isArray;
     private String fieldName;
     private ElasticsearchField elasticsearchField;
-    private ArrayList<ElasticsearchFieldMetadataTemp> children = new ArrayList<>();
+    private Map<String, ElasticsearchFieldMetadata> children;
 
-    public ElasticsearchFieldMetadataTemp(String fieldName, ElasticsearchField elasticsearchField){
+    public ElasticsearchFieldMetadata(String fieldName, ElasticsearchField elasticsearchField, boolean isArray, Map<String,ElasticsearchFieldMetadata> children){
         this.fieldName = fieldName;
         this.elasticsearchField = elasticsearchField;
+        this.isArray = isArray;
+        this.children = Collections.unmodifiableMap(children);
     }
 
     public String getFieldName() {
@@ -30,7 +33,7 @@ public class ElasticsearchFieldMetadataTemp {
         return this.elasticsearchField.analyzer();
     }
 
-    public ElasticsearchField.Type getCoreType() {
+    public ElasticsearchField.Type getType() {
         return this.elasticsearchField.type();
     }
 
@@ -38,17 +41,12 @@ public class ElasticsearchFieldMetadataTemp {
         return this.elasticsearchField.isParentId();
     }
 
-    public ArrayList<ElasticsearchFieldMetadataTemp> getChildren() {
+    public Map<String, ElasticsearchFieldMetadata> getChildren() {
         return children;
     }
 
     public boolean isArray() {
         return isArray;
-    }
-
-    public ElasticsearchFieldMetadataTemp setArray(boolean array) {
-        isArray = array;
-        return this;
     }
 
     /**
@@ -65,10 +63,5 @@ public class ElasticsearchFieldMetadataTemp {
      */
     public SortOrder getDefaultSortOrder() {
         return this.elasticsearchField.defaultSortOrder();
-    }
-
-    public ElasticsearchFieldMetadataTemp setChildren(ArrayList<ElasticsearchFieldMetadataTemp> children) {
-        this.children = children;
-        return this;
     }
 }

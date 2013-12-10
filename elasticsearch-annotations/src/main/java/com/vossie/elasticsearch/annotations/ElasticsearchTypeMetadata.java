@@ -5,7 +5,7 @@ import com.vossie.elasticsearch.annotations.exceptions.InvalidParentTypeSpecifie
 import org.elasticsearch.common.xcontent.XContentBuilder;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -15,35 +15,26 @@ import java.util.Map;
  * Date: 06/12/2013
  * Time: 09:34
  */
-public class ElasticsearchTypeMetadataOLD {
+public class ElasticsearchTypeMetadata {
 
-    private Class clazz;
     private XContentBuilder xContentBuilder;
     private ElasticsearchType elasticsearchType;
-    private Map<String,ElasticsearchFieldMetadataTemp> elasticsearchFields = new HashMap<>();
+    private Map<String,ElasticsearchFieldMetadata> elasticsearchFields;
 
-//    public ElasticsearchTypeMetadataOLD(Class clazz, XContentBuilder xContentBuilder, ElasticsearchType elasticsearchType) {
-//        this(clazz, xContentBuilder, elasticsearchType, null);
-//    }
-
-    public ElasticsearchTypeMetadataOLD(Class clazz, XContentBuilder xContentBuilder, ElasticsearchType elasticsearchType, ElasticsearchFieldMetadataTemp... elasticsearchFieldMetadataTemp) {
+    public ElasticsearchTypeMetadata(ElasticsearchType elasticsearchType, Map<String, ElasticsearchFieldMetadata> elasticsearchFields) throws ClassNotAnnotated, InvalidParentTypeSpecified {
 
         this.elasticsearchType = elasticsearchType;
-        this.xContentBuilder = xContentBuilder;
-        this.clazz = clazz;
-
-        if(elasticsearchFieldMetadataTemp != null)
-            for(ElasticsearchFieldMetadataTemp field : elasticsearchFieldMetadataTemp)
-                this.elasticsearchFields.put(field.getFieldName(), field);
+        this.elasticsearchFields = Collections.unmodifiableMap(elasticsearchFields);
+        this.xContentBuilder = MetadataMappingBuilder.getXContentBuilder(this);
     }
 
-    public Map<String, ElasticsearchFieldMetadataTemp> getElasticsearchFields() {
+    public Map<String, ElasticsearchFieldMetadata> getElasticsearchFields() {
         return elasticsearchFields;
     }
 
-    public ElasticsearchTypeMetadataOLD putAllElasticsearchFields(List<ElasticsearchFieldMetadataTemp> fields) {
+    public ElasticsearchTypeMetadata putAllElasticsearchFields(List<ElasticsearchFieldMetadata> fields) {
 
-        for(ElasticsearchFieldMetadataTemp field : fields)
+        for(ElasticsearchFieldMetadata field : fields)
             this.elasticsearchFields.put(field.getFieldName(), field);
 
         return this;
@@ -62,10 +53,6 @@ public class ElasticsearchTypeMetadataOLD {
      * @return
      */
     public String getTypeName() {
-
-        if(this.elasticsearchType.type().equals(""))
-            return this.clazz.getSimpleName().toLowerCase();
-
         return this.elasticsearchType.type();
     }
 
@@ -73,8 +60,12 @@ public class ElasticsearchTypeMetadataOLD {
      * Get the parent type name
      * @return Parent type name.
      */
-    public ElasticsearchTypeMetadataOLD getParent() throws ClassNotAnnotated, InvalidParentTypeSpecified {
+    public ElasticsearchTypeMetadata getParent() throws ClassNotAnnotated, InvalidParentTypeSpecified {
         return ElasticsearchMapping.getMapping(this.elasticsearchType.parent());
+    }
+
+    public boolean hasParent() {
+        return (!elasticsearchType.parent().getName().equals(TopLevelType.class.getName()));
     }
 
     public boolean isChildType() {
@@ -120,7 +111,7 @@ public class ElasticsearchTypeMetadataOLD {
      * Get all the fields in this mapping.
      * @return Map of indexed fields.
      */
-    public Map<String, ElasticsearchFieldMetadataTemp> getFields() {
+    public Map<String, ElasticsearchFieldMetadata> getFields() {
         return this.elasticsearchFields;
     }
 
@@ -129,7 +120,7 @@ public class ElasticsearchTypeMetadataOLD {
      * @param fieldName The name of the field to retrieve.
      * @return The meta data if found otherwise null.
      */
-    public ElasticsearchFieldMetadataTemp getFieldMetaData(String fieldName) {
+    public ElasticsearchFieldMetadata getFieldMetaData(String fieldName) {
 
         if(this.elasticsearchFields.containsKey(fieldName))
             return this.elasticsearchFields.get(fieldName);
