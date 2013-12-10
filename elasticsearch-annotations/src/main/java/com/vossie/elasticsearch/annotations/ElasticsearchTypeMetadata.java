@@ -154,6 +154,6 @@ public class ElasticsearchTypeMetadata {
      * @throws IOException
      */
     public String toJson() throws IOException, ClassNotAnnotated, InvalidParentTypeSpecified {
-        return MetadataMappingBuilder.getXContentBuilder(this).string();
+        return MetadataXContentBuilder.getXContentBuilder(this).string();
     }
 }
