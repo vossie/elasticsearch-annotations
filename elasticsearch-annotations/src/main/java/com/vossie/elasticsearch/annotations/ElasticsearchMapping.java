@@ -129,7 +129,7 @@ public abstract class ElasticsearchMapping {
      * @throws InvalidParentTypeSpecified
      * @throws IOException
      */
-    private static void parseParentTypeIndex(Class<?> clazz, ElasticsearchType elasticsearchType) throws InvalidParentTypeSpecified, IOException {
+    private static void validateParentTypeReference(Class<?> clazz, ElasticsearchType elasticsearchType) throws InvalidParentTypeSpecified, IOException {
 
         // Test to see if we have a parent child relationship and set accordingly.
         if(!elasticsearchType.parent().getName().equals(TopLevelType.class.getName())) {
@@ -138,16 +138,13 @@ public abstract class ElasticsearchMapping {
 
             try {
                 parentType = getElasticsearchType(elasticsearchType.parent());
+
             } catch (ClassNotAnnotated e) {
-                throw new InvalidParentTypeSpecified(elasticsearchType.parent(), "", elasticsearchType.index());
+
+                throw new InvalidParentTypeSpecified(elasticsearchType.parent(), "ClassNotAnnotated", elasticsearchType.index());
             }
 
             if(parentType != null) {
-
-                String parentTypeName = parentType.type();
-
-                if(parentTypeName.equals(""))
-                    parentTypeName = elasticsearchType.parent().getSimpleName().toLowerCase();
 
                 if(!parentType.index().equals(elasticsearchType.index()))
                     throw new InvalidParentTypeSpecified(clazz, elasticsearchType.index(), parentType.index());
@@ -165,21 +162,24 @@ public abstract class ElasticsearchMapping {
     public static ElasticsearchTypeMetadata getMapping(Class<?> clazz) throws InvalidParentTypeSpecified, ClassNotAnnotated {
 
         // Check the cache to see if we have already parsed this reference.
-        if(mappingCache.containsKey(clazz.getName()))
-            return mappingCache.get(clazz.getName());
+        if(mappingCache.containsKey(clazz.getCanonicalName()))
+            return mappingCache.get(clazz.getCanonicalName());
 
         // Get the annotation.
         ElasticsearchType elasticsearchType = getElasticsearchType(clazz);
 
         try {
             // Test to see if we have a parent child relationship and set accordingly.
-            parseParentTypeIndex(clazz, elasticsearchType);
-            ElasticsearchTypeMetadata elasticsearchTypeMapping = new ElasticsearchTypeMetadata(elasticsearchType, getElasticsearchFieldsMetadata(clazz));
+            validateParentTypeReference(clazz, elasticsearchType);
 
             // Add this item to the local cache for fast lookup.
-            mappingCache.put(clazz.getName(), elasticsearchTypeMapping);
+            mappingCache.put(
+                    clazz.getCanonicalName(),
+                    new ElasticsearchTypeMetadata(clazz, elasticsearchType, getElasticsearchFieldsMetadata(clazz))
+            );
 
-            return elasticsearchTypeMapping;
+            // Return the reference.
+            return mappingCache.get(clazz.getCanonicalName());
 
         } catch (IOException e) {
             logger.error(e.getMessage());
