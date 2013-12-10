@@ -2,7 +2,6 @@ package com.vossie.elasticsearch.annotations;
 
 import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidParentTypeSpecified;
-import org.elasticsearch.common.xcontent.XContentBuilder;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -17,14 +16,18 @@ import java.util.Map;
  */
 public class ElasticsearchTypeMetadata {
 
-    private XContentBuilder xContentBuilder;
+    private String typeName;
     private ElasticsearchType elasticsearchType;
     private Map<String,ElasticsearchFieldMetadata> elasticsearchFields;
 
-    public ElasticsearchTypeMetadata(ElasticsearchType elasticsearchType, Map<String, ElasticsearchFieldMetadata> elasticsearchFields) throws ClassNotAnnotated, InvalidParentTypeSpecified {
+    public ElasticsearchTypeMetadata(Class<?> clazz, ElasticsearchType elasticsearchType, Map<String, ElasticsearchFieldMetadata> elasticsearchFields) throws ClassNotAnnotated, InvalidParentTypeSpecified {
+
+        this.typeName = (elasticsearchType.type().equals(""))
+                ? clazz.getSimpleName().toLowerCase()
+                : elasticsearchType.type();
+
         this.elasticsearchType = elasticsearchType;
         this.elasticsearchFields = Collections.unmodifiableMap(elasticsearchFields);
-        this.xContentBuilder = MetadataMappingBuilder.getXContentBuilder(this);
     }
 
     public Map<String, ElasticsearchFieldMetadata> getElasticsearchFields() {
@@ -52,7 +55,7 @@ public class ElasticsearchTypeMetadata {
      * @return
      */
     public String getTypeName() {
-        return this.elasticsearchType.type();
+        return this.typeName;
     }
 
     /**
@@ -131,11 +134,16 @@ public class ElasticsearchTypeMetadata {
      * Get a json formatted string representing the mapping;
      * @return The mapping.
      */
+    @Override
     public String toString() {
         try {
-            return this.xContentBuilder.string();
+            return toJson();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ClassNotAnnotated classNotAnnotated) {
+            classNotAnnotated.printStackTrace();
+        } catch (InvalidParentTypeSpecified invalidParentTypeSpecified) {
+            invalidParentTypeSpecified.printStackTrace();
         }
         return null;
     }
@@ -145,7 +153,7 @@ public class ElasticsearchTypeMetadata {
      * @return The mapping.
      * @throws IOException
      */
-    public String toJson() throws IOException {
-        return this.xContentBuilder.string();
+    public String toJson() throws IOException, ClassNotAnnotated, InvalidParentTypeSpecified {
+        return MetadataMappingBuilder.getXContentBuilder(this).string();
     }
 }
