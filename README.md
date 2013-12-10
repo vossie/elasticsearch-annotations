@@ -1,6 +1,8 @@
 elasticsearch-annotations
 =========================
 
+Work in progress, check back soon.
+
 A simple module to create Elasticsearch mappings using annotated classes.
 
 I created this project because I got tired of managing separate json files for each object I indexed in Elasticsearch.

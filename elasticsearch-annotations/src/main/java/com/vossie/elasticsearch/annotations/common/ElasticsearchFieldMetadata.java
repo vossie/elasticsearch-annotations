@@ -7,6 +7,7 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -31,7 +32,17 @@ public class ElasticsearchFieldMetadata {
         this.children = Collections.unmodifiableMap(children);
 
         // Todo: Find a way of doing this without the spring dependency.
-        this.attributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(elasticsearchField));
+        Map<String, Object> allAttributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(elasticsearchField));
+        Map<String, Object> tempAttributes = new HashMap<>();
+        for(String key : allAttributes.keySet()) {
+
+            if(allAttributes.get(key).toString().equals(Empty.NULL))
+                continue;
+
+            tempAttributes.put(key,allAttributes.get(key));
+        }
+        this.attributes = Collections.unmodifiableMap(tempAttributes);
+
     }
 
     public Map<String, Object> getAttributes() {
