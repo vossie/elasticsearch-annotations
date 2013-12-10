@@ -1,17 +1,19 @@
-package com.vossie.elasticsearch.annotations;
+package com.vossie.elasticsearch.annotations.common;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Copyright © 2013 Carel Vosloo.
- * Place holder class used to identify type mappings without parent mappings.
+ * Used to identify empty class references in the annotations.
  * User: cvosloo
  * Date: 09/12/2013
  * Time: 21:47
  */
-public final class TopLevelType {
+public final class Empty {
 
-    public TopLevelType() {
+    public static final String NULL = "__null";
+
+    public Empty() {
         throw new NotImplementedException();
     }
 }

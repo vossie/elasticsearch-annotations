@@ -1,12 +1,17 @@
-package com.vossie.elasticsearch.annotations;
+package com.vossie.elasticsearch.annotations.common;
 
+import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
+import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
-import com.vossie.elasticsearch.annotations.exceptions.InvalidParentTypeSpecified;
+import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
+import org.springframework.core.annotation.AnnotationUtils;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
+
+import static com.google.common.base.CaseFormat.LOWER_HYPHEN;
+import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 
 /**
  * Copyright © 2013 Carel Vosloo.
@@ -14,32 +19,28 @@ import java.util.Map;
  * Date: 06/12/2013
  * Time: 09:34
  */
-public class ElasticsearchTypeMetadata {
+public class ElasticsearchDocumentMetadata {
 
     private String typeName;
-    private ElasticsearchType elasticsearchType;
+    private ElasticsearchDocument elasticsearchDocument;
     private Map<String,ElasticsearchFieldMetadata> elasticsearchFields;
+    private Map<String, Object> attributes;
 
-    public ElasticsearchTypeMetadata(Class<?> clazz, ElasticsearchType elasticsearchType, Map<String, ElasticsearchFieldMetadata> elasticsearchFields) throws ClassNotAnnotated, InvalidParentTypeSpecified {
+    public ElasticsearchDocumentMetadata(Class<?> clazz, ElasticsearchDocument elasticsearchDocument, Map<String, ElasticsearchFieldMetadata> elasticsearchFields) throws ClassNotAnnotated, InvalidParentDocumentSpecified {
 
-        this.typeName = (elasticsearchType.type().equals(""))
-                ? clazz.getSimpleName().toLowerCase()
-                : elasticsearchType.type();
+        this.typeName = (elasticsearchDocument.type().equals(""))
+                ? UPPER_CAMEL.to(LOWER_HYPHEN, clazz.getSimpleName().toLowerCase())
+                : elasticsearchDocument.type();
 
-        this.elasticsearchType = elasticsearchType;
+        this.elasticsearchDocument = elasticsearchDocument;
         this.elasticsearchFields = Collections.unmodifiableMap(elasticsearchFields);
+
+        // Todo: Find a way of doing this without the spring dependency.
+        this.attributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(elasticsearchDocument));
     }
 
     public Map<String, ElasticsearchFieldMetadata> getElasticsearchFields() {
         return elasticsearchFields;
-    }
-
-    public ElasticsearchTypeMetadata putAllElasticsearchFields(List<ElasticsearchFieldMetadata> fields) {
-
-        for(ElasticsearchFieldMetadata field : fields)
-            this.elasticsearchFields.put(field.getFieldName(), field);
-
-        return this;
     }
 
     /**
@@ -47,11 +48,12 @@ public class ElasticsearchTypeMetadata {
      * @return index name
      */
     public String getIndexName(){
-        return this.elasticsearchType.index();
+        return this.elasticsearchDocument.index();
     }
 
     /**
      * Get the type name for this index mapping.
+     * If it is not set the class name will be changed from upper camel case to lower hyphen case.
      * @return
      */
     public String getTypeName() {
@@ -59,19 +61,19 @@ public class ElasticsearchTypeMetadata {
     }
 
     /**
-     * Get the parent type name
-     * @return Parent type name.
+     * Get the parent
+     * @return Parent
      */
-    public ElasticsearchTypeMetadata getParent() throws ClassNotAnnotated, InvalidParentTypeSpecified {
-        return ElasticsearchMapping.getMapping(this.elasticsearchType.parent());
+    public ElasticsearchDocumentMetadata getParent() throws ClassNotAnnotated, InvalidParentDocumentSpecified {
+        return ElasticsearchMapping.getMapping(this.elasticsearchDocument.parent());
     }
 
     public boolean hasParent() {
-        return (!elasticsearchType.parent().getName().equals(TopLevelType.class.getName()));
+        return (!elasticsearchDocument.parent().getName().equals(Empty.class.getName()));
     }
 
     public boolean isChildType() {
-        return (!this.elasticsearchType.parent().equals(""));
+        return (!this.elasticsearchDocument.parent().equals(""));
     }
 
     /**
@@ -79,7 +81,7 @@ public class ElasticsearchTypeMetadata {
      * @return The time to live
      */
     public String getTtl(){
-        return this.elasticsearchType.ttl();
+        return this.elasticsearchDocument.ttl();
     }
 
     /**
@@ -87,7 +89,7 @@ public class ElasticsearchTypeMetadata {
      * @return True if the indexed item expires after a defined period.
      */
     public boolean hasTtl() {
-        return (!this.elasticsearchType.ttl().equals(""));
+        return (!this.elasticsearchDocument.ttl().equals(""));
     }
 
     /**
@@ -98,7 +100,7 @@ public class ElasticsearchTypeMetadata {
      * @return True if the source is stored.
      */
     public boolean isSourceStoredWithIndex() {
-        return this.elasticsearchType.source();
+        return this.elasticsearchDocument.source();
     }
 
     /**
@@ -142,8 +144,8 @@ public class ElasticsearchTypeMetadata {
             e.printStackTrace();
         } catch (ClassNotAnnotated classNotAnnotated) {
             classNotAnnotated.printStackTrace();
-        } catch (InvalidParentTypeSpecified invalidParentTypeSpecified) {
-            invalidParentTypeSpecified.printStackTrace();
+        } catch (InvalidParentDocumentSpecified invalidParentDocumentSpecified) {
+            invalidParentDocumentSpecified.printStackTrace();
         }
         return null;
     }
@@ -153,7 +155,7 @@ public class ElasticsearchTypeMetadata {
      * @return The mapping.
      * @throws IOException
      */
-    public String toJson() throws IOException, ClassNotAnnotated, InvalidParentTypeSpecified {
+    public String toJson() throws IOException, ClassNotAnnotated, InvalidParentDocumentSpecified {
         return MetadataXContentBuilder.getXContentBuilder(this).string();
     }
 }

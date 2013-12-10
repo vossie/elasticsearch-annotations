@@ -1,17 +1,20 @@
+package com.vossie.test;
+
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
+import com.vossie.elasticsearch.annotations.enums.CoreTypes;
 
 /**
  * Copyright © 2013 GSMA. GSM and the GSM Logo are registered and owned by the GSMA.
- * User: cvosloo
+ * com.vossie.test.User: cvosloo
  * Date: 06/12/2013
  * Time: 12:36
  */
 public class Location {
 
-    @ElasticsearchField(type = ElasticsearchField.Type.DOUBLE)
+    @ElasticsearchField(type = CoreTypes.DOUBLE)
     private double lat;
 
-    @ElasticsearchField(type = ElasticsearchField.Type.DOUBLE)
+    @ElasticsearchField(type = CoreTypes.DOUBLE)
     private double lon;
 
     public Location(double lat, double lon) {

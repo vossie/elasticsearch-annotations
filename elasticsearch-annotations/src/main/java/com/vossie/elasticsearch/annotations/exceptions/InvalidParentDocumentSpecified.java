@@ -6,9 +6,9 @@ package com.vossie.elasticsearch.annotations.exceptions;
  * Date: 06/12/2013
  * Time: 11:58
  */
-public class InvalidParentTypeSpecified extends Exception {
+public class InvalidParentDocumentSpecified extends Exception {
 
-    public InvalidParentTypeSpecified(Class clazz, String childIndex, String parentIndex) {
+    public InvalidParentDocumentSpecified(Class clazz, String childIndex, String parentIndex) {
         super(String.format("The supplied class %s is indexed to %s and it specified parent index is %s.", clazz.getCanonicalName(), childIndex, parentIndex));
     }
 }

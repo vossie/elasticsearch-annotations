@@ -1,16 +1,19 @@
+package com.vossie.test;
+
+import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
-import com.vossie.elasticsearch.annotations.ElasticsearchType;
+import com.vossie.elasticsearch.annotations.enums.CoreTypes;
 
 /**
  * Copyright © 2013 GSMA. GSM and the GSM Logo are registered and owned by the GSMA.
- * User: cvosloo
+ * com.vossie.test.User: cvosloo
  * Date: 09/12/2013
  * Time: 21:12
  */
-@ElasticsearchType(index = "test", parent = Object.class)
+@ElasticsearchDocument(index = "test", parent = Object.class)
 public class InvalidParentTypeAnnotationTestClass {
 
-    @ElasticsearchField(type = ElasticsearchField.Type.STRING)
+    @ElasticsearchField(type = CoreTypes.STRING)
     private String id;
 
     public String getId() {

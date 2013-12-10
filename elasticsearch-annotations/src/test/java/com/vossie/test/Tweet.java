@@ -1,22 +1,26 @@
+package com.vossie.test;
+
+import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
-import com.vossie.elasticsearch.annotations.ElasticsearchType;
+import com.vossie.elasticsearch.annotations.enums.BooleanNullable;
+import com.vossie.elasticsearch.annotations.enums.CoreTypes;
 
 /**
  * Copyright © 2013 GSMA. GSM and the GSM Logo are registered and owned by the GSMA.
- * User: cvosloo
+ * com.vossie.test.User: cvosloo
  * Date: 06/12/2013
  * Time: 12:28
  */
-@ElasticsearchType(index = "twitter", type = "tweet", source = true, parent = User.class)
+@ElasticsearchDocument(index = "twitter", source = true, parent = User.class)
 public class Tweet {
 
-    @ElasticsearchField(type = ElasticsearchField.Type.STRING, analyzer = "not_analyzed", isParentId = true)
+    @ElasticsearchField(type = CoreTypes.STRING, analyzer = "not_analyzed", isParentId = BooleanNullable.TRUE)
     private String user;
 
-    @ElasticsearchField(type = ElasticsearchField.Type.DATE, isDefaultSortByField = true)
+    @ElasticsearchField(type = CoreTypes.DATE, isDefaultSortByField = BooleanNullable.TRUE)
     private String postDate;
 
-    @ElasticsearchField(type = ElasticsearchField.Type.STRING)
+    @ElasticsearchField(type = CoreTypes.STRING)
     private String message;
 
     public String getUser() {

@@ -1,6 +1,10 @@
-package com.vossie.elasticsearch.annotations;
+package com.vossie.elasticsearch.annotations.common;
 
+import com.vossie.elasticsearch.annotations.ElasticsearchField;
+import com.vossie.elasticsearch.annotations.enums.BooleanNullable;
+import com.vossie.elasticsearch.annotations.enums.CoreTypes;
 import org.elasticsearch.search.sort.SortOrder;
+import org.springframework.core.annotation.AnnotationUtils;
 
 import java.util.Collections;
 import java.util.Map;
@@ -17,12 +21,21 @@ public class ElasticsearchFieldMetadata {
     private String fieldName;
     private ElasticsearchField elasticsearchField;
     private Map<String, ElasticsearchFieldMetadata> children;
+    private Map<String, Object> attributes;
 
     public ElasticsearchFieldMetadata(String fieldName, ElasticsearchField elasticsearchField, boolean isArray, Map<String,ElasticsearchFieldMetadata> children){
+
         this.fieldName = fieldName;
         this.elasticsearchField = elasticsearchField;
         this.isArray = isArray;
         this.children = Collections.unmodifiableMap(children);
+
+        // Todo: Find a way of doing this without the spring dependency.
+        this.attributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(elasticsearchField));
+    }
+
+    public Map<String, Object> getAttributes() {
+        return this.attributes;
     }
 
     public String getFieldName() {
@@ -33,12 +46,12 @@ public class ElasticsearchFieldMetadata {
         return this.elasticsearchField.analyzer();
     }
 
-    public ElasticsearchField.Type getType() {
+    public CoreTypes getType() {
         return this.elasticsearchField.type();
     }
 
     public boolean isParentId() {
-        return this.elasticsearchField.isParentId();
+        return (this.elasticsearchField.isParentId().equals(BooleanNullable.TRUE));
     }
 
     public Map<String, ElasticsearchFieldMetadata> getChildren() {
@@ -54,7 +67,7 @@ public class ElasticsearchFieldMetadata {
      * @return Boolean
      */
     public boolean isDefaultSortByField() {
-        return this.elasticsearchField.isDefaultSortByField();
+        return (this.elasticsearchField.isDefaultSortByField().equals(BooleanNullable.TRUE));
     }
 
     /**
@@ -63,5 +76,10 @@ public class ElasticsearchFieldMetadata {
      */
     public SortOrder getDefaultSortOrder() {
         return this.elasticsearchField.defaultSortOrder();
+    }
+
+    public void getFieldAttributes() {
+
+
     }
 }

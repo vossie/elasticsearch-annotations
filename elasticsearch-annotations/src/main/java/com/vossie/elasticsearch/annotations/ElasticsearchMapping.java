@@ -1,7 +1,12 @@
 package com.vossie.elasticsearch.annotations;
 
+import com.vossie.elasticsearch.annotations.common.ElasticsearchDocumentMetadata;
+import com.vossie.elasticsearch.annotations.common.ElasticsearchFieldMetadata;
+import com.vossie.elasticsearch.annotations.common.Empty;
+import com.vossie.elasticsearch.annotations.enums.BooleanNullable;
+import com.vossie.elasticsearch.annotations.enums.CoreTypes;
 import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
-import com.vossie.elasticsearch.annotations.exceptions.InvalidParentTypeSpecified;
+import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -19,7 +24,7 @@ import java.util.Map;
 public abstract class ElasticsearchMapping {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ElasticsearchMapping.class);
-    private static HashMap<String, ElasticsearchTypeMetadata> mappingCache = new HashMap<>();
+    private static HashMap<String, ElasticsearchDocumentMetadata> mappingCache = new HashMap<>();
 
     public static final String OBJECT_TTL       = "_ttl";
     public static final String OBJECT_PARENT    = "_parent";
@@ -33,34 +38,19 @@ public abstract class ElasticsearchMapping {
     public static final String FIELD_DEFAULT    = "default";
 
     /**
-     * Get the ElasticsearchType annotations for the provided class object.
+     * Get the ElasticsearchDocument annotations for the provided class object.
      * @param clazz The class to inspect.
-     * @return The ElasticsearchType details
+     * @return The ElasticsearchDocument details
      * @throws ClassNotAnnotated if the annotation is not found.
      */
-    private static ElasticsearchType getElasticsearchType(Class<?> clazz) throws ClassNotAnnotated {
+    private static ElasticsearchDocument getElasticsearchType(Class<?> clazz) throws ClassNotAnnotated {
 
-        for(Annotation a : clazz.getAnnotations())
-            if(a instanceof ElasticsearchType)
-                return (ElasticsearchType) a;
+        ElasticsearchDocument doc = clazz.getAnnotation(ElasticsearchDocument.class);
+
+        if (doc != null)
+            return doc;
 
         throw new ClassNotAnnotated(clazz);
-    }
-
-    /**
-     * Get the type name from the annotation. If it is not set use the simple class name instead.
-     * @param clazz The annotated class
-     * @param elasticsearchType The type annotation.
-     * @return The type name.
-     */
-    private static String getTypeName(Class<?> clazz, ElasticsearchType elasticsearchType) {
-
-        String typeName = elasticsearchType.type();
-
-        if(typeName.equals(""))
-            typeName = clazz.getSimpleName().toLowerCase();
-
-        return typeName;
     }
 
     private static Map<String, ElasticsearchFieldMetadata> getElasticsearchFieldsMetadata(Class<?> clazz) {
@@ -86,37 +76,33 @@ public abstract class ElasticsearchMapping {
         // Iterate over all the annotated fields
         for(Field field : fields) {
 
-            Annotation[] annotations = field.getAnnotations();
+            ElasticsearchField elasticsearchField = field.getAnnotation(ElasticsearchField.class);
 
-            for(Annotation a : annotations){
+            if(elasticsearchField == null)
+                continue;
 
-                if(a instanceof ElasticsearchField) {
+            ElasticsearchFieldMetadata elasticsearchFieldMetadata;
+            boolean isArray = false;
 
-                    ElasticsearchField elasticsearchField = (ElasticsearchField) a;
-                    ElasticsearchFieldMetadata elasticsearchFieldMetadata;
-                    boolean isArray = false;
+            if(elasticsearchField.type().equals(CoreTypes.GEO_POINT) || elasticsearchField.type().equals(CoreTypes.OBJECT)) {
 
-                    if(elasticsearchField.type().equals(ElasticsearchField.Type.GEO_POINT) || elasticsearchField.type().equals(ElasticsearchField.Type.OBJECT)) {
+                // If it is an array we need the component type
+                isArray = field.getType().isArray();
 
-                        // If it is an array we need the component type
-                        isArray = field.getType().isArray();
+                // Get the child class
+                Class childClass = (field.getType().isArray())
+                        ? field.getType().getComponentType()
+                        : field.getType();
 
-                        // Get the child class
-                        Class childClass = (field.getType().isArray())
-                                ? field.getType().getComponentType()
-                                : field.getType();
+                // Set the children
+                elasticsearchFieldMetadata = new ElasticsearchFieldMetadata(field.getName(), elasticsearchField, isArray, getElasticsearchFieldsMetadata(childClass));
 
-                        // Set the children
-                        elasticsearchFieldMetadata = new ElasticsearchFieldMetadata(field.getName(), elasticsearchField, isArray, getElasticsearchFieldsMetadata(childClass));
-
-                    } else {
-                        elasticsearchFieldMetadata = new ElasticsearchFieldMetadata(field.getName(), elasticsearchField, isArray, new HashMap<String, ElasticsearchFieldMetadata>());
-                    }
-
-                    // Add to the response list
-                    elasticsearchFieldMappings.put(elasticsearchFieldMetadata.getFieldName(), elasticsearchFieldMetadata);
-                }
+            } else {
+                elasticsearchFieldMetadata = new ElasticsearchFieldMetadata(field.getName(), elasticsearchField, isArray, new HashMap<String, ElasticsearchFieldMetadata>());
             }
+
+            // Add to the response list
+            elasticsearchFieldMappings.put(elasticsearchFieldMetadata.getFieldName(), elasticsearchFieldMetadata);
         }
 
         return elasticsearchFieldMappings;
@@ -125,29 +111,29 @@ public abstract class ElasticsearchMapping {
     /**
      *
      * @param clazz
-     * @param elasticsearchType
-     * @throws InvalidParentTypeSpecified
+     * @param elasticsearchDocument
+     * @throws com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified
      * @throws IOException
      */
-    private static void validateParentTypeReference(Class<?> clazz, ElasticsearchType elasticsearchType) throws InvalidParentTypeSpecified, IOException {
+    private static void validateParentTypeReference(Class<?> clazz, ElasticsearchDocument elasticsearchDocument) throws InvalidParentDocumentSpecified, IOException {
 
         // Test to see if we have a parent child relationship and set accordingly.
-        if(!elasticsearchType.parent().getName().equals(TopLevelType.class.getName())) {
+        if(!elasticsearchDocument.parent().getName().equals(Empty.class.getName())) {
 
-            ElasticsearchType parentType;
+            ElasticsearchDocument parentType;
 
             try {
-                parentType = getElasticsearchType(elasticsearchType.parent());
+                parentType = getElasticsearchType(elasticsearchDocument.parent());
 
             } catch (ClassNotAnnotated e) {
 
-                throw new InvalidParentTypeSpecified(elasticsearchType.parent(), "ClassNotAnnotated", elasticsearchType.index());
+                throw new InvalidParentDocumentSpecified(elasticsearchDocument.parent(), "ClassNotAnnotated", elasticsearchDocument.index());
             }
 
             if(parentType != null) {
 
-                if(!parentType.index().equals(elasticsearchType.index()))
-                    throw new InvalidParentTypeSpecified(clazz, elasticsearchType.index(), parentType.index());
+                if(!parentType.index().equals(elasticsearchDocument.index()))
+                    throw new InvalidParentDocumentSpecified(clazz, elasticsearchDocument.index(), parentType.index());
             }
         }
     }
@@ -156,26 +142,26 @@ public abstract class ElasticsearchMapping {
      * Get the mapping based on the provided annotations.
      * @param clazz The class to inspect.
      * @return Returns the meta data used to describe this entity.
-     * @throws InvalidParentTypeSpecified
+     * @throws com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified
      * @throws ClassNotAnnotated
      */
-    public static ElasticsearchTypeMetadata getMapping(Class<?> clazz) throws InvalidParentTypeSpecified, ClassNotAnnotated {
+    public static ElasticsearchDocumentMetadata getMapping(Class<?> clazz) throws InvalidParentDocumentSpecified, ClassNotAnnotated {
 
         // Check the cache to see if we have already parsed this reference.
         if(mappingCache.containsKey(clazz.getCanonicalName()))
             return mappingCache.get(clazz.getCanonicalName());
 
         // Get the annotation.
-        ElasticsearchType elasticsearchType = getElasticsearchType(clazz);
+        ElasticsearchDocument elasticsearchDocument = getElasticsearchType(clazz);
 
         try {
             // Test to see if we have a parent child relationship and set accordingly.
-            validateParentTypeReference(clazz, elasticsearchType);
+            validateParentTypeReference(clazz, elasticsearchDocument);
 
             // Add this item to the local cache for fast lookup.
             mappingCache.put(
                     clazz.getCanonicalName(),
-                    new ElasticsearchTypeMetadata(clazz, elasticsearchType, getElasticsearchFieldsMetadata(clazz))
+                    new ElasticsearchDocumentMetadata(clazz, elasticsearchDocument, getElasticsearchFieldsMetadata(clazz))
             );
 
             // Return the reference.
@@ -205,7 +191,7 @@ public abstract class ElasticsearchMapping {
                 if(a instanceof ElasticsearchField) {
 
                     ElasticsearchField elasticsearchField = (ElasticsearchField) a;
-                    if(elasticsearchField.isParentId())
+                    if(elasticsearchField.isParentId().equals(BooleanNullable.TRUE))
                         try {
                             field.setAccessible(true);
                             return field.get(obj).toString();

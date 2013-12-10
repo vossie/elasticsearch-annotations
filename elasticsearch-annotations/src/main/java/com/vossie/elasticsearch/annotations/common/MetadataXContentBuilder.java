@@ -1,7 +1,9 @@
-package com.vossie.elasticsearch.annotations;
+package com.vossie.elasticsearch.annotations.common;
 
+import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
+import com.vossie.elasticsearch.annotations.enums.CoreTypes;
 import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
-import com.vossie.elasticsearch.annotations.exceptions.InvalidParentTypeSpecified;
+import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.slf4j.LoggerFactory;
 
@@ -22,9 +24,9 @@ public class MetadataXContentBuilder {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MetadataXContentBuilder.class);
     private static HashMap<String, XContentBuilder> cache = new HashMap<>();
 
-    protected static XContentBuilder getXContentBuilder(ElasticsearchTypeMetadata elasticsearchTypeMetadata) throws ClassNotAnnotated, InvalidParentTypeSpecified {
+    protected static XContentBuilder getXContentBuilder(ElasticsearchDocumentMetadata elasticsearchDocumentMetadata) throws ClassNotAnnotated, InvalidParentDocumentSpecified {
 
-        String key = String.format("%s-%s", elasticsearchTypeMetadata.getIndexName(), elasticsearchTypeMetadata.getTypeName());
+        String key = String.format("%s-%s", elasticsearchDocumentMetadata.getIndexName(), elasticsearchDocumentMetadata.getTypeName());
 
         // Return from cache if it has been previously parsed.
         if(cache.containsKey(key))
@@ -35,28 +37,28 @@ public class MetadataXContentBuilder {
             /** Set the objects type name */
             XContentBuilder xbMapping = jsonBuilder()
                     .startObject()
-                    .startObject(elasticsearchTypeMetadata.getTypeName());
+                    .startObject(elasticsearchDocumentMetadata.getTypeName());
 
             // Set the object expiry
-            if(elasticsearchTypeMetadata.hasTtl()) {
+            if(elasticsearchDocumentMetadata.hasTtl()) {
                 xbMapping
                         .startObject(ElasticsearchMapping.OBJECT_TTL)
                         .field(ElasticsearchMapping.FIELD_ENABLED, true)
-                        .field(ElasticsearchMapping.FIELD_DEFAULT, elasticsearchTypeMetadata.getTtl())
+                        .field(ElasticsearchMapping.FIELD_DEFAULT, elasticsearchDocumentMetadata.getTtl())
                         .endObject();
             }
 
             // Test to see if we have a parent child relationship and set accordingly.
-            if(elasticsearchTypeMetadata.hasParent()) {
-                xbMapping.startObject(ElasticsearchMapping.OBJECT_PARENT).field(ElasticsearchMapping.FIELD_TYPE, elasticsearchTypeMetadata.getParent().getTypeName()).endObject();
+            if(elasticsearchDocumentMetadata.hasParent()) {
+                xbMapping.startObject(ElasticsearchMapping.OBJECT_PARENT).field(ElasticsearchMapping.FIELD_TYPE, elasticsearchDocumentMetadata.getParent().getTypeName()).endObject();
             }
 
             // Set the _source mapping value.
-            if(!elasticsearchTypeMetadata.isSourceStoredWithIndex())
-                xbMapping.startObject(ElasticsearchMapping.OBJECT_SOURCE).field(ElasticsearchMapping.FIELD_ENABLED, elasticsearchTypeMetadata.isSourceStoredWithIndex()).endObject();
+            if(!elasticsearchDocumentMetadata.isSourceStoredWithIndex())
+                xbMapping.startObject(ElasticsearchMapping.OBJECT_SOURCE).field(ElasticsearchMapping.FIELD_ENABLED, elasticsearchDocumentMetadata.isSourceStoredWithIndex()).endObject();
 
             // Add the fields.
-            setXContentBuilderFields(xbMapping, elasticsearchTypeMetadata.getFields());
+            setXContentBuilderFields(xbMapping, elasticsearchDocumentMetadata.getFields());
 
             // End
             xbMapping
@@ -78,6 +80,8 @@ public class MetadataXContentBuilder {
 
         xbMapping.startObject(ElasticsearchMapping.OBJECT_PROPERTIES);
 
+        // Todo: Update to use the attributes to set the attributes
+
         // Iterate over all the annotated fields
         for(String fieldName : fields.keySet()) {
 
@@ -90,7 +94,7 @@ public class MetadataXContentBuilder {
             if(!elasticsearchField.getAnalyzer().equals(""))
                 xbMapping.field(ElasticsearchMapping.FIELD_INDEX, elasticsearchField.getAnalyzer());
 
-            if(elasticsearchField.getType().equals(ElasticsearchField.Type.GEO_POINT) || elasticsearchField.getType().equals(ElasticsearchField.Type.OBJECT))
+            if(elasticsearchField.getType().equals(CoreTypes.GEO_POINT) || elasticsearchField.getType().equals(CoreTypes.OBJECT))
                 setXContentBuilderFields(xbMapping, elasticsearchField.getChildren());
 
             xbMapping.endObject();
