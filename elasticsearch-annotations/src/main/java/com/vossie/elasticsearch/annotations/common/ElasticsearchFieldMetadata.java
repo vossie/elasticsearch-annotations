@@ -94,20 +94,4 @@ public class ElasticsearchFieldMetadata {
     public boolean isArray() {
         return this.isArray;
     }
-
-    /**
-     * Should we use this field as the default sort order for queries if none is specified.
-     * @return Boolean
-     */
-    public boolean isDefaultSortByField() {
-        return (this.elasticsearchField.isDefaultSortByField().equals(BooleanValue.TRUE));
-    }
-
-    /**
-     * The default sort order to use if no sort order is specified.
-     * @return
-     */
-    public SortOrder getDefaultSortOrder() {
-        return this.elasticsearchField.defaultSortOrder();
-    }
 }

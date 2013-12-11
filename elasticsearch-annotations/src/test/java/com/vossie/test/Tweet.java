@@ -11,13 +11,13 @@ import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
  * Date: 06/12/2013
  * Time: 12:28
  */
-@ElasticsearchDocument(index = "twitter", source = true, parent = User.class)
+@ElasticsearchDocument(index = "twitter", source = true, parent = User.class, defaultSortByField = "postDate")
 public class Tweet {
 
     @ElasticsearchField(type = ElasticsearchType.STRING, index = "not_analyzed", isParentId = BooleanValue.TRUE)
     private String user;
 
-    @ElasticsearchField(type = ElasticsearchType.DATE, isDefaultSortByField = BooleanValue.TRUE)
+    @ElasticsearchField(type = ElasticsearchType.DATE)
     private String postDate;
 
     @ElasticsearchField(type = ElasticsearchType.STRING)

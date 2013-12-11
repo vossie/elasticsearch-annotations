@@ -27,18 +27,6 @@ public @interface ElasticsearchField {
      */
     public BooleanValue isParentId() default BooleanValue.NULL;
 
-    /**
-     * Should we use this field as the default sort by for queries if none is specified.
-     * @return Boolean
-     */
-    public BooleanValue isDefaultSortByField() default BooleanValue.NULL;
-
-    /**
-     * The default sort order to use if no sort order is specified.
-     * @return
-     */
-    public SortOrder defaultSortOrder() default SortOrder.ASC;
-
     /* >>>>>>> End: Helper <<<<<<<< */
 
     /* >>>>>>> START: Common <<<<<<<< */

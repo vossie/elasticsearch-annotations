@@ -2,6 +2,7 @@ package com.vossie.elasticsearch.annotations;
 
 import com.vossie.elasticsearch.annotations.common.Empty;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
+import org.elasticsearch.search.sort.SortOrder;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -35,6 +36,19 @@ public @interface ElasticsearchDocument {
      * @return
      */
     public Class<?> parent() default Empty.class;
+
+
+    /**
+     * Should we use this field as the default sort by for queries if none is specified.
+     * @return Boolean
+     */
+    public String defaultSortByField() default Empty.NULL;
+
+    /**
+     * The default sort order to use if no sort order is specified.
+     * @return
+     */
+    public SortOrder defaultSortOrder() default SortOrder.ASC;
 
     /**
      * When does the data expire

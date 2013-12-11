@@ -2,7 +2,6 @@ package com.vossie.test;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
-import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.enums.TermVector;
 
@@ -12,10 +11,10 @@ import com.vossie.elasticsearch.annotations.enums.TermVector;
  * Date: 06/12/2013
  * Time: 12:32
  */
-@ElasticsearchDocument(index = "twitter", source = true, type = "twitterUser")
+@ElasticsearchDocument(index = "twitter", source = true, type = "twitterUser", defaultSortByField = "user")
 public class UserWithInvalidAttribute {
 
-    @ElasticsearchField(type = ElasticsearchType.STRING, index = "not_analyzed", isDefaultSortByField = BooleanValue.TRUE)
+    @ElasticsearchField(type = ElasticsearchType.STRING, index = "not_analyzed")
     private String user;
 
     // Term vector is not valid for ElasticsearchType.DATE type.

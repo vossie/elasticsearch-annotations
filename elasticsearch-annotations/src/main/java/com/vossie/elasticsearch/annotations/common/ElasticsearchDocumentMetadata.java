@@ -5,6 +5,7 @@ import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import java.io.IOException;
@@ -131,6 +132,24 @@ public class ElasticsearchDocumentMetadata {
             return this.elasticsearchFields.get(fieldName);
 
         return null;
+    }
+
+    /**
+     * Should we use this field as the default sort order for queries if none is specified.
+     * @return Boolean
+     */
+    public String getDefaultSortByField() {
+        return (this.elasticsearchDocument.defaultSortByField().equals(Empty.NULL))
+                ? null
+                : this.elasticsearchDocument.defaultSortByField();
+    }
+
+    /**
+     * The default sort order to use if no sort order is specified.
+     * @return
+     */
+    public SortOrder getDefaultSortOrder() {
+        return this.elasticsearchDocument.defaultSortOrder();
     }
 
     /**
