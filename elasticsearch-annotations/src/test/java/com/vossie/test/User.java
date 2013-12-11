@@ -5,6 +5,8 @@ import com.vossie.elasticsearch.annotations.ElasticsearchField;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
 
+import java.util.List;
+
 /**
  * Copyright © 2013 GSMA. GSM and the GSM Logo are registered and owned by the GSMA.
  * com.vossie.test.User: cvosloo
@@ -22,6 +24,9 @@ public class User {
 
     @ElasticsearchField(type = ElasticsearchType.GEO_POINT)
     private Location location;
+
+    @ElasticsearchField(type = ElasticsearchType.NESTED)
+    private List<Cities> citiesVisited;
 
     public String getUser() {
         return user;

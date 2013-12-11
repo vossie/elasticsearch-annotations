@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,15 +87,34 @@ public abstract class ElasticsearchMapping {
             ElasticsearchFieldMetadata elasticsearchFieldMetadata;
             boolean isArray = false;
 
-            if(elasticsearchField.type().equals(ElasticsearchType.GEO_POINT) || elasticsearchField.type().equals(ElasticsearchType.OBJECT)) {
+            if(elasticsearchField.type().equals(ElasticsearchType.GEO_POINT) ||
+                    elasticsearchField.type().equals(ElasticsearchType.OBJECT) ||
+                    elasticsearchField.type().equals(ElasticsearchType.NESTED)) {
 
                 // If it is an array we need the component type
                 isArray = field.getType().isArray();
+                Class<?> childClass = null;
 
                 // Get the child class
-                Class childClass = (field.getType().isArray())
+                childClass = (isArray)
                         ? field.getType().getComponentType()
                         : field.getType();
+
+
+                if (Collection.class.isAssignableFrom(field.getType())){
+                    isArray = true;
+
+                    Type type = field.getGenericType();
+                    if (type instanceof ParameterizedType) {
+
+                        ParameterizedType pType = (ParameterizedType)type;
+                        Type[] arr = pType.getActualTypeArguments();
+
+                        for (Type tp: arr) {
+                            childClass = (Class<?>)tp;
+                        }
+                    }
+                }
 
                 // Set the children
                 elasticsearchFieldMetadata = new ElasticsearchFieldMetadata(field.getName(), elasticsearchField, isArray, getElasticsearchFieldsMetadata(childClass));
