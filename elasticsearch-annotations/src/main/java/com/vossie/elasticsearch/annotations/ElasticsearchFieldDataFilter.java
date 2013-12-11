@@ -22,6 +22,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface ElasticsearchFieldDataFilter {
 
+    // Todo: implement the data filter.
+
     public String regexPattern();
 
     public double frequencyMin();

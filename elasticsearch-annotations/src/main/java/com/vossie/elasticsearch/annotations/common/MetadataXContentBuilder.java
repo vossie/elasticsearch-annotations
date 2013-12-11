@@ -82,8 +82,6 @@ public class MetadataXContentBuilder {
 
         xbMapping.startObject(ElasticsearchMapping.OBJECT_PROPERTIES);
 
-        // Todo: Update to use the attributes to set the attributes
-
         // Iterate over all the annotated fields
         for(String fieldName : fields.keySet()) {
 
@@ -91,21 +89,9 @@ public class MetadataXContentBuilder {
 
             xbMapping.startObject(elasticsearchField.getFieldName());
 
-//            xbMapping.field(ElasticsearchMapping.FIELD_TYPE, elasticsearchField.getType().toString().toLowerCase());
-
             for(String attribute : elasticsearchField.getAttributes().keySet()) {
                 xbMapping.field(attribute, elasticsearchField.getAttributes().get(attribute));
             }
-
-
-//            if(!elasticsearchField.getAnalyzer().equals(""))
-//                xbMapping.field(ElasticsearchMapping.FIELD_INDEX, elasticsearchField.getAnalyzer());
-
-//            if(     elasticsearchField.getType().equals(ElasticsearchType.OBJECT) ||
-//                    elasticsearchField.getType().equals(ElasticsearchType.GEO_POINT) ||
-//                    elasticsearchField.getType().equals(ElasticsearchType.GEO_SHAPE) ||
-//                    elasticsearchField.getType().equals(ElasticsearchType.POLYGON) ||
-//                    elasticsearchField.getType().equals(ElasticsearchType.MULTI_POLYGON))
 
             setXContentBuilderFields(xbMapping, elasticsearchField.getChildren());
 

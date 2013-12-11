@@ -89,7 +89,7 @@ public class ElasticsearchDocumentMetadata {
      * @return True if the indexed item expires after a defined period.
      */
     public boolean hasTtl() {
-        return (!this.elasticsearchDocument.ttl().equals(""));
+        return (!this.elasticsearchDocument.ttl().isEmpty());
     }
 
     /**

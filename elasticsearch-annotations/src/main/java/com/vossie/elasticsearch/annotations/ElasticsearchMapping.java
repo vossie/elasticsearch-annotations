@@ -33,7 +33,6 @@ public abstract class ElasticsearchMapping {
     public static final String OBJECT_PROPERTIES= "properties";
 
     public static final String FIELD_TYPE       = "type";
-    public static final String FIELD_INDEX      = "index";
     public static final String FIELD_ENABLED    = "enabled";
     public static final String FIELD_DEFAULT    = "default";
 
