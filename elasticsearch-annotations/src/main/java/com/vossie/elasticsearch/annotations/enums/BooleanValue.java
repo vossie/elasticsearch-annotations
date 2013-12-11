@@ -6,9 +6,9 @@ import com.vossie.elasticsearch.annotations.common.Empty;
  * Copyright © 2013 GSMA. GSM and the GSM Logo are registered and owned by the GSMA.
  * User: cvosloo
  * Date: 10/12/2013
- * Time: 14:21
+ * Time: 14:16
  */
-public enum IndexOptions {
+public enum BooleanValue {
 
     NULL {
         @Override
@@ -17,31 +17,17 @@ public enum IndexOptions {
         }
     },
 
-    DOCS {
+    TRUE {
         @Override
         public String toString() {
-            return "docs";
+            return Empty.NULL;
         }
     },
 
-    FREQS {
+    FALSE {
         @Override
         public String toString() {
-            return "freqs";
-        }
-    },
-
-    POSITIONS {
-        @Override
-        public String toString() {
-            return "positions";
-        }
-    },
-
-    OFFSETS {
-        @Override
-        public String toString() {
-            return "offsets";
+            return Empty.NULL;
         }
     }
 }

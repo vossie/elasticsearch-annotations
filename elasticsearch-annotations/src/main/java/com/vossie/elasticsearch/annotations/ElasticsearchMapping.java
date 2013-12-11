@@ -3,8 +3,8 @@ package com.vossie.elasticsearch.annotations;
 import com.vossie.elasticsearch.annotations.common.ElasticsearchDocumentMetadata;
 import com.vossie.elasticsearch.annotations.common.ElasticsearchFieldMetadata;
 import com.vossie.elasticsearch.annotations.common.Empty;
-import com.vossie.elasticsearch.annotations.enums.BooleanNullable;
-import com.vossie.elasticsearch.annotations.enums.CoreTypes;
+import com.vossie.elasticsearch.annotations.enums.BooleanValue;
+import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
 import org.slf4j.LoggerFactory;
@@ -84,7 +84,7 @@ public abstract class ElasticsearchMapping {
             ElasticsearchFieldMetadata elasticsearchFieldMetadata;
             boolean isArray = false;
 
-            if(elasticsearchField.type().equals(CoreTypes.GEO_POINT) || elasticsearchField.type().equals(CoreTypes.OBJECT)) {
+            if(elasticsearchField.type().equals(ElasticsearchType.GEO_POINT) || elasticsearchField.type().equals(ElasticsearchType.OBJECT)) {
 
                 // If it is an array we need the component type
                 isArray = field.getType().isArray();
@@ -191,7 +191,7 @@ public abstract class ElasticsearchMapping {
                 if(a instanceof ElasticsearchField) {
 
                     ElasticsearchField elasticsearchField = (ElasticsearchField) a;
-                    if(elasticsearchField.isParentId().equals(BooleanNullable.TRUE))
+                    if(elasticsearchField.isParentId().equals(BooleanValue.TRUE))
                         try {
                             field.setAccessible(true);
                             return field.get(obj).toString();

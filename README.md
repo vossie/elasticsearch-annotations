@@ -1,25 +1,27 @@
 elasticsearch-annotations
 =========================
 
-Work in progress, check back soon.
-
 A simple module to create Elasticsearch mappings using annotated classes.
 
-I created this project because I got tired of managing separate json files for each object I indexed in Elasticsearch.
+I created this project because I got tired of managing separate json mapping files for each object I indexed in Elasticsearch.
 
 Usage:
- Annotating a class:
 
-     @ElasticsearchType(index = "twitter", type = "tweet", source = true, parent = User.class)
+    ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.getMapping(Tweet.class);
+    String mapping = documentMetadata.toJson();
+
+ Annotated class:
+
+     @ElasticsearchDocument(index = "twitter", source = true, parent = User.class)
      public class Tweet {
 
-         @ElasticsearchField(type = ElasticsearchField.Type.STRING, analyzer = "not_analyzed", isParentId = true)
+         @ElasticsearchField(type = ElasticsearchType.STRING, index = "not_analyzed", isParentId = BooleanValue.TRUE)
          private String user;
 
-         @ElasticsearchField(type = ElasticsearchField.Type.DATE, isDefaultSortByField = true)
+         @ElasticsearchField(type = ElasticsearchType.DATE, isDefaultSortByField = BooleanValue.TRUE)
          private String postDate;
 
-         @ElasticsearchField(type = ElasticsearchField.Type.STRING)
+         @ElasticsearchField(type = ElasticsearchType.STRING)
          private String message;
 
          public String getUser() {
@@ -47,3 +49,14 @@ Usage:
          }
      }
 
+ Produces:
+
+    { "tweet" : {
+        "_parent" : { "type" : "twitterUser" },
+        "properties" : {
+            "message" : { "type" : "string" },
+            "postDate" : { "type" : "date" },
+            "user" : { "index" : "not_analyzed", "type" : "string" }
+            }
+        }
+    }

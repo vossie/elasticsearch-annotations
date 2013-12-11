@@ -1,7 +1,6 @@
 package com.vossie.elasticsearch.annotations.common;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
-import com.vossie.elasticsearch.annotations.enums.CoreTypes;
 import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
 import org.elasticsearch.common.xcontent.XContentBuilder;
@@ -78,6 +77,9 @@ public class MetadataXContentBuilder {
 
     private static void setXContentBuilderFields(XContentBuilder xbMapping, Map<String, ElasticsearchFieldMetadata> fields) throws IOException {
 
+        if(fields.keySet().size() < 1)
+            return;
+
         xbMapping.startObject(ElasticsearchMapping.OBJECT_PROPERTIES);
 
         // Todo: Update to use the attributes to set the attributes
@@ -89,13 +91,23 @@ public class MetadataXContentBuilder {
 
             xbMapping.startObject(elasticsearchField.getFieldName());
 
-            xbMapping.field(ElasticsearchMapping.FIELD_TYPE, elasticsearchField.getType().toString().toLowerCase());
+//            xbMapping.field(ElasticsearchMapping.FIELD_TYPE, elasticsearchField.getType().toString().toLowerCase());
 
-            if(!elasticsearchField.getAnalyzer().equals(""))
-                xbMapping.field(ElasticsearchMapping.FIELD_INDEX, elasticsearchField.getAnalyzer());
+            for(String attribute : elasticsearchField.getAttributes().keySet()) {
+                xbMapping.field(attribute, elasticsearchField.getAttributes().get(attribute));
+            }
 
-            if(elasticsearchField.getType().equals(CoreTypes.GEO_POINT) || elasticsearchField.getType().equals(CoreTypes.OBJECT))
-                setXContentBuilderFields(xbMapping, elasticsearchField.getChildren());
+
+//            if(!elasticsearchField.getAnalyzer().equals(""))
+//                xbMapping.field(ElasticsearchMapping.FIELD_INDEX, elasticsearchField.getAnalyzer());
+
+//            if(     elasticsearchField.getType().equals(ElasticsearchType.OBJECT) ||
+//                    elasticsearchField.getType().equals(ElasticsearchType.GEO_POINT) ||
+//                    elasticsearchField.getType().equals(ElasticsearchType.GEO_SHAPE) ||
+//                    elasticsearchField.getType().equals(ElasticsearchType.POLYGON) ||
+//                    elasticsearchField.getType().equals(ElasticsearchType.MULTI_POLYGON))
+
+            setXContentBuilderFields(xbMapping, elasticsearchField.getChildren());
 
             xbMapping.endObject();
         }

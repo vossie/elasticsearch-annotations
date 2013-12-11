@@ -11,7 +11,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public final class Empty {
 
-    public static final String NULL = "__null";
+    public static final String NULL = "___null";
 
     public Empty() {
         throw new NotImplementedException();

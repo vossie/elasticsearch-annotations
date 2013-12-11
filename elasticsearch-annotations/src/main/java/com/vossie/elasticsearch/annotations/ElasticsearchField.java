@@ -19,25 +19,19 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface ElasticsearchField {
 
-    /**
-     * The type of field this is.
-     * @return
-     */
-    public CoreTypes type();
-
     /* >>>>>>> START: Helper <<<<<<<< */
 
     /**
      * Does this field contain a reference key to the parent document.
      * @return Boolean
      */
-    public BooleanNullable isParentId() default BooleanNullable.NULL;
+    public BooleanValue isParentId() default BooleanValue.NULL;
 
     /**
      * Should we use this field as the default sort by for queries if none is specified.
      * @return Boolean
      */
-    public BooleanNullable isDefaultSortByField() default BooleanNullable.NULL;
+    public BooleanValue isDefaultSortByField() default BooleanValue.NULL;
 
     /**
      * The default sort order to use if no sort order is specified.
@@ -48,6 +42,12 @@ public @interface ElasticsearchField {
     /* >>>>>>> End: Helper <<<<<<<< */
 
     /* >>>>>>> START: Common <<<<<<<< */
+
+    /**
+     * The type of field this is.
+     * @return
+     */
+    public ElasticsearchType type();
 
     /**
      * From version 0.90.Beta1 Elasticsearch includes changes from Lucene 4 that allows you to configure a
@@ -70,7 +70,7 @@ public @interface ElasticsearchField {
     public PostingsFormat postings_format() default PostingsFormat.NULL;
 
 
-    /* >>>>>>> START: Common <<<<<<<< */
+    /* >>>>>>> END: Common <<<<<<<< */
 
     /**
      * The name of the field that will be stored in the index. Defaults to the property/field name if __null.
@@ -82,7 +82,7 @@ public @interface ElasticsearchField {
      * Set to yes to store actual field in the index, no to not store it.
      * Defaults to no (note, the JSON document itself is stored, and it can be retrieved from it).
      */
-    public BooleanNullable store() default BooleanNullable.NULL;
+    public BooleanValue store() default BooleanValue.NULL;
 
     /**
      * Set to analyzed for the field to be indexed and searchable after being broken down into token using an analyzer.
@@ -96,7 +96,7 @@ public @interface ElasticsearchField {
     /**
      * Possible values are no, yes, with_offsets, with_positions, with_positions_offsets. Defaults to no.
      */
-    public double boost() default 1.0;
+    public String boost() default Empty.NULL;
 
     /**
      * When there is a (JSON) null value for the field, use the null_value as the field value.
@@ -110,13 +110,13 @@ public @interface ElasticsearchField {
      * Possible values are no, yes, with_offsets, with_positions, with_positions_offsets. Defaults to no.
      * @return
      */
-    public TermVectors term_vector() default TermVectors.NULL;
+    public TermVector term_vector() default TermVector.NULL;
 
     /**
      * Boolean value if norms should be omitted or not. Defaults to false for analyzed fields,
      * and to true for not_analyzed fields.
      */
-    public BooleanNullable omit_norms() default BooleanNullable.NULL;
+    public BooleanValue omit_norms() default BooleanValue.NULL;
 
     /**
      * Available since 0.20. Allows to set the indexing options, possible values are docs
@@ -125,7 +125,7 @@ public @interface ElasticsearchField {
      * and to docs for not_analyzed fields. Since 0.90 it is also possible to set it to offsets
      * (doc numbers, term frequencies, positions and offsets).
      */
-    public IndexOptions index_options() default IndexOptions.NULL;
+    public IndexOption index_options() default IndexOption.NULL;
 
     /**
      * The analyzer used to analyze the text contents when analyzed during indexing and when searching using
@@ -147,7 +147,7 @@ public @interface ElasticsearchField {
      * The analyzer will ignore strings larger than this size. Useful for generic not_analyzed fields that should
      * ignore long text. (since @0.19.9).
      */
-    public int ignore_above() default -1;
+    public int ignore_above() default 0;
 
     /**
      * Position increment gap between field instances with the same field name. Defaults to 0.
@@ -158,12 +158,12 @@ public @interface ElasticsearchField {
     /**
      * The precision step (number of terms generated for each number value). Defaults to 4.
      */
-    public double precision_step() default 4d;
+    public double precision_step() default 0d;
 
     /**
      * Ignored a malformed number. Defaults to false. (Since @0.19.9).
      */
-    public BooleanNullable ignore_malformed() default BooleanNullable.NULL;
+    public BooleanValue ignore_malformed() default BooleanValue.NULL;
 
     // date
     /**

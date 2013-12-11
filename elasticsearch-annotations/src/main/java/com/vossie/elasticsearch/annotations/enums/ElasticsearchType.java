@@ -6,7 +6,7 @@ package com.vossie.elasticsearch.annotations.enums;
  * Date: 10/12/2013
  * Time: 14:30
  */
-public enum CoreTypes {
+public enum ElasticsearchType {
 
     STRING {
         @Override
@@ -71,6 +71,15 @@ public enum CoreTypes {
         }
     },
 
+    ATTACHMENT {
+        @Override
+        public String toString() {
+            return "attachment";
+        }
+    },
+
+    // <<<<<<< Shape types >>>>>>>
+
     GEO_POINT {
         @Override
         public String toString() {
@@ -85,10 +94,24 @@ public enum CoreTypes {
         }
     },
 
-    ATTACHMENT {
+    ENVELOPE {
         @Override
         public String toString() {
-            return "attachment";
+            return "envelope";
+        }
+    },
+
+    POLYGON {
+        @Override
+        public String toString() {
+            return "polygon";
+        }
+    },
+
+    MULTI_POLYGON {
+        @Override
+        public String toString() {
+            return "multipolygon";
         }
     },
 

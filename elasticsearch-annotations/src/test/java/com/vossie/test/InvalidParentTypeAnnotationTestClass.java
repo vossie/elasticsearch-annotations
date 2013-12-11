@@ -2,7 +2,7 @@ package com.vossie.test;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
-import com.vossie.elasticsearch.annotations.enums.CoreTypes;
+import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
 
 /**
  * Copyright © 2013 GSMA. GSM and the GSM Logo are registered and owned by the GSMA.
@@ -13,7 +13,7 @@ import com.vossie.elasticsearch.annotations.enums.CoreTypes;
 @ElasticsearchDocument(index = "test", parent = Object.class)
 public class InvalidParentTypeAnnotationTestClass {
 
-    @ElasticsearchField(type = CoreTypes.STRING)
+    @ElasticsearchField(type = ElasticsearchType.STRING)
     private String id;
 
     public String getId() {

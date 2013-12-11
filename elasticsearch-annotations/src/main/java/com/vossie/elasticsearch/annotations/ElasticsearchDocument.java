@@ -1,6 +1,7 @@
 package com.vossie.elasticsearch.annotations;
 
 import com.vossie.elasticsearch.annotations.common.Empty;
+import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -46,4 +47,16 @@ public @interface ElasticsearchDocument {
      * @return
      */
     public boolean source() default true;
+
+    public String index_analyzer() default "";
+
+    public String search_analyzer() default "";
+
+    public String[] dynamic_date_formats() default "";
+
+    public BooleanValue date_detection() default BooleanValue.NULL;
+
+    public BooleanValue numeric_detection() default BooleanValue.NULL;
+
+    public String[] dynamic_templates() default "";
 }

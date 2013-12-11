@@ -1,8 +1,9 @@
 package com.vossie.elasticsearch.annotations.common;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
-import com.vossie.elasticsearch.annotations.enums.BooleanNullable;
-import com.vossie.elasticsearch.annotations.enums.CoreTypes;
+import com.vossie.elasticsearch.annotations.enums.BooleanValue;
+import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
+import com.vossie.elasticsearch.annotations.util.ESTypeAttributeConstraints;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.core.annotation.AnnotationUtils;
 
@@ -31,18 +32,31 @@ public class ElasticsearchFieldMetadata {
         this.isArray = isArray;
         this.children = Collections.unmodifiableMap(children);
 
+        setAttributes();
+    }
+
+    private void setAttributes() {
+
         // Todo: Find a way of doing this without the spring dependency.
         Map<String, Object> allAttributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(elasticsearchField));
+
+        ESTypeAttributeConstraints constraints = new ESTypeAttributeConstraints();
         Map<String, Object> tempAttributes = new HashMap<>();
+
         for(String key : allAttributes.keySet()) {
 
             if(allAttributes.get(key).toString().equals(Empty.NULL))
                 continue;
+            if(allAttributes.get(key).toString().equals("0") || allAttributes.get(key).toString().equals("0.0"))
+                continue;
+            else if(!constraints.isValidAttributeForType(this.elasticsearchField.type(), key))
+                continue;
 
-            tempAttributes.put(key,allAttributes.get(key));
+            tempAttributes.put(key, allAttributes.get(key));
         }
-        this.attributes = Collections.unmodifiableMap(tempAttributes);
 
+
+        this.attributes = Collections.unmodifiableMap(tempAttributes);
     }
 
     public Map<String, Object> getAttributes() {
@@ -57,12 +71,12 @@ public class ElasticsearchFieldMetadata {
         return this.elasticsearchField.analyzer();
     }
 
-    public CoreTypes getType() {
+    public ElasticsearchType getType() {
         return this.elasticsearchField.type();
     }
 
     public boolean isParentId() {
-        return (this.elasticsearchField.isParentId().equals(BooleanNullable.TRUE));
+        return (this.elasticsearchField.isParentId().equals(BooleanValue.TRUE));
     }
 
     public Map<String, ElasticsearchFieldMetadata> getChildren() {
@@ -78,7 +92,7 @@ public class ElasticsearchFieldMetadata {
      * @return Boolean
      */
     public boolean isDefaultSortByField() {
-        return (this.elasticsearchField.isDefaultSortByField().equals(BooleanNullable.TRUE));
+        return (this.elasticsearchField.isDefaultSortByField().equals(BooleanValue.TRUE));
     }
 
     /**

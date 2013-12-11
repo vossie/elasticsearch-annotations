@@ -28,11 +28,6 @@
             <version>${slf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.skyscreamer</groupId>
-            <artifactId>jsonassert</artifactId>
-            <version>1.2.1</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>14.0.1</version>
@@ -41,6 +36,14 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>3.2.2.RELEASE</version>
+        </dependency>
+
+        <!--Testing-->
+        <dependency>
+            <groupId>org.skyscreamer</groupId>
+            <artifactId>jsonassert</artifactId>
+            <version>1.2.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
