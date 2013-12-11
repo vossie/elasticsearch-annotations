@@ -110,9 +110,4 @@ public class ElasticsearchFieldMetadata {
     public SortOrder getDefaultSortOrder() {
         return this.elasticsearchField.defaultSortOrder();
     }
-
-    public void getFieldAttributes() {
-
-
-    }
 }

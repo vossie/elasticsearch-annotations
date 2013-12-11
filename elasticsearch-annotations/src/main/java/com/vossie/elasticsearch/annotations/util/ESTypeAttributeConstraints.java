@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Copyright © 2013 GSMA. GSM and the GSM Logo are registered and owned by the GSMA.
+ * Copyright © 2013 Carel Vosloo.
  * User: cvosloo
  * Date: 11/12/2013
  * Time: 09:44
