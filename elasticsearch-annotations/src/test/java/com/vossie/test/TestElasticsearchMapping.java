@@ -4,6 +4,7 @@ import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.common.ElasticsearchDocumentMetadata;
 import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
+import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
 import com.vossie.elasticsearch.annotations.util.ESTypeAttributeConstraints;
 import org.json.JSONException;
@@ -25,19 +26,19 @@ import static org.junit.Assert.assertTrue;
 public class TestElasticsearchMapping {
 
     @Test(expected = ClassNotAnnotated.class)
-    public void testForClassNotAnnotatedException() throws InvalidParentDocumentSpecified, ClassNotAnnotated {
+    public void testForClassNotAnnotatedException() throws InvalidParentDocumentSpecified, ClassNotAnnotated, InvalidAttributeForType {
 
         ElasticsearchMapping.getMapping(Object.class);
     }
 
     @Test(expected = InvalidParentDocumentSpecified.class)
-    public void testInvalidParentTypeSpecifiedException() throws InvalidParentDocumentSpecified, ClassNotAnnotated {
+    public void testInvalidParentTypeSpecifiedException() throws InvalidParentDocumentSpecified, ClassNotAnnotated, InvalidAttributeForType {
 
         ElasticsearchMapping.getMapping(InvalidParentTypeAnnotationTestClass.class);
     }
 
     @Test
-    public void testGettingTweetMapping() throws InvalidParentDocumentSpecified, ClassNotAnnotated, IOException, JSONException {
+    public void testGettingTweetMapping() throws InvalidParentDocumentSpecified, ClassNotAnnotated, IOException, JSONException, InvalidAttributeForType {
 
         ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.getMapping(Tweet.class);
         String json = documentMetadata.toJson();
@@ -47,7 +48,7 @@ public class TestElasticsearchMapping {
     }
 
     @Test
-    public void testGettingParentMappingFromChild() throws InvalidParentDocumentSpecified, ClassNotAnnotated, IOException, JSONException {
+    public void testGettingParentMappingFromChild() throws InvalidParentDocumentSpecified, ClassNotAnnotated, IOException, JSONException, InvalidAttributeForType {
 
         String json = ElasticsearchMapping.getMapping(Tweet.class).getParent().toJson();
         String expected = "{\"twitterUser\":{\"properties\":{\"user\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"dateOfBirth\":{\"type\":\"date\"},\"location\":{\"type\":\"geo_point\",\"properties\":{\"lat\":{\"type\":\"double\"},\"lon\":{\"type\":\"double\"}}}}}}";
@@ -78,5 +79,11 @@ public class TestElasticsearchMapping {
     public void testValidatingTypeAttributeFalse() throws Exception {
 
         assertFalse(new ESTypeAttributeConstraints().isValidAttributeForType(ElasticsearchType.GEO_POINT, "term_vector"));
+    }
+
+    @Test(expected = InvalidAttributeForType.class)
+    public void testSettingAnInvalidAttributeForType() throws ClassNotAnnotated, InvalidParentDocumentSpecified, InvalidAttributeForType {
+
+        ElasticsearchMapping.getMapping(UserWithInvalidAttribute.class);
     }
 }

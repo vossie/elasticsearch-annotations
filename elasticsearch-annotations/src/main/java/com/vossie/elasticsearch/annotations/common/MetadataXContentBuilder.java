@@ -2,6 +2,7 @@ package com.vossie.elasticsearch.annotations.common;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
+import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,7 @@ public class MetadataXContentBuilder {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MetadataXContentBuilder.class);
     private static HashMap<String, XContentBuilder> cache = new HashMap<>();
 
-    protected static XContentBuilder getXContentBuilder(ElasticsearchDocumentMetadata elasticsearchDocumentMetadata) throws ClassNotAnnotated, InvalidParentDocumentSpecified {
+    protected static XContentBuilder getXContentBuilder(ElasticsearchDocumentMetadata elasticsearchDocumentMetadata) throws ClassNotAnnotated, InvalidParentDocumentSpecified, InvalidAttributeForType {
 
         String key = String.format("%s-%s", elasticsearchDocumentMetadata.getIndexName(), elasticsearchDocumentMetadata.getTypeName());
 

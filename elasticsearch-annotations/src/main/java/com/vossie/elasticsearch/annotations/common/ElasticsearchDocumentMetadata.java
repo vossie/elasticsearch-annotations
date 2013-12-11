@@ -3,6 +3,7 @@ package com.vossie.elasticsearch.annotations.common;
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
+import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
 import org.springframework.core.annotation.AnnotationUtils;
 
@@ -64,7 +65,7 @@ public class ElasticsearchDocumentMetadata {
      * Get the parent
      * @return Parent
      */
-    public ElasticsearchDocumentMetadata getParent() throws ClassNotAnnotated, InvalidParentDocumentSpecified {
+    public ElasticsearchDocumentMetadata getParent() throws ClassNotAnnotated, InvalidParentDocumentSpecified, InvalidAttributeForType {
         return ElasticsearchMapping.getMapping(this.elasticsearchDocument.parent());
     }
 
@@ -146,6 +147,8 @@ public class ElasticsearchDocumentMetadata {
             classNotAnnotated.printStackTrace();
         } catch (InvalidParentDocumentSpecified invalidParentDocumentSpecified) {
             invalidParentDocumentSpecified.printStackTrace();
+        } catch (InvalidAttributeForType invalidAttributeForType) {
+            invalidAttributeForType.printStackTrace();
         }
         return null;
     }
@@ -155,7 +158,7 @@ public class ElasticsearchDocumentMetadata {
      * @return The mapping.
      * @throws IOException
      */
-    public String toJson() throws IOException, ClassNotAnnotated, InvalidParentDocumentSpecified {
+    public String toJson() throws IOException, ClassNotAnnotated, InvalidParentDocumentSpecified, InvalidAttributeForType {
         return MetadataXContentBuilder.getXContentBuilder(this).string();
     }
 }

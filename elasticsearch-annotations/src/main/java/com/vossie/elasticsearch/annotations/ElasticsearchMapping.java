@@ -6,6 +6,7 @@ import com.vossie.elasticsearch.annotations.common.Empty;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
+import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +53,7 @@ public abstract class ElasticsearchMapping {
         throw new ClassNotAnnotated(clazz);
     }
 
-    private static Map<String, ElasticsearchFieldMetadata> getElasticsearchFieldsMetadata(Class<?> clazz) {
+    private static Map<String, ElasticsearchFieldMetadata> getElasticsearchFieldsMetadata(Class<?> clazz) throws InvalidAttributeForType {
 
         Field[] fieldsFromClass = clazz.getDeclaredFields();
 
@@ -144,7 +145,7 @@ public abstract class ElasticsearchMapping {
      * @throws com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified
      * @throws ClassNotAnnotated
      */
-    public static ElasticsearchDocumentMetadata getMapping(Class<?> clazz) throws InvalidParentDocumentSpecified, ClassNotAnnotated {
+    public static ElasticsearchDocumentMetadata getMapping(Class<?> clazz) throws InvalidParentDocumentSpecified, ClassNotAnnotated, InvalidAttributeForType {
 
         // Check the cache to see if we have already parsed this reference.
         if(mappingCache.containsKey(clazz.getCanonicalName()))

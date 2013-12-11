@@ -3,6 +3,7 @@ package com.vossie.elasticsearch.annotations.common;
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
+import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
 import com.vossie.elasticsearch.annotations.util.ESTypeAttributeConstraints;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -25,7 +26,7 @@ public class ElasticsearchFieldMetadata {
     private Map<String, ElasticsearchFieldMetadata> children;
     private Map<String, Object> attributes;
 
-    public ElasticsearchFieldMetadata(String fieldName, ElasticsearchField elasticsearchField, boolean isArray, Map<String,ElasticsearchFieldMetadata> children){
+    public ElasticsearchFieldMetadata(String fieldName, ElasticsearchField elasticsearchField, boolean isArray, Map<String,ElasticsearchFieldMetadata> children) throws InvalidAttributeForType {
 
         this.fieldName = fieldName;
         this.elasticsearchField = elasticsearchField;
@@ -35,7 +36,7 @@ public class ElasticsearchFieldMetadata {
         setAttributes();
     }
 
-    private void setAttributes() {
+    private void setAttributes() throws InvalidAttributeForType {
 
         // Todo: Find a way of doing this without the spring dependency.
         Map<String, Object> allAttributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(elasticsearchField));
@@ -47,10 +48,17 @@ public class ElasticsearchFieldMetadata {
 
             if(allAttributes.get(key).toString().equals(Empty.NULL))
                 continue;
+
             if(allAttributes.get(key).toString().equals("0") || allAttributes.get(key).toString().equals("0.0"))
                 continue;
-            else if(!constraints.isValidAttributeForType(this.elasticsearchField.type(), key))
-                continue;
+
+            else if(!constraints.isValidAttributeForType(this.elasticsearchField.type(), key)) {
+
+                if(!constraints.getAttributeNames().contains(key))
+                    continue;
+
+                throw new InvalidAttributeForType(elasticsearchField.type().toString(),key,elasticsearchField.index());
+            }
 
             tempAttributes.put(key, allAttributes.get(key));
         }
