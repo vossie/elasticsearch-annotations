@@ -109,7 +109,7 @@ Usage:
     {
         "tweet": {
             "_parent": {
-                "type": "twitterUser"
+                "type": "user"
             },
             "properties": {
                 "message": {
