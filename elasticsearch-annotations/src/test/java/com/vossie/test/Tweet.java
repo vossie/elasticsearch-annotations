@@ -1,7 +1,7 @@
 package com.vossie.test;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
-import com.vossie.elasticsearch.annotations.ElasticsearchFieldProperties;
+import com.vossie.elasticsearch.annotations.ElasticsearchField;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
 
@@ -19,19 +19,19 @@ import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
 )
 public class Tweet {
 
-    @ElasticsearchFieldProperties(
+    @ElasticsearchField(
             type = ElasticsearchType.STRING,
             index = "not_analyzed"
     )
     private String user;
 
-    @ElasticsearchFieldProperties(
+    @ElasticsearchField(
             type = ElasticsearchType.DATE,
             format = "YYYY-MM-dd"
     )
     private String postDate;
 
-    @ElasticsearchFieldProperties(
+    @ElasticsearchField(
             type = ElasticsearchType.STRING,
             store = BooleanValue.TRUE,
             index = "analyzed",
@@ -39,17 +39,17 @@ public class Tweet {
     )
     private String message;
 
-    @ElasticsearchFieldProperties(
+    @ElasticsearchField(
             type = ElasticsearchType.BOOLEAN
     )
     private Boolean hes_my_special_tweet;
 
-    @ElasticsearchFieldProperties(
+    @ElasticsearchField(
             type = ElasticsearchType.INTEGER
     )
     private Integer priority;
 
-    @ElasticsearchFieldProperties(
+    @ElasticsearchField(
             type = ElasticsearchType.FLOAT
     )
     private Float rank;

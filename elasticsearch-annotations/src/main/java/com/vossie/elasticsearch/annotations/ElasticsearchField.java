@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface ElasticsearchFieldProperties {
+public @interface ElasticsearchField {
 
     /**
      * The type of field this is.

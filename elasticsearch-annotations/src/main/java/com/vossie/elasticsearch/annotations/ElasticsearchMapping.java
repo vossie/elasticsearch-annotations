@@ -101,19 +101,19 @@ public abstract class ElasticsearchMapping {
         for(Field field : fields) {
 
             // Get the annotation from the field
-            ElasticsearchFieldProperties elasticsearchFieldProperties = field.getAnnotation(ElasticsearchFieldProperties.class);
+            ElasticsearchField elasticsearchField = field.getAnnotation(ElasticsearchField.class);
 
             // Skip over the field is not annotated
-            if(elasticsearchFieldProperties == null)
+            if(elasticsearchField == null)
                 continue;
 
             ElasticsearchFieldMetadata elasticsearchFieldMetadata;
             boolean isArray = false;
             Class<?> childClass = null;
 
-            if(elasticsearchFieldProperties.type().equals(ElasticsearchType.GEO_POINT) ||
-                    elasticsearchFieldProperties.type().equals(ElasticsearchType.OBJECT) ||
-                    elasticsearchFieldProperties.type().equals(ElasticsearchType.NESTED)) {
+            if(elasticsearchField.type().equals(ElasticsearchType.GEO_POINT) ||
+                    elasticsearchField.type().equals(ElasticsearchType.OBJECT) ||
+                    elasticsearchField.type().equals(ElasticsearchType.NESTED)) {
 
                 // If it is an array we need the component type
                 isArray = field.getType().isArray();
@@ -141,7 +141,7 @@ public abstract class ElasticsearchMapping {
             }
 
             // Set the children
-            elasticsearchFieldMetadata = new ElasticsearchFieldMetadata(field.getName(), elasticsearchFieldProperties, isArray, getElasticsearchFieldsMetadata(childClass));
+            elasticsearchFieldMetadata = new ElasticsearchFieldMetadata(field.getName(), elasticsearchField, isArray, getElasticsearchFieldsMetadata(childClass));
 
             // Add to the response list
             elasticsearchFieldMappings.put(elasticsearchFieldMetadata.getFieldName(), elasticsearchFieldMetadata);

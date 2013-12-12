@@ -1,7 +1,7 @@
 package com.vossie.test;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
-import com.vossie.elasticsearch.annotations.ElasticsearchFieldProperties;
+import com.vossie.elasticsearch.annotations.ElasticsearchField;
 import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.enums.TermVector;
 
@@ -14,14 +14,14 @@ import com.vossie.elasticsearch.annotations.enums.TermVector;
 @ElasticsearchDocument(index = "twitter", source = true, type = "twitterUser", defaultSortByField = "user")
 public class UserWithInvalidAttribute {
 
-    @ElasticsearchFieldProperties(type = ElasticsearchType.STRING, index = "not_analyzed")
+    @ElasticsearchField(type = ElasticsearchType.STRING, index = "not_analyzed")
     private String user;
 
     // Term vector is not valid for ElasticsearchType.DATE type.
-    @ElasticsearchFieldProperties(type = ElasticsearchType.DATE, term_vector = TermVector.NO)
+    @ElasticsearchField(type = ElasticsearchType.DATE, term_vector = TermVector.NO)
     private String dateOfBirth;
 
-    @ElasticsearchFieldProperties(type = ElasticsearchType.GEO_POINT)
+    @ElasticsearchField(type = ElasticsearchType.GEO_POINT)
     private Location location;
 
     public String getUser() {

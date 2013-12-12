@@ -1,7 +1,7 @@
 package com.vossie.test;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
-import com.vossie.elasticsearch.annotations.ElasticsearchFieldProperties;
+import com.vossie.elasticsearch.annotations.ElasticsearchField;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
 
@@ -16,24 +16,24 @@ import java.util.List;
 @ElasticsearchDocument(index = "twitter", source = true, type = "twitterUser", defaultSortByField = "user")
 public class User {
 
-    @ElasticsearchFieldProperties(
+    @ElasticsearchField(
             type = ElasticsearchType.STRING,
             store = BooleanValue.TRUE
     )
     private String user;
 
-    @ElasticsearchFieldProperties(
+    @ElasticsearchField(
             type = ElasticsearchType.DATE,
             format = "dateOptionalTime"
     )
     private String dateOfBirth;
 
-    @ElasticsearchFieldProperties(
+    @ElasticsearchField(
             type = ElasticsearchType.GEO_POINT
     )
     private Location location;
 
-    @ElasticsearchFieldProperties(
+    @ElasticsearchField(
             type = ElasticsearchType.NESTED
     )
     private List<Cities> citiesVisited;

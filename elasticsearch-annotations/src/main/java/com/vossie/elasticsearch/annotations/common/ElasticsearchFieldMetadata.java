@@ -1,6 +1,6 @@
 package com.vossie.elasticsearch.annotations.common;
 
-import com.vossie.elasticsearch.annotations.ElasticsearchFieldProperties;
+import com.vossie.elasticsearch.annotations.ElasticsearchField;
 import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
 import com.vossie.elasticsearch.annotations.util.ESTypeAttributeConstraints;
@@ -20,14 +20,14 @@ public class ElasticsearchFieldMetadata {
 
     private boolean isArray;
     private String fieldName;
-    private ElasticsearchFieldProperties elasticsearchFieldProperties;
+    private ElasticsearchField elasticsearchField;
     private Map<String, ElasticsearchFieldMetadata> children;
     private Map<String, Object> attributes;
 
-    public ElasticsearchFieldMetadata(String fieldName, ElasticsearchFieldProperties elasticsearchFieldProperties, boolean isArray, Map<String,ElasticsearchFieldMetadata> children) throws InvalidAttributeForType {
+    public ElasticsearchFieldMetadata(String fieldName, ElasticsearchField elasticsearchField, boolean isArray, Map<String,ElasticsearchFieldMetadata> children) throws InvalidAttributeForType {
 
         this.fieldName = fieldName;
-        this.elasticsearchFieldProperties = elasticsearchFieldProperties;
+        this.elasticsearchField = elasticsearchField;
         this.isArray = isArray;
         this.children = Collections.unmodifiableMap(children);
 
@@ -37,7 +37,7 @@ public class ElasticsearchFieldMetadata {
     private void setAttributes() throws InvalidAttributeForType {
 
         // Todo: Find a way of doing this without the spring dependency.
-        Map<String, Object> allAttributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(elasticsearchFieldProperties));
+        Map<String, Object> allAttributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(elasticsearchField));
 
         ESTypeAttributeConstraints constraints = new ESTypeAttributeConstraints();
         Map<String, Object> tempAttributes = new HashMap<>();
@@ -50,12 +50,12 @@ public class ElasticsearchFieldMetadata {
             if(allAttributes.get(key).toString().equals("0") || allAttributes.get(key).toString().equals("0.0"))
                 continue;
 
-            else if(!constraints.isValidAttributeForType(this.elasticsearchFieldProperties.type(), key)) {
+            else if(!constraints.isValidAttributeForType(this.elasticsearchField.type(), key)) {
 
                 if(!constraints.getAttributeNames().contains(key))
                     continue;
 
-                throw new InvalidAttributeForType(elasticsearchFieldProperties.type().toString(),key, elasticsearchFieldProperties.index());
+                throw new InvalidAttributeForType(elasticsearchField.type().toString(),key, elasticsearchField.index());
             }
 
             tempAttributes.put(key, allAttributes.get(key));
@@ -74,11 +74,11 @@ public class ElasticsearchFieldMetadata {
     }
 
     public String getAnalyzer() {
-        return this.elasticsearchFieldProperties.analyzer();
+        return this.elasticsearchField.analyzer();
     }
 
     public ElasticsearchType getType() {
-        return this.elasticsearchFieldProperties.type();
+        return this.elasticsearchField.type();
     }
 
     public Map<String, ElasticsearchFieldMetadata> getChildren() {
