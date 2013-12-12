@@ -6,7 +6,7 @@ package com.vossie.elasticsearch.annotations.exceptions;
  * Date: 06/12/2013
  * Time: 11:58
  */
-public class ClassNotAnnotated extends Exception {
+public class ClassNotAnnotated extends AnnotationException {
 
     public ClassNotAnnotated(Class clazz) {
         super(String.format("The supplied class %s is not annotated with @ElasticsearchDocument.", clazz.getCanonicalName()));

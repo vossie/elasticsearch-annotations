@@ -2,9 +2,7 @@ package com.vossie.elasticsearch.annotations.common;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
-import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
-import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
-import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
+import com.vossie.elasticsearch.annotations.exceptions.*;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.core.annotation.AnnotationUtils;
 
@@ -28,9 +26,11 @@ public class ElasticsearchDocumentMetadata {
     private Map<String,ElasticsearchFieldMetadata> elasticsearchFields;
     private Map<String, Object> attributes;
 
-    public ElasticsearchDocumentMetadata(Class<?> clazz, ElasticsearchDocument elasticsearchDocument, Map<String, ElasticsearchFieldMetadata> elasticsearchFields) throws ClassNotAnnotated, InvalidParentDocumentSpecified {
+    public ElasticsearchDocumentMetadata(Class<?> clazz, ElasticsearchDocument elasticsearchDocument, Map<String, ElasticsearchFieldMetadata> elasticsearchFields)
+            throws UnableToLoadConstraints, InvalidAttributeForType, ClassNotAnnotated, InvalidParentDocumentSpecified {
 
-        this.typeName = (elasticsearchDocument.type().equals(""))
+        // Set the type name
+        this.typeName = (elasticsearchDocument.type().isEmpty())
                 ? UPPER_CAMEL.to(LOWER_HYPHEN, clazz.getSimpleName().toLowerCase())
                 : elasticsearchDocument.type();
 
@@ -39,6 +39,13 @@ public class ElasticsearchDocumentMetadata {
 
         // Todo: Find a way of doing this without the spring dependency.
         this.attributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(elasticsearchDocument));
+
+        // Init the XContent builder
+        try {
+            MetadataXContentBuilder.getXContentBuilder(this).string();
+        } catch (IOException e) {
+            throw new UnableToLoadConstraints(e);
+        }
     }
 
     public Map<String, ElasticsearchFieldMetadata> getElasticsearchFields() {
@@ -66,8 +73,16 @@ public class ElasticsearchDocumentMetadata {
      * Get the parent
      * @return Parent
      */
-    public ElasticsearchDocumentMetadata getParent() throws ClassNotAnnotated, InvalidParentDocumentSpecified, InvalidAttributeForType {
-        return ElasticsearchMapping.getMapping(this.elasticsearchDocument.parent());
+    public ElasticsearchDocumentMetadata getParent() {
+
+        try {
+            return ElasticsearchMapping.getProperties(this.elasticsearchDocument.parent());
+
+        } catch (AnnotationException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public boolean hasParent() {
@@ -158,18 +173,7 @@ public class ElasticsearchDocumentMetadata {
      */
     @Override
     public String toString() {
-        try {
-            return toJson();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotAnnotated classNotAnnotated) {
-            classNotAnnotated.printStackTrace();
-        } catch (InvalidParentDocumentSpecified invalidParentDocumentSpecified) {
-            invalidParentDocumentSpecified.printStackTrace();
-        } catch (InvalidAttributeForType invalidAttributeForType) {
-            invalidAttributeForType.printStackTrace();
-        }
-        return null;
+        return toMapping();
     }
 
     /**
@@ -177,7 +181,19 @@ public class ElasticsearchDocumentMetadata {
      * @return The mapping.
      * @throws IOException
      */
-    public String toJson() throws IOException, ClassNotAnnotated, InvalidParentDocumentSpecified, InvalidAttributeForType {
-        return MetadataXContentBuilder.getXContentBuilder(this).string();
+    public String toMapping() {
+
+        try {
+            return MetadataXContentBuilder.getXContentBuilder(this).string();
+
+        } catch (AnnotationException e) {
+            // This has been tested in the constructor so there is no need to report the errors.
+            e.printStackTrace();
+        } catch (IOException e) {
+            // This has been tested in the constructor so there is no need to report the errors.
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

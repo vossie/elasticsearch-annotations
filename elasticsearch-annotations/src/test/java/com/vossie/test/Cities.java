@@ -1,6 +1,6 @@
 package com.vossie.test;
 
-import com.vossie.elasticsearch.annotations.ElasticsearchField;
+import com.vossie.elasticsearch.annotations.ElasticsearchFieldProperties;
 import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
 
 /**
@@ -11,10 +11,10 @@ import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
  */
 public class Cities {
 
-    @ElasticsearchField(type = ElasticsearchType.STRING)
+    @ElasticsearchFieldProperties(type = ElasticsearchType.STRING)
     private String name;
 
-    @ElasticsearchField(type = ElasticsearchType.GEO_POINT)
+    @ElasticsearchFieldProperties(type = ElasticsearchType.GEO_POINT)
     private Location location;
 
     public String getName() {

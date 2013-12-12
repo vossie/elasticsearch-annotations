@@ -6,8 +6,8 @@ import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
+import com.vossie.elasticsearch.annotations.exceptions.UnableToLoadConstraints;
 import com.vossie.elasticsearch.annotations.util.ESTypeAttributeConstraints;
-import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.cluster.ClusterState;
@@ -15,15 +15,14 @@ import org.elasticsearch.cluster.metadata.IndexMetaData;
 import org.elasticsearch.cluster.metadata.MappingMetaData;
 import org.elasticsearch.indices.IndexAlreadyExistsException;
 import org.elasticsearch.node.Node;
-import org.elasticsearch.node.NodeBuilder;
 import org.json.JSONException;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Copyright © 2013 GSMA. GSM and the GSM Logo are registered and owned by the GSMA.
@@ -35,58 +34,50 @@ public class TestElasticsearchMapping {
 
     private static Node node;
 
-    @BeforeClass
-    public static void init() {
-
-        node = NodeBuilder.nodeBuilder()
-                .node();
-
-        ClusterHealthResponse clusterHealthResponse = node
-                .client()
-                .admin()
-                .cluster()
-                .prepareHealth()
-                .setWaitForGreenStatus()
-                .execute()
-                .actionGet();
-    }
+//    @BeforeClass
+//    public static void init() {
+//
+//        node = NodeBuilder.nodeBuilder()
+//                .node();
+//
+//        node
+//                .client()
+//                .admin()
+//                .cluster()
+//                .prepareHealth()
+//                .setWaitForGreenStatus()
+//                .execute()
+//                .actionGet();
+//    }
 
     @Test(expected = ClassNotAnnotated.class)
-    public void testForClassNotAnnotatedException() throws InvalidParentDocumentSpecified, ClassNotAnnotated, InvalidAttributeForType {
+    public void testForClassNotAnnotatedException() throws InvalidParentDocumentSpecified, ClassNotAnnotated, InvalidAttributeForType, UnableToLoadConstraints {
 
-        ElasticsearchMapping.getMapping(Object.class);
+        ElasticsearchMapping.getProperties(Object.class);
     }
 
     @Test(expected = InvalidParentDocumentSpecified.class)
-    public void testInvalidParentTypeSpecifiedException() throws InvalidParentDocumentSpecified, ClassNotAnnotated, InvalidAttributeForType {
+    public void testInvalidParentTypeSpecifiedException() throws InvalidParentDocumentSpecified, ClassNotAnnotated, InvalidAttributeForType, UnableToLoadConstraints {
 
-        ElasticsearchMapping.getMapping(InvalidParentTypeAnnotationTestClass.class);
+        ElasticsearchMapping.getProperties(InvalidParentTypeAnnotationTestClass.class);
     }
 
     @Test
-    public void testGettingTweetMapping() throws InvalidParentDocumentSpecified, ClassNotAnnotated, IOException, JSONException, InvalidAttributeForType {
+    public void testGettingTweetMapping() throws InvalidParentDocumentSpecified, ClassNotAnnotated, IOException, JSONException, InvalidAttributeForType, UnableToLoadConstraints {
 
-        ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.getMapping(Tweet.class);
-        String json = documentMetadata.toJson();
+        ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.getProperties(Tweet.class);
+        String json = documentMetadata.toMapping();
 
         String expected = "{\"tweet\":{\"_parent\":{\"type\":\"twitterUser\"},\"properties\":{\"user\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"postDate\":{\"type\":\"date\"},\"message\":{\"type\":\"string\"}}}}";
         JSONAssert.assertEquals(expected,json,false);
     }
 
     @Test
-    public void testGettingParentMappingFromChild() throws InvalidParentDocumentSpecified, ClassNotAnnotated, IOException, JSONException, InvalidAttributeForType {
+    public void testGettingParentMappingFromChild() throws InvalidParentDocumentSpecified, ClassNotAnnotated, IOException, JSONException, InvalidAttributeForType, UnableToLoadConstraints {
 
-        String json = ElasticsearchMapping.getMapping(Tweet.class).getParent().toJson();
-        String expected = "{\"twitterUser\":{\"properties\":{\"user\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"dateOfBirth\":{\"type\":\"date\"},\"location\":{\"type\":\"geo_point\",\"properties\":{\"lat\":{\"type\":\"double\"},\"lon\":{\"type\":\"double\"}}}}}}";
+        String json = ElasticsearchMapping.getProperties(Tweet.class).getParent().toMapping();
+        String expected = "{\"twitterUser\":{\"properties\":{\"dateOfBirth\":{\"format\":\"dateOptionalTime\",\"type\":\"date\"},\"location\":{\"type\":\"geo_point\",\"properties\":{\"lon\":{\"type\":\"double\"},\"lat\":{\"type\":\"double\"}}},\"citiesVisited\":{\"type\":\"nested\",\"properties\":{\"location\":{\"type\":\"geo_point\",\"properties\":{\"lon\":{\"type\":\"double\"},\"lat\":{\"type\":\"double\"}}},\"name\":{\"type\":\"string\"}}},\"user\":{\"type\":\"string\"}}}}";
         JSONAssert.assertEquals(expected,json,false);
-    }
-
-    @Test
-    public void testGettingTweetParentMapping() {
-
-        Tweet tweet = new Tweet();
-        tweet.setUser("abc");
-        assertEquals("Parent ID retrieved", "abc", ElasticsearchMapping.getParentId(tweet));
     }
 
     @Test
@@ -108,18 +99,18 @@ public class TestElasticsearchMapping {
     }
 
     @Test(expected = InvalidAttributeForType.class)
-    public void testSettingAnInvalidAttributeForType() throws ClassNotAnnotated, InvalidParentDocumentSpecified, InvalidAttributeForType {
+    public void testSettingAnInvalidAttributeForType() throws ClassNotAnnotated, InvalidParentDocumentSpecified, InvalidAttributeForType, UnableToLoadConstraints {
 
-        ElasticsearchMapping.getMapping(UserWithInvalidAttribute.class);
+        ElasticsearchMapping.getProperties(UserWithInvalidAttribute.class);
     }
 
-    @Test
-    public void testSavingMappingToElasticInstance() throws InvalidAttributeForType, ClassNotAnnotated, InvalidParentDocumentSpecified, IOException, JSONException {
-
-        ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.getMapping(User.class);
-        assertTrue(createIndex(User.class));
-        MappingMetaData json = getMapping(documentMetadata.getIndexName(), documentMetadata.getTypeName());
-    }
+//    @Test
+//    public void testSavingMappingToElasticInstance() throws InvalidAttributeForType, ClassNotAnnotated, InvalidParentDocumentSpecified, IOException, JSONException, UnableToLoadConstraints {
+//
+//        ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.getProperties(User.class);
+//        assertTrue(createIndex(User.class));
+//        MappingMetaData json = getMapping(documentMetadata.getIndexName(), documentMetadata.getTypeName());
+//    }
 
     /******************
      * Helper Methods *
@@ -138,9 +129,9 @@ public class TestElasticsearchMapping {
         return node.client().admin().indices().exists(new IndicesExistsRequest(index)).actionGet().isExists();
     }
 
-    public boolean createIndex(Class<?> clazz) throws ClassNotAnnotated, InvalidParentDocumentSpecified, InvalidAttributeForType, IOException {
+    public boolean createIndex(Class<?> clazz) throws ClassNotAnnotated, InvalidParentDocumentSpecified, InvalidAttributeForType, IOException, UnableToLoadConstraints {
 
-        ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.getMapping(clazz);
+        ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.getProperties(clazz);
         createIndex(documentMetadata.getIndexName());
 
         node.client()
@@ -148,7 +139,7 @@ public class TestElasticsearchMapping {
                 .indices()
                 .preparePutMapping (documentMetadata.getIndexName())
                 .setType (documentMetadata.getTypeName())
-                .setSource(documentMetadata.toJson())
+                .setSource(documentMetadata.toMapping())
                 .execute()
                 .actionGet();
 

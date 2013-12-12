@@ -1,7 +1,8 @@
 package com.vossie.test;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
-import com.vossie.elasticsearch.annotations.ElasticsearchField;
+import com.vossie.elasticsearch.annotations.ElasticsearchFieldProperties;
+import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
 
 import java.util.List;
@@ -15,16 +16,26 @@ import java.util.List;
 @ElasticsearchDocument(index = "twitter", source = true, type = "twitterUser", defaultSortByField = "user")
 public class User {
 
-    @ElasticsearchField(type = ElasticsearchType.STRING, index = "not_analyzed")
+    @ElasticsearchFieldProperties(
+            type = ElasticsearchType.STRING,
+            store = BooleanValue.TRUE
+    )
     private String user;
 
-    @ElasticsearchField(type = ElasticsearchType.DATE)
+    @ElasticsearchFieldProperties(
+            type = ElasticsearchType.DATE,
+            format = "dateOptionalTime"
+    )
     private String dateOfBirth;
 
-    @ElasticsearchField(type = ElasticsearchType.GEO_POINT)
+    @ElasticsearchFieldProperties(
+            type = ElasticsearchType.GEO_POINT
+    )
     private Location location;
 
-    @ElasticsearchField(type = ElasticsearchType.NESTED)
+    @ElasticsearchFieldProperties(
+            type = ElasticsearchType.NESTED
+    )
     private List<Cities> citiesVisited;
 
     public String getUser() {
@@ -49,5 +60,13 @@ public class User {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public List<Cities> getCitiesVisited() {
+        return citiesVisited;
+    }
+
+    public void setCitiesVisited(List<Cities> citiesVisited) {
+        this.citiesVisited = citiesVisited;
     }
 }

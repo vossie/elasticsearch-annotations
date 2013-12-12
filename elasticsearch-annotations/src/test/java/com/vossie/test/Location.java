@@ -1,6 +1,6 @@
 package com.vossie.test;
 
-import com.vossie.elasticsearch.annotations.ElasticsearchField;
+import com.vossie.elasticsearch.annotations.ElasticsearchFieldProperties;
 import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
 
 /**
@@ -11,10 +11,10 @@ import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
  */
 public class Location {
 
-    @ElasticsearchField(type = ElasticsearchType.DOUBLE)
+    @ElasticsearchFieldProperties(type = ElasticsearchType.DOUBLE)
     private double lat;
 
-    @ElasticsearchField(type = ElasticsearchType.DOUBLE)
+    @ElasticsearchFieldProperties(type = ElasticsearchType.DOUBLE)
     private double lon;
 
     public Location(double lat, double lon) {

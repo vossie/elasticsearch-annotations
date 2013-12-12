@@ -2,7 +2,6 @@ package com.vossie.elasticsearch.annotations;
 
 import com.vossie.elasticsearch.annotations.common.Empty;
 import com.vossie.elasticsearch.annotations.enums.*;
-import org.elasticsearch.search.sort.SortOrder;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -17,19 +16,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface ElasticsearchField {
-
-    /* >>>>>>> START: Helper <<<<<<<< */
-
-    /**
-     * Does this field contain a reference key to the parent document.
-     * @return Boolean
-     */
-    public BooleanValue isParentId() default BooleanValue.NULL;
-
-    /* >>>>>>> End: Helper <<<<<<<< */
-
-    /* >>>>>>> START: Common <<<<<<<< */
+public @interface ElasticsearchFieldProperties {
 
     /**
      * The type of field this is.

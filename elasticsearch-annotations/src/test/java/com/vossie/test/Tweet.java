@@ -1,7 +1,7 @@
 package com.vossie.test;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
-import com.vossie.elasticsearch.annotations.ElasticsearchField;
+import com.vossie.elasticsearch.annotations.ElasticsearchFieldProperties;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
 
@@ -11,17 +11,48 @@ import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
  * Date: 06/12/2013
  * Time: 12:28
  */
-@ElasticsearchDocument(index = "twitter", source = true, parent = User.class, defaultSortByField = "postDate")
+@ElasticsearchDocument(
+        index = "twitter",
+        type = "tweet"      /** Optional, if not set it will use the simple class name in a lower hyphenated format */,
+        source = true       /** Optional */,
+        parent = User.class /** Optional */
+)
 public class Tweet {
 
-    @ElasticsearchField(type = ElasticsearchType.STRING, index = "not_analyzed", isParentId = BooleanValue.TRUE)
+    @ElasticsearchFieldProperties(
+            type = ElasticsearchType.STRING,
+            index = "not_analyzed"
+    )
     private String user;
 
-    @ElasticsearchField(type = ElasticsearchType.DATE)
+    @ElasticsearchFieldProperties(
+            type = ElasticsearchType.DATE,
+            format = "YYYY-MM-dd"
+    )
     private String postDate;
 
-    @ElasticsearchField(type = ElasticsearchType.STRING)
+    @ElasticsearchFieldProperties(
+            type = ElasticsearchType.STRING,
+            store = BooleanValue.TRUE,
+            index = "analyzed",
+            null_value = "na"
+    )
     private String message;
+
+    @ElasticsearchFieldProperties(
+            type = ElasticsearchType.BOOLEAN
+    )
+    private Boolean hes_my_special_tweet;
+
+    @ElasticsearchFieldProperties(
+            type = ElasticsearchType.INTEGER
+    )
+    private Integer priority;
+
+    @ElasticsearchFieldProperties(
+            type = ElasticsearchType.FLOAT
+    )
+    private Float rank;
 
     public String getUser() {
         return user;
@@ -45,5 +76,29 @@ public class Tweet {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Boolean getHes_my_special_tweet() {
+        return hes_my_special_tweet;
+    }
+
+    public void setHes_my_special_tweet(Boolean hes_my_special_tweet) {
+        this.hes_my_special_tweet = hes_my_special_tweet;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public Float getRank() {
+        return rank;
+    }
+
+    public void setRank(Float rank) {
+        this.rank = rank;
     }
 }

@@ -4,6 +4,7 @@ import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
+import com.vossie.elasticsearch.annotations.exceptions.UnableToLoadConstraints;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.slf4j.LoggerFactory;
 
@@ -19,12 +20,14 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
  * Date: 10/12/2013
  * Time: 10:02
  */
-public class MetadataXContentBuilder {
+public final class MetadataXContentBuilder {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MetadataXContentBuilder.class);
+
     private static HashMap<String, XContentBuilder> cache = new HashMap<>();
 
-    protected static XContentBuilder getXContentBuilder(ElasticsearchDocumentMetadata elasticsearchDocumentMetadata) throws ClassNotAnnotated, InvalidParentDocumentSpecified, InvalidAttributeForType {
+    protected static XContentBuilder getXContentBuilder(ElasticsearchDocumentMetadata elasticsearchDocumentMetadata)
+            throws ClassNotAnnotated, InvalidParentDocumentSpecified, InvalidAttributeForType, UnableToLoadConstraints {
 
         String key = String.format("%s-%s", elasticsearchDocumentMetadata.getIndexName(), elasticsearchDocumentMetadata.getTypeName());
 
@@ -76,29 +79,34 @@ public class MetadataXContentBuilder {
         }
     }
 
-    private static void setXContentBuilderFields(XContentBuilder xbMapping, Map<String, ElasticsearchFieldMetadata> fields) throws IOException {
+    private static void setXContentBuilderFields(XContentBuilder xbMapping, Map<String, ElasticsearchFieldMetadata> fields) throws UnableToLoadConstraints {
 
         if(fields.keySet().size() < 1)
             return;
 
-        xbMapping.startObject(ElasticsearchMapping.OBJECT_PROPERTIES);
+        try {
+            xbMapping.startObject(ElasticsearchMapping.OBJECT_PROPERTIES);
 
-        // Iterate over all the annotated fields
-        for(String fieldName : fields.keySet()) {
+            // Iterate over all the annotated fields
+            for(String fieldName : fields.keySet()) {
 
-            ElasticsearchFieldMetadata elasticsearchField = fields.get(fieldName);
+                ElasticsearchFieldMetadata elasticsearchField = fields.get(fieldName);
 
-            xbMapping.startObject(elasticsearchField.getFieldName());
+                xbMapping.startObject(elasticsearchField.getFieldName());
 
-            for(String attribute : elasticsearchField.getAttributes().keySet()) {
-                xbMapping.field(attribute, elasticsearchField.getAttributes().get(attribute));
+                for(String attribute : elasticsearchField.getAttributes().keySet()) {
+                    xbMapping.field(attribute, elasticsearchField.getAttributes().get(attribute));
+                }
+
+                setXContentBuilderFields(xbMapping, elasticsearchField.getChildren());
+
+                xbMapping.endObject();
             }
 
-            setXContentBuilderFields(xbMapping, elasticsearchField.getChildren());
-
             xbMapping.endObject();
-        }
 
-        xbMapping.endObject();
+        } catch (IOException e) {
+            throw new UnableToLoadConstraints(e);
+        }
     }
 }
