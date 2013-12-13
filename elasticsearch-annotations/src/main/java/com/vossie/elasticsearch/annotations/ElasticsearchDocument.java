@@ -2,7 +2,6 @@ package com.vossie.elasticsearch.annotations;
 
 import com.vossie.elasticsearch.annotations.common.Empty;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
-import org.elasticsearch.search.sort.SortOrder;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -29,7 +28,9 @@ public @interface ElasticsearchDocument {
      * The object type name to index as.
      * @return
      */
-    public String type() default "";
+    public String type() default Empty.NULL;
+
+    public ElasticsearchRootField[] _rootFields() default {};
 
     /**
      * Is this a child entity with a parent object.
@@ -37,24 +38,11 @@ public @interface ElasticsearchDocument {
      */
     public Class<?> parent() default Empty.class;
 
-
-    /**
-     * Should we use this field as the default sort by for queries if none is specified.
-     * @return Boolean
-     */
-    public String defaultSortByField() default Empty.NULL;
-
-    /**
-     * The default sort order to use if no sort order is specified.
-     * @return
-     */
-    public SortOrder defaultSortOrder() default SortOrder.ASC;
-
     /**
      * When does the data expire
      * @return
      */
-    public String ttl() default "";
+    public String ttl() default Empty.NULL;
 
     /**
      * Should we store the source data in the index.
@@ -62,15 +50,21 @@ public @interface ElasticsearchDocument {
      */
     public boolean source() default true;
 
-    public String index_analyzer() default "";
+    //TODO: Implement index_analyzer
+    public String index_analyzer() default Empty.NULL;
 
-    public String search_analyzer() default "";
+    //TODO: Implement search_analyzer
+    public String search_analyzer() default Empty.NULL;
 
-    public String[] dynamic_date_formats() default "";
+    //TODO: Implement dynamic_date_formats
+    public String[] dynamic_date_formats() default Empty.NULL;
 
+    //TODO: Implement date_detection
     public BooleanValue date_detection() default BooleanValue.NULL;
 
+    //TODO: Implement numeric_detection
     public BooleanValue numeric_detection() default BooleanValue.NULL;
 
-    public String[] dynamic_templates() default "";
+    //TODO: Implement dynamic_templates
+    public String[] dynamic_templates() default Empty.NULL;
 }

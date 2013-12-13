@@ -1,7 +1,5 @@
 package com.vossie.elasticsearch.annotations.util;
 
-import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -75,10 +73,10 @@ public class ESTypeAttributeConstraints {
         }
     }
 
-    public boolean isValidAttributeForType(ElasticsearchType typeName, String attributeName) {
+    public boolean isValidAttributeForType(String typeName, String attributeName) {
 
         // Get the column number
-        Integer column = columnHeader.get(typeName.toString());
+        Integer column = columnHeader.get(typeName);
 
         if(!dataRows.containsKey(attributeName))
             return false;

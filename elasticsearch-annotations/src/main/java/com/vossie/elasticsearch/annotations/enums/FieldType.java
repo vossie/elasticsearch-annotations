@@ -6,7 +6,7 @@ package com.vossie.elasticsearch.annotations.enums;
  * Date: 10/12/2013
  * Time: 14:30
  */
-public enum ElasticsearchType {
+public enum FieldType {
 
     STRING {
         @Override

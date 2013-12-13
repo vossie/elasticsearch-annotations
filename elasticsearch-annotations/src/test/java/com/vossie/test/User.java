@@ -3,38 +3,38 @@ package com.vossie.test;
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
-import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
+import com.vossie.elasticsearch.annotations.enums.FieldType;
 
 import java.util.List;
 
 /**
- * Copyright © 2013 GSMA. GSM and the GSM Logo are registered and owned by the GSMA.
+ * Copyright © 2013 Carel Vosloo.
  * com.vossie.test.User: cvosloo
  * Date: 06/12/2013
  * Time: 12:32
  */
-@ElasticsearchDocument(index = "twitter", source = true, type = "twitterUser", defaultSortByField = "user")
+@ElasticsearchDocument(index = "twitter", source = true)
 public class User {
 
     @ElasticsearchField(
-            type = ElasticsearchType.STRING,
+            type = FieldType.STRING,
             store = BooleanValue.TRUE
     )
     private String user;
 
     @ElasticsearchField(
-            type = ElasticsearchType.DATE,
+            type = FieldType.DATE,
             format = "dateOptionalTime"
     )
     private String dateOfBirth;
 
     @ElasticsearchField(
-            type = ElasticsearchType.GEO_POINT
+            type = FieldType.GEO_POINT
     )
     private Location location;
 
     @ElasticsearchField(
-            type = ElasticsearchType.NESTED
+            type = FieldType.NESTED
     )
     private List<Cities> citiesVisited;
 

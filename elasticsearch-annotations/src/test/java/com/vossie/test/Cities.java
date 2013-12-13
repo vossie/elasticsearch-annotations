@@ -1,20 +1,20 @@
 package com.vossie.test;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
-import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
+import com.vossie.elasticsearch.annotations.enums.FieldType;
 
 /**
- * Copyright © 2013 GSMA. GSM and the GSM Logo are registered and owned by the GSMA.
+ * Copyright © 2013 Carel Vosloo.
  * User: cvosloo
  * Date: 11/12/2013
  * Time: 13:24
  */
 public class Cities {
 
-    @ElasticsearchField(type = ElasticsearchType.STRING)
+    @ElasticsearchField(type = FieldType.STRING)
     private String name;
 
-    @ElasticsearchField(type = ElasticsearchType.GEO_POINT)
+    @ElasticsearchField(type = FieldType.GEO_POINT)
     private Location location;
 
     public String getName() {

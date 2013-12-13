@@ -22,7 +22,7 @@ public @interface ElasticsearchField {
      * The type of field this is.
      * @return
      */
-    public ElasticsearchType type();
+    public FieldType type();
 
     /**
      * From version 0.90.Beta1 Elasticsearch includes changes from Lucene 4 that allows you to configure a

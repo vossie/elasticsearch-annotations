@@ -3,12 +3,11 @@ package com.vossie.elasticsearch.annotations;
 import com.vossie.elasticsearch.annotations.common.ElasticsearchDocumentMetadata;
 import com.vossie.elasticsearch.annotations.common.ElasticsearchFieldMetadata;
 import com.vossie.elasticsearch.annotations.common.Empty;
-import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
+import com.vossie.elasticsearch.annotations.enums.FieldType;
 import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
 import com.vossie.elasticsearch.annotations.exceptions.UnableToLoadConstraints;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -26,18 +25,9 @@ import java.util.Map;
  */
 public abstract class ElasticsearchMapping {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ElasticsearchMapping.class);
     private static HashMap<Class<?>, ElasticsearchDocumentMetadata> mappingCache = new HashMap<>();
 
-    public static final String OBJECT_TTL       = "_ttl";
-    public static final String OBJECT_PARENT    = "_parent";
-    public static final String OBJECT_SOURCE    = "_source";
-
     public static final String OBJECT_PROPERTIES= "properties";
-
-    public static final String FIELD_TYPE       = "type";
-    public static final String FIELD_ENABLED    = "enabled";
-    public static final String FIELD_DEFAULT    = "default";
 
     /**
      * Get the ElasticsearchDocument annotations for the provided class object.
@@ -111,9 +101,9 @@ public abstract class ElasticsearchMapping {
             boolean isArray = false;
             Class<?> childClass = null;
 
-            if(elasticsearchField.type().equals(ElasticsearchType.GEO_POINT) ||
-                    elasticsearchField.type().equals(ElasticsearchType.OBJECT) ||
-                    elasticsearchField.type().equals(ElasticsearchType.NESTED)) {
+            if(elasticsearchField.type().equals(FieldType.GEO_POINT) ||
+                    elasticsearchField.type().equals(FieldType.OBJECT) ||
+                    elasticsearchField.type().equals(FieldType.NESTED)) {
 
                 // If it is an array we need the component type
                 isArray = field.getType().isArray();
@@ -146,6 +136,28 @@ public abstract class ElasticsearchMapping {
             // Add to the response list
             elasticsearchFieldMappings.put(elasticsearchFieldMetadata.getFieldName(), elasticsearchFieldMetadata);
         }
+
+        return elasticsearchFieldMappings;
+    }
+
+
+    private static Map<String, ElasticsearchFieldMetadata> getElasticsearchSystemFieldsMetadata(ElasticsearchRootField[] systemFields)
+            throws InvalidAttributeForType {
+
+        Map<String, ElasticsearchFieldMetadata> elasticsearchFieldMappings = new HashMap<>();
+
+        // Add the system fields
+        if(systemFields != null)
+            for (ElasticsearchRootField systemField : systemFields){
+                elasticsearchFieldMappings.put(
+                        systemField._rootFieldName().toString(),
+                        new ElasticsearchFieldMetadata(
+                                systemField._rootFieldName().toString(),
+                                systemField,
+                                new HashMap<String,ElasticsearchFieldMetadata>()
+                        )
+                );
+            }
 
         return elasticsearchFieldMappings;
     }
@@ -200,7 +212,12 @@ public abstract class ElasticsearchMapping {
         // Add this item to the local cache for fast lookup.
         mappingCache.put(
                 clazz,
-                new ElasticsearchDocumentMetadata(clazz, elasticsearchDocument, getElasticsearchFieldsMetadata(clazz))
+                new ElasticsearchDocumentMetadata(
+                        clazz,
+                        elasticsearchDocument,
+                        getElasticsearchFieldsMetadata(clazz),
+                        getElasticsearchSystemFieldsMetadata(elasticsearchDocument._rootFields())
+                )
         );
 
         // Return the reference.

@@ -2,7 +2,7 @@ package com.vossie.test;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.common.ElasticsearchDocumentMetadata;
-import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
+import com.vossie.elasticsearch.annotations.enums.FieldType;
 import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Copyright © 2013 GSMA. GSM and the GSM Logo are registered and owned by the GSMA.
+ * Copyright © 2013 Carel Vosloo.
  * com.vossie.test.User: cvosloo
  * Date: 09/12/2013
  * Time: 21:00
@@ -68,7 +68,7 @@ public class TestElasticsearchMapping {
         ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.getProperties(Tweet.class);
         String json = documentMetadata.toMapping();
 
-        String expected = "{\"tweet\":{\"_parent\":{\"type\":\"twitterUser\"},\"properties\":{\"user\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"postDate\":{\"type\":\"date\"},\"message\":{\"type\":\"string\"}}}}";
+        String expected = "{\"tweet\":{\"_parent\":{\"type\":\"user\"},\"properties\":{\"user\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"postDate\":{\"type\":\"date\"},\"message\":{\"type\":\"string\"}}}}";
         JSONAssert.assertEquals(expected,json,false);
     }
 
@@ -76,7 +76,7 @@ public class TestElasticsearchMapping {
     public void testGettingParentMappingFromChild() throws InvalidParentDocumentSpecified, ClassNotAnnotated, IOException, JSONException, InvalidAttributeForType, UnableToLoadConstraints {
 
         String json = ElasticsearchMapping.getProperties(Tweet.class).getParent().toMapping();
-        String expected = "{\"twitterUser\":{\"properties\":{\"dateOfBirth\":{\"format\":\"dateOptionalTime\",\"type\":\"date\"},\"location\":{\"type\":\"geo_point\",\"properties\":{\"lon\":{\"type\":\"double\"},\"lat\":{\"type\":\"double\"}}},\"citiesVisited\":{\"type\":\"nested\",\"properties\":{\"location\":{\"type\":\"geo_point\",\"properties\":{\"lon\":{\"type\":\"double\"},\"lat\":{\"type\":\"double\"}}},\"name\":{\"type\":\"string\"}}},\"user\":{\"type\":\"string\"}}}}";
+        String expected = "{\"user\":{\"properties\":{\"dateOfBirth\":{\"format\":\"dateOptionalTime\",\"type\":\"date\"},\"location\":{\"type\":\"geo_point\",\"properties\":{\"lon\":{\"type\":\"double\"},\"lat\":{\"type\":\"double\"}}},\"citiesVisited\":{\"type\":\"nested\",\"properties\":{\"location\":{\"type\":\"geo_point\",\"properties\":{\"lon\":{\"type\":\"double\"},\"lat\":{\"type\":\"double\"}}},\"name\":{\"type\":\"string\"}}},\"user\":{\"type\":\"string\"}}}}";
         JSONAssert.assertEquals(expected,json,false);
     }
 
@@ -89,13 +89,13 @@ public class TestElasticsearchMapping {
     @Test
     public void testValidatingTypeAttributeTrue() throws Exception {
 
-        assertTrue(new ESTypeAttributeConstraints().isValidAttributeForType(ElasticsearchType.STRING, "type"));
+        assertTrue(new ESTypeAttributeConstraints().isValidAttributeForType(FieldType.STRING.toString(), "type"));
     }
 
     @Test
     public void testValidatingTypeAttributeFalse() throws Exception {
 
-        assertFalse(new ESTypeAttributeConstraints().isValidAttributeForType(ElasticsearchType.GEO_POINT, "term_vector"));
+        assertFalse(new ESTypeAttributeConstraints().isValidAttributeForType(FieldType.GEO_POINT.toString(), "term_vector"));
     }
 
     @Test(expected = InvalidAttributeForType.class)

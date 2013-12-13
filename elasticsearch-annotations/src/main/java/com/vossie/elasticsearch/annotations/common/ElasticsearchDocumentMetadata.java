@@ -3,7 +3,6 @@ package com.vossie.elasticsearch.annotations.common;
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.exceptions.*;
-import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import java.io.IOException;
@@ -24,18 +23,20 @@ public class ElasticsearchDocumentMetadata {
     private String typeName;
     private ElasticsearchDocument elasticsearchDocument;
     private Map<String,ElasticsearchFieldMetadata> elasticsearchFields;
+    private Map<String,ElasticsearchFieldMetadata> elasticsearchSystemFields;
     private Map<String, Object> attributes;
 
-    public ElasticsearchDocumentMetadata(Class<?> clazz, ElasticsearchDocument elasticsearchDocument, Map<String, ElasticsearchFieldMetadata> elasticsearchFields)
+    public ElasticsearchDocumentMetadata(Class<?> clazz, ElasticsearchDocument elasticsearchDocument, Map<String, ElasticsearchFieldMetadata> elasticsearchFields, Map<String, ElasticsearchFieldMetadata> elasticsearchSystemFields)
             throws UnableToLoadConstraints, InvalidAttributeForType, ClassNotAnnotated, InvalidParentDocumentSpecified {
 
         // Set the type name
-        this.typeName = (elasticsearchDocument.type().isEmpty())
+        this.typeName = (elasticsearchDocument.type().equals(Empty.NULL))
                 ? UPPER_CAMEL.to(LOWER_HYPHEN, clazz.getSimpleName().toLowerCase())
                 : elasticsearchDocument.type();
 
         this.elasticsearchDocument = elasticsearchDocument;
         this.elasticsearchFields = Collections.unmodifiableMap(elasticsearchFields);
+        this.elasticsearchSystemFields = Collections.unmodifiableMap(elasticsearchSystemFields);
 
         // Todo: Find a way of doing this without the spring dependency.
         this.attributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(elasticsearchDocument));
@@ -90,7 +91,7 @@ public class ElasticsearchDocumentMetadata {
     }
 
     public boolean isChildType() {
-        return (!this.elasticsearchDocument.parent().equals(""));
+        return (!Empty.class.isAssignableFrom(this.elasticsearchDocument.parent()));
     }
 
     /**
@@ -106,7 +107,7 @@ public class ElasticsearchDocumentMetadata {
      * @return True if the indexed item expires after a defined period.
      */
     public boolean hasTtl() {
-        return (!this.elasticsearchDocument.ttl().isEmpty());
+        return (!this.elasticsearchDocument.ttl().equals(Empty.NULL));
     }
 
     /**
@@ -149,22 +150,34 @@ public class ElasticsearchDocumentMetadata {
         return null;
     }
 
+
     /**
-     * Should we use this field as the default sort order for queries if none is specified.
-     * @return Boolean
+     * Get a list of field names.
+     * @return
      */
-    public String getDefaultSortByField() {
-        return (this.elasticsearchDocument.defaultSortByField().equals(Empty.NULL))
-                ? null
-                : this.elasticsearchDocument.defaultSortByField();
+    public String[] getRootFieldNames() {
+        return this.getRootFields().keySet().toArray(new String[this.getRootFields().size()]);
     }
 
     /**
-     * The default sort order to use if no sort order is specified.
-     * @return
+     * Get all the fields in this mapping.
+     * @return Map of indexed fields.
      */
-    public SortOrder getDefaultSortOrder() {
-        return this.elasticsearchDocument.defaultSortOrder();
+    public Map<String, ElasticsearchFieldMetadata> getRootFields() {
+        return this.elasticsearchSystemFields;
+    }
+
+    /**
+     * Get the metadata associated with a specific field.
+     * @param fieldName The name of the field to retrieve.
+     * @return The meta data if found otherwise null.
+     */
+    public ElasticsearchFieldMetadata getRootFieldMetaData(String fieldName) {
+
+        if(this.elasticsearchSystemFields.containsKey(fieldName))
+            return this.elasticsearchSystemFields.get(fieldName);
+
+        return null;
     }
 
     /**

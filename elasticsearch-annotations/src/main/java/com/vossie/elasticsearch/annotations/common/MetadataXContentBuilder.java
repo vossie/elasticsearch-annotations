@@ -1,6 +1,7 @@
 package com.vossie.elasticsearch.annotations.common;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
+import com.vossie.elasticsearch.annotations.enums.SystemField;
 import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
@@ -42,23 +43,29 @@ public final class MetadataXContentBuilder {
                     .startObject()
                     .startObject(elasticsearchDocumentMetadata.getTypeName());
 
-            // Set the object expiry
-            if(elasticsearchDocumentMetadata.hasTtl()) {
-                xbMapping
-                        .startObject(ElasticsearchMapping.OBJECT_TTL)
-                        .field(ElasticsearchMapping.FIELD_ENABLED, true)
-                        .field(ElasticsearchMapping.FIELD_DEFAULT, elasticsearchDocumentMetadata.getTtl())
-                        .endObject();
-            }
 
-            // Test to see if we have a parent child relationship and set accordingly.
-            if(elasticsearchDocumentMetadata.hasParent()) {
-                xbMapping.startObject(ElasticsearchMapping.OBJECT_PARENT).field(ElasticsearchMapping.FIELD_TYPE, elasticsearchDocumentMetadata.getParent().getTypeName()).endObject();
-            }
+            for(String rootFieldName : elasticsearchDocumentMetadata.getRootFieldNames()) {
 
-            // Set the _source mapping value.
-            if(!elasticsearchDocumentMetadata.isSourceStoredWithIndex())
-                xbMapping.startObject(ElasticsearchMapping.OBJECT_SOURCE).field(ElasticsearchMapping.FIELD_ENABLED, elasticsearchDocumentMetadata.isSourceStoredWithIndex()).endObject();
+                ElasticsearchFieldMetadata rootField = elasticsearchDocumentMetadata.getRootFieldMetaData(rootFieldName);
+                xbMapping.startObject(rootField.getFieldName());
+
+                for(String attributeName : rootField.getAttributes().keySet()) {
+
+                    if(rootFieldName.equals(SystemField._PARENT.toString()) && attributeName.equals("type")) {
+
+                        ElasticsearchDocumentMetadata m = (ElasticsearchDocumentMetadata)rootField.getAttributes().get(attributeName);
+
+                        xbMapping.field(
+                                attributeName,
+                                m.getTypeName()
+                        );
+                    }
+                    else
+                        xbMapping.field(attributeName,rootField.getAttributes().get(attributeName).toString());
+                }
+
+                xbMapping.endObject();
+            }
 
             // Add the fields.
             setXContentBuilderFields(xbMapping, elasticsearchDocumentMetadata.getFields());
@@ -79,6 +86,12 @@ public final class MetadataXContentBuilder {
         }
     }
 
+    /**
+     * Populate the child field nodes.
+     * @param xbMapping The content builder to use.
+     * @param fields The fields to append
+     * @throws UnableToLoadConstraints Occurs when the constraints file cannot be loaded.
+     */
     private static void setXContentBuilderFields(XContentBuilder xbMapping, Map<String, ElasticsearchFieldMetadata> fields) throws UnableToLoadConstraints {
 
         if(fields.keySet().size() < 1)

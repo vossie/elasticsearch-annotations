@@ -3,7 +3,7 @@ package com.vossie.elasticsearch.annotations.exceptions;
 import java.io.IOException;
 
 /**
- * Copyright © 2013 GSMA. GSM and the GSM Logo are registered and owned by the GSMA.
+ * Copyright © 2013 Carel Vosloo.
  * User: cvosloo
  * Date: 12/12/2013
  * Time: 12:24

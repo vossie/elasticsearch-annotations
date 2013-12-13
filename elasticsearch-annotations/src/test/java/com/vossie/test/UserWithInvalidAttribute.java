@@ -2,26 +2,26 @@ package com.vossie.test;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
-import com.vossie.elasticsearch.annotations.enums.ElasticsearchType;
+import com.vossie.elasticsearch.annotations.enums.FieldType;
 import com.vossie.elasticsearch.annotations.enums.TermVector;
 
 /**
- * Copyright © 2013 GSMA. GSM and the GSM Logo are registered and owned by the GSMA.
+ * Copyright © 2013 Carel Vosloo.
  * com.vossie.test.User: cvosloo
  * Date: 06/12/2013
  * Time: 12:32
  */
-@ElasticsearchDocument(index = "twitter", source = true, type = "twitterUser", defaultSortByField = "user")
+@ElasticsearchDocument(index = "twitter", source = true, type = "twitterUser")
 public class UserWithInvalidAttribute {
 
-    @ElasticsearchField(type = ElasticsearchType.STRING, index = "not_analyzed")
+    @ElasticsearchField(type = FieldType.STRING, index = "not_analyzed")
     private String user;
 
-    // Term vector is not valid for ElasticsearchType.DATE type.
-    @ElasticsearchField(type = ElasticsearchType.DATE, term_vector = TermVector.NO)
+    // Term vector is not valid for FieldType.DATE type.
+    @ElasticsearchField(type = FieldType.DATE, term_vector = TermVector.NO)
     private String dateOfBirth;
 
-    @ElasticsearchField(type = ElasticsearchType.GEO_POINT)
+    @ElasticsearchField(type = FieldType.GEO_POINT)
     private Location location;
 
     public String getUser() {
