@@ -167,7 +167,7 @@ public abstract class ElasticsearchMapping {
      * @throws com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified
      * @throws ClassNotAnnotated
      */
-    public static ElasticsearchDocumentMetadata getProperties(Class<?> clazz) throws ClassNotAnnotated, InvalidAttributeForType, UnableToLoadConstraints, InvalidParentDocumentSpecified {
+    public static ElasticsearchDocumentMetadata get(Class<?> clazz) throws ClassNotAnnotated, InvalidAttributeForType, UnableToLoadConstraints, InvalidParentDocumentSpecified {
 
         // Check the cache to see if we have already parsed this reference.
         if(mappingCache.containsKey(clazz))
