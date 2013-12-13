@@ -7,7 +7,7 @@ I created this project because I got tired of managing separate json mapping fil
 
 Usage:
 
-    ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.getMapping(Tweet.class);
+    ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.get(Tweet.class);
     String mapping = documentMetadata.toMapping();
 
  Annotated class:
