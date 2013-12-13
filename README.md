@@ -12,28 +12,84 @@ Usage:
 
  Annotated class:
 
-     @ElasticsearchDocument(
+     @ElasticsearchDocument /** required */(
              index = "twitter",
-             type = "tweet"      /** Optional, if not set it will use the simple class name in a lower hyphenated format */,
-             source = true       /** Optional */,
-             parent = User.class /** Optional */
+     //        type = "tweet"    /** optional, if not set it will use the simple class name in a lower hyphenated format */,
+             _rootFields = {
+                     @ElasticsearchRootField(
+                             _rootFieldName = SystemField._ID,
+                             index = "not_analyzed",
+                             store = "yes"
+                     ),
+                     @ElasticsearchRootField(
+                             _rootFieldName = SystemField._TYPE,
+                             index = "no",
+                             store = "yes"
+                     ),
+                     @ElasticsearchRootField(
+                         _rootFieldName = SystemField._SOURCE,
+                         enabled = BooleanValue.TRUE
+                     ),
+                     @ElasticsearchRootField(
+                             _rootFieldName = SystemField._ALL,
+                             enabled = BooleanValue.TRUE
+                     ),
+                     @ElasticsearchRootField(
+                             _rootFieldName = SystemField._ANALYZER,
+                             path = "user"
+                     ),
+                     @ElasticsearchRootField(
+                             _rootFieldName = SystemField._BOOST,
+                             name = "my_boost",
+                             null_value = "1.0"
+                     ),
+                     @ElasticsearchRootField(
+                             _rootFieldName = SystemField._PARENT,
+                             type = User.class
+                     ),
+                     @ElasticsearchRootField(
+                             _rootFieldName = SystemField._ROUTING,
+                             required = BooleanValue.FALSE,
+                             path = "blog.post_id"
+                     ),
+                     @ElasticsearchRootField(
+                             _rootFieldName = SystemField._INDEX,
+                             enabled = BooleanValue.FALSE
+                     ),
+                     @ElasticsearchRootField(
+                             _rootFieldName = SystemField._SIZE,
+                             enabled = BooleanValue.FALSE,
+                             store = "yes"
+                     ),
+                     @ElasticsearchRootField(
+                             _rootFieldName = SystemField._TIMESTAMP,
+                             enabled = BooleanValue.FALSE,
+                             path = "post_date",
+                             format = "dateOptionalTime"
+                     ),
+                     @ElasticsearchRootField(
+                             _rootFieldName = SystemField._TTL,
+                             enabled = BooleanValue.TRUE,
+                             defaultValue = "1d"
+                     )
+             }
      )
      public class Tweet {
 
          @ElasticsearchField(
-                 type = ElasticsearchType.STRING,
+                 type = FieldType.STRING,
                  index = "not_analyzed"
          )
          private String user;
 
          @ElasticsearchField(
-                 type = ElasticsearchType.DATE,
+                 type = FieldType.DATE,
                  format = "YYYY-MM-dd"
          )
          private String postDate;
 
          @ElasticsearchField(
-                 type = ElasticsearchType.STRING,
+                 type = FieldType.STRING,
                  store = BooleanValue.TRUE,
                  index = "analyzed",
                  null_value = "na"
@@ -41,17 +97,17 @@ Usage:
          private String message;
 
          @ElasticsearchField(
-                 type = ElasticsearchType.BOOLEAN
+                 type = FieldType.BOOLEAN
          )
          private Boolean hes_my_special_tweet;
 
          @ElasticsearchField(
-                 type = ElasticsearchType.INTEGER
+                 type = FieldType.INTEGER
          )
          private Integer priority;
 
          @ElasticsearchField(
-                 type = ElasticsearchType.FLOAT
+                 type = FieldType.FLOAT
          )
          private Float rank;
 
@@ -108,12 +164,54 @@ Usage:
 
     {
         "tweet": {
+            "_boost": {
+                "null_value": "1.0",
+                "name": "my_boost"
+            },
+            "_type": {
+                "index": "no",
+                "store": "yes"
+            },
+            "_source": {
+                "enabled": "true"
+            },
+            "_id": {
+                "index": "not_analyzed",
+                "store": "yes"
+            },
+            "_routing": {
+                "path": "blog.post_id",
+                "required": "false"
+            },
+            "_analyzer": {
+                "path": "user"
+            },
+            "_timestamp": {
+                "enabled": "false",
+                "path": "post_date",
+                "format": "dateOptionalTime"
+            },
+            "_index": {
+                "enabled": "false"
+            },
+            "_ttl": {
+                "enabled": "true",
+                "default": "1d"
+            },
+            "_size": {
+                "enabled": "false",
+                "store": "yes"
+            },
+            "_all": {
+                "enabled": "true"
+            },
             "_parent": {
                 "type": "user"
             },
             "properties": {
                 "message": {
                     "index": "analyzed",
+                    "store": "true",
                     "null_value": "na",
                     "type": "string"
                 },
