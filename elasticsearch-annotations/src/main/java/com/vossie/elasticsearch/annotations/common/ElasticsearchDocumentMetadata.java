@@ -86,7 +86,7 @@ public class ElasticsearchDocumentMetadata {
 
         if(parentClass != null)
             try {
-                return ElasticsearchMapping.getProperties(parentClass);
+                return ElasticsearchMapping.get(parentClass);
             } catch (AnnotationException e) {
                 throw new InvalidParentDocumentSpecified("Invalid parent type specified.");
             }

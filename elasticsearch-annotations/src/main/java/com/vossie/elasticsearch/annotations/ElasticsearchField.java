@@ -44,9 +44,6 @@ public @interface ElasticsearchField {
      */
     public PostingsFormat postings_format() default PostingsFormat.NULL;
 
-
-    /* >>>>>>> END: Common <<<<<<<< */
-
     /**
      * The name of the field that will be stored in the index. Defaults to the property/field name if __null.
      * @return
