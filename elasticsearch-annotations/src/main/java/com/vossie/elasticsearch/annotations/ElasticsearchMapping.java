@@ -2,14 +2,12 @@ package com.vossie.elasticsearch.annotations;
 
 import com.vossie.elasticsearch.annotations.common.ElasticsearchDocumentMetadata;
 import com.vossie.elasticsearch.annotations.common.ElasticsearchFieldMetadata;
-import com.vossie.elasticsearch.annotations.common.Empty;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
 import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
 import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
 import com.vossie.elasticsearch.annotations.exceptions.UnableToLoadConstraints;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -149,45 +147,17 @@ public abstract class ElasticsearchMapping {
         // Add the system fields
         if(systemFields != null)
             for (ElasticsearchRootField systemField : systemFields){
-                elasticsearchFieldMappings.put(
+
+                ElasticsearchFieldMetadata metadata = new ElasticsearchFieldMetadata(
                         systemField._rootFieldName().toString(),
-                        new ElasticsearchFieldMetadata(
-                                systemField._rootFieldName().toString(),
-                                systemField,
-                                new HashMap<String,ElasticsearchFieldMetadata>()
-                        )
+                        systemField,
+                        new HashMap<String,ElasticsearchFieldMetadata>()
                 );
+
+                elasticsearchFieldMappings.put(systemField._rootFieldName().toString(), metadata);
             }
 
         return elasticsearchFieldMappings;
-    }
-
-    /**
-     *
-     * @param clazz
-     * @param elasticsearchDocument
-     * @throws com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified
-     * @throws IOException
-     */
-    private static void validateParentTypeReference(Class<?> clazz, ElasticsearchDocument elasticsearchDocument) throws InvalidParentDocumentSpecified {
-
-        // Test to see if we have a parent child relationship and set accordingly.
-        if(!Empty.class.isAssignableFrom(elasticsearchDocument.parent())) {
-
-            ElasticsearchDocument parentType;
-
-            try {
-                parentType = getElasticsearchType(elasticsearchDocument.parent());
-
-            } catch (ClassNotAnnotated e) {
-                throw new InvalidParentDocumentSpecified(elasticsearchDocument.parent(), "ClassNotAnnotated", elasticsearchDocument.index());
-            }
-
-            if(parentType != null) {
-                if(!parentType.index().equals(elasticsearchDocument.index()))
-                    throw new InvalidParentDocumentSpecified(clazz, elasticsearchDocument.index(), parentType.index());
-            }
-        }
     }
 
     /**
@@ -197,7 +167,7 @@ public abstract class ElasticsearchMapping {
      * @throws com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified
      * @throws ClassNotAnnotated
      */
-    public static ElasticsearchDocumentMetadata getProperties(Class<?> clazz) throws InvalidParentDocumentSpecified, ClassNotAnnotated, InvalidAttributeForType, UnableToLoadConstraints {
+    public static ElasticsearchDocumentMetadata getProperties(Class<?> clazz) throws ClassNotAnnotated, InvalidAttributeForType, UnableToLoadConstraints, InvalidParentDocumentSpecified {
 
         // Check the cache to see if we have already parsed this reference.
         if(mappingCache.containsKey(clazz))
@@ -206,19 +176,15 @@ public abstract class ElasticsearchMapping {
         // Get the annotation.
         ElasticsearchDocument elasticsearchDocument = getElasticsearchType(clazz);
 
-        // Test to see if we have a parent child relationship and set accordingly.
-        validateParentTypeReference(clazz, elasticsearchDocument);
+        ElasticsearchDocumentMetadata documentMetadata = new ElasticsearchDocumentMetadata(
+                clazz,
+                elasticsearchDocument,
+                getElasticsearchFieldsMetadata(clazz),
+                getElasticsearchSystemFieldsMetadata(elasticsearchDocument._rootFields())
+        );
 
         // Add this item to the local cache for fast lookup.
-        mappingCache.put(
-                clazz,
-                new ElasticsearchDocumentMetadata(
-                        clazz,
-                        elasticsearchDocument,
-                        getElasticsearchFieldsMetadata(clazz),
-                        getElasticsearchSystemFieldsMetadata(elasticsearchDocument._rootFields())
-                )
-        );
+        mappingCache.put(clazz, documentMetadata );
 
         // Return the reference.
         return mappingCache.get(clazz);

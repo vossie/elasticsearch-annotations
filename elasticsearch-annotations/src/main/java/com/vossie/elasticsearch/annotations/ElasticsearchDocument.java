@@ -1,7 +1,6 @@
 package com.vossie.elasticsearch.annotations;
 
 import com.vossie.elasticsearch.annotations.common.Empty;
-import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -19,7 +18,7 @@ import java.lang.annotation.Target;
 public @interface ElasticsearchDocument {
 
     /**
-     *  The index name.
+     *  The elastic index to use name.
      * @return
      */
     public String index();
@@ -30,41 +29,29 @@ public @interface ElasticsearchDocument {
      */
     public String type() default Empty.NULL;
 
+    /**
+     * The system fields.
+     * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-fields.html
+     * @return
+     */
     public ElasticsearchRootField[] _rootFields() default {};
 
-    /**
-     * Is this a child entity with a parent object.
-     * @return
-     */
-    public Class<?> parent() default Empty.class;
-
-    /**
-     * When does the data expire
-     * @return
-     */
-    public String ttl() default Empty.NULL;
-
-    /**
-     * Should we store the source data in the index.
-     * @return
-     */
-    public boolean source() default true;
 
     //TODO: Implement index_analyzer
-    public String index_analyzer() default Empty.NULL;
+//    public String index_analyzer() default Empty.NULL;
 
     //TODO: Implement search_analyzer
-    public String search_analyzer() default Empty.NULL;
+//    public String search_analyzer() default Empty.NULL;
 
     //TODO: Implement dynamic_date_formats
-    public String[] dynamic_date_formats() default Empty.NULL;
+//    public String[] dynamic_date_formats() default Empty.NULL;
 
     //TODO: Implement date_detection
-    public BooleanValue date_detection() default BooleanValue.NULL;
+//    public BooleanValue date_detection() default BooleanValue.NULL;
 
     //TODO: Implement numeric_detection
-    public BooleanValue numeric_detection() default BooleanValue.NULL;
+//    public BooleanValue numeric_detection() default BooleanValue.NULL;
 
     //TODO: Implement dynamic_templates
-    public String[] dynamic_templates() default Empty.NULL;
+//    public String[] dynamic_templates() default Empty.NULL;
 }

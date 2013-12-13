@@ -2,6 +2,7 @@ package com.vossie.elasticsearch.annotations.common;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
+import com.vossie.elasticsearch.annotations.enums.SystemField;
 import com.vossie.elasticsearch.annotations.exceptions.*;
 import org.springframework.core.annotation.AnnotationUtils;
 
@@ -23,10 +24,10 @@ public class ElasticsearchDocumentMetadata {
     private String typeName;
     private ElasticsearchDocument elasticsearchDocument;
     private Map<String,ElasticsearchFieldMetadata> elasticsearchFields;
-    private Map<String,ElasticsearchFieldMetadata> elasticsearchSystemFields;
+    private Map<String,ElasticsearchFieldMetadata> elasticsearchRootFields;
     private Map<String, Object> attributes;
 
-    public ElasticsearchDocumentMetadata(Class<?> clazz, ElasticsearchDocument elasticsearchDocument, Map<String, ElasticsearchFieldMetadata> elasticsearchFields, Map<String, ElasticsearchFieldMetadata> elasticsearchSystemFields)
+    public ElasticsearchDocumentMetadata(Class<?> clazz, ElasticsearchDocument elasticsearchDocument, Map<String, ElasticsearchFieldMetadata> elasticsearchFields, Map<String, ElasticsearchFieldMetadata> elasticsearchRootFields)
             throws UnableToLoadConstraints, InvalidAttributeForType, ClassNotAnnotated, InvalidParentDocumentSpecified {
 
         // Set the type name
@@ -36,12 +37,12 @@ public class ElasticsearchDocumentMetadata {
 
         this.elasticsearchDocument = elasticsearchDocument;
         this.elasticsearchFields = Collections.unmodifiableMap(elasticsearchFields);
-        this.elasticsearchSystemFields = Collections.unmodifiableMap(elasticsearchSystemFields);
+        this.elasticsearchRootFields = Collections.unmodifiableMap(elasticsearchRootFields);
 
         // Todo: Find a way of doing this without the spring dependency.
         this.attributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(elasticsearchDocument));
 
-        // Init the XContent builder
+        // Initialize the XContent builder
         try {
             MetadataXContentBuilder.getXContentBuilder(this).string();
         } catch (IOException e) {
@@ -74,40 +75,27 @@ public class ElasticsearchDocumentMetadata {
      * Get the parent
      * @return Parent
      */
-    public ElasticsearchDocumentMetadata getParent() {
+    public ElasticsearchDocumentMetadata getParent() throws InvalidParentDocumentSpecified {
 
-        try {
-            return ElasticsearchMapping.getProperties(this.elasticsearchDocument.parent());
+        if(!hasParent())
+            return null;
 
-        } catch (AnnotationException e) {
-            e.printStackTrace();
-        }
+        Class<?> parentClass = (this.elasticsearchRootFields.get(SystemField._PARENT.toString()).getAttributes().containsKey("type"))
+                    ?(Class<?>) this.elasticsearchRootFields.get(SystemField._PARENT.toString()).getAttributes().get("type")
+                    : null;
+
+        if(parentClass != null)
+            try {
+                return ElasticsearchMapping.getProperties(parentClass);
+            } catch (AnnotationException e) {
+                throw new InvalidParentDocumentSpecified("Invalid parent type specified.");
+            }
 
         return null;
     }
 
     public boolean hasParent() {
-        return (!elasticsearchDocument.parent().getName().equals(Empty.class.getName()));
-    }
-
-    public boolean isChildType() {
-        return (!Empty.class.isAssignableFrom(this.elasticsearchDocument.parent()));
-    }
-
-    /**
-     * The time after which the indexed data will expire
-     * @return The time to live
-     */
-    public String getTtl(){
-        return this.elasticsearchDocument.ttl();
-    }
-
-    /**
-     * Does this document have an expires after time.
-     * @return True if the indexed item expires after a defined period.
-     */
-    public boolean hasTtl() {
-        return (!this.elasticsearchDocument.ttl().equals(Empty.NULL));
+        return (this.elasticsearchRootFields.containsKey(SystemField._PARENT.toString()));
     }
 
     /**
@@ -118,7 +106,9 @@ public class ElasticsearchDocumentMetadata {
      * @return True if the source is stored.
      */
     public boolean isSourceStoredWithIndex() {
-        return this.elasticsearchDocument.source();
+        return (this.elasticsearchRootFields.containsKey(SystemField._SOURCE.toString()))
+                ? Boolean.valueOf(this.elasticsearchRootFields.get(SystemField._SOURCE.toString()).getAttributes().get("enabled").toString())
+                : true;
     }
 
     /**
@@ -144,10 +134,9 @@ public class ElasticsearchDocumentMetadata {
      */
     public ElasticsearchFieldMetadata getFieldMetaData(String fieldName) {
 
-        if(this.elasticsearchFields.containsKey(fieldName))
-            return this.elasticsearchFields.get(fieldName);
-
-        return null;
+        return (this.elasticsearchFields.containsKey(fieldName))
+                ? this.elasticsearchFields.get(fieldName)
+                : null;
     }
 
 
@@ -164,7 +153,7 @@ public class ElasticsearchDocumentMetadata {
      * @return Map of indexed fields.
      */
     public Map<String, ElasticsearchFieldMetadata> getRootFields() {
-        return this.elasticsearchSystemFields;
+        return this.elasticsearchRootFields;
     }
 
     /**
@@ -174,8 +163,8 @@ public class ElasticsearchDocumentMetadata {
      */
     public ElasticsearchFieldMetadata getRootFieldMetaData(String fieldName) {
 
-        if(this.elasticsearchSystemFields.containsKey(fieldName))
-            return this.elasticsearchSystemFields.get(fieldName);
+        if(this.elasticsearchRootFields.containsKey(fieldName))
+            return this.elasticsearchRootFields.get(fieldName);
 
         return null;
     }

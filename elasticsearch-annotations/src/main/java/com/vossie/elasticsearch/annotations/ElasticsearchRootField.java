@@ -3,6 +3,7 @@ package com.vossie.elasticsearch.annotations;
 import com.vossie.elasticsearch.annotations.common.Empty;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.SystemField;
+import com.vossie.elasticsearch.annotations.util.MethodToAttributeNameMapping;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

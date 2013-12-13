@@ -14,8 +14,6 @@ import com.vossie.elasticsearch.annotations.enums.SystemField;
 @ElasticsearchDocument /** required */(
         index = "twitter",
 //        type = "tweet"    /** optional, if not set it will use the simple class name in a lower hyphenated format */,
-        source = true       /** optional */,
-        parent = User.class /** optional */,
         _rootFields = {
                 @ElasticsearchRootField(
                         _rootFieldName = SystemField._ID,

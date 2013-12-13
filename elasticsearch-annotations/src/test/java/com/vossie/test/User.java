@@ -13,7 +13,7 @@ import java.util.List;
  * Date: 06/12/2013
  * Time: 12:32
  */
-@ElasticsearchDocument(index = "twitter", source = true)
+@ElasticsearchDocument(index = "twitter")
 public class User {
 
     @ElasticsearchField(

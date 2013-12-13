@@ -1,10 +1,8 @@
 package com.vossie.elasticsearch.annotations.common;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
-import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.ElasticsearchRootField;
-import com.vossie.elasticsearch.annotations.enums.SystemField;
-import com.vossie.elasticsearch.annotations.exceptions.*;
+import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
 import com.vossie.elasticsearch.annotations.util.AttributeNameHelper;
 import com.vossie.elasticsearch.annotations.util.ESTypeAttributeConstraints;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -43,7 +41,6 @@ public class ElasticsearchFieldMetadata {
     public ElasticsearchFieldMetadata(String fieldName, ElasticsearchRootField elasticsearchRootFieldField,
                                       Map<String,ElasticsearchFieldMetadata> children) throws InvalidAttributeForType {
 
-        this.isArray = isArray;
         this.fieldName = fieldName;
         this.children = Collections.unmodifiableMap(children);
         this.elasticsearchRootField = elasticsearchRootFieldField;
@@ -81,16 +78,7 @@ public class ElasticsearchFieldMetadata {
                 throw new InvalidAttributeForType(typeName,attributeName, annotation.getClass().getCanonicalName());
             }
 
-            if(typeName.equals(SystemField._PARENT.toString()) && attributeName.equals("type")) {
-                try {
-                    tempAttributes.put(attributeName, ElasticsearchMapping.getProperties((Class<?>) value));
-                } catch (AnnotationException e) {
-                    e.printStackTrace();
-                }
-            }
-            else {
-                tempAttributes.put(attributeName, value);
-            }
+            tempAttributes.put(attributeName, value);
         }
 
 

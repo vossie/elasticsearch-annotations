@@ -1,4 +1,4 @@
-package com.vossie.elasticsearch.annotations;
+package com.vossie.elasticsearch.annotations.util;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

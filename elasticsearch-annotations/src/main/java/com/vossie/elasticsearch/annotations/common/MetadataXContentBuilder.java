@@ -28,7 +28,7 @@ public final class MetadataXContentBuilder {
     private static HashMap<String, XContentBuilder> cache = new HashMap<>();
 
     protected static XContentBuilder getXContentBuilder(ElasticsearchDocumentMetadata elasticsearchDocumentMetadata)
-            throws ClassNotAnnotated, InvalidParentDocumentSpecified, InvalidAttributeForType, UnableToLoadConstraints {
+            throws ClassNotAnnotated, InvalidAttributeForType, UnableToLoadConstraints, InvalidParentDocumentSpecified {
 
         String key = String.format("%s-%s", elasticsearchDocumentMetadata.getIndexName(), elasticsearchDocumentMetadata.getTypeName());
 
@@ -53,11 +53,9 @@ public final class MetadataXContentBuilder {
 
                     if(rootFieldName.equals(SystemField._PARENT.toString()) && attributeName.equals("type")) {
 
-                        ElasticsearchDocumentMetadata m = (ElasticsearchDocumentMetadata)rootField.getAttributes().get(attributeName);
-
                         xbMapping.field(
                                 attributeName,
-                                m.getTypeName()
+                                elasticsearchDocumentMetadata.getParent().getTypeName()
                         );
                     }
                     else

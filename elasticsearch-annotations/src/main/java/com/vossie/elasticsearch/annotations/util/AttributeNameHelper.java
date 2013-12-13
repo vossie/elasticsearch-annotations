@@ -1,7 +1,5 @@
 package com.vossie.elasticsearch.annotations.util;
 
-import com.vossie.elasticsearch.annotations.MethodToAttributeNameMapping;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
