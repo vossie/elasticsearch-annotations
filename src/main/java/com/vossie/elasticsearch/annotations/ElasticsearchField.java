@@ -2,7 +2,7 @@ package com.vossie.elasticsearch.annotations;
 
 import com.vossie.elasticsearch.annotations.common.Empty;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
-import com.vossie.elasticsearch.annotations.enums.SystemField;
+import com.vossie.elasticsearch.annotations.enums.FieldName;
 import com.vossie.elasticsearch.annotations.util.MethodToAttributeNameMapping;
 
 import java.lang.annotation.ElementType;
@@ -23,9 +23,9 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface ElasticsearchRootField {
+public @interface ElasticsearchField {
 
-    public SystemField _rootFieldName();
+    public FieldName fieldName();
 
 
     /**
@@ -75,6 +75,10 @@ public @interface ElasticsearchRootField {
      * @return String or ___null if it is not set.
      */
     public BooleanValue required() default BooleanValue.NULL;
+
+    public String[] includes() default {};
+
+    public String[] excludes() default {};
 
     /**
      * Maps to default

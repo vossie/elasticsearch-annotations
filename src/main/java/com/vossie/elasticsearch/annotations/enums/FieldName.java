@@ -6,7 +6,7 @@ package com.vossie.elasticsearch.annotations.enums;
  * Date: 12/12/2013
  * Time: 14:14
  */
-public enum SystemField {
+public enum FieldName {
 
     _UID {
         @Override
