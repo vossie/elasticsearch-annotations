@@ -4,7 +4,7 @@
 
     <groupId>com.vossie</groupId>
     <artifactId>elasticsearch-annotations</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6-SNAPSHOT</version>
 
     <scm>
         <url>
