@@ -1,11 +1,8 @@
 package com.vossie.elasticsearch.annotations.util;
 
-import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
-import com.vossie.elasticsearch.annotations.ElasticsearchField;
 import com.vossie.elasticsearch.annotations.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.common.Empty;
 import com.vossie.elasticsearch.annotations.enums.ElasticsearchAnnotationTypeNames;
-import com.vossie.elasticsearch.annotations.enums.FieldName;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -15,10 +12,7 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
