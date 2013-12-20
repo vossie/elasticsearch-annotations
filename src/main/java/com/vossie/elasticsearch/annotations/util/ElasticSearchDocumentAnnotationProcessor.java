@@ -23,11 +23,15 @@ import java.util.Set;
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class ElasticSearchDocumentAnnotationProcessor extends AbstractProcessor {
 
+    public ElasticSearchDocumentAnnotationProcessor() {
+        super();
+    }
+
     @Override
     public boolean process(Set<? extends TypeElement> typeElements,
                            RoundEnvironment roundEnv) {
 
-        boolean response = true;
+        boolean response = false;
 
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(ElasticsearchDocument.class);
 
@@ -40,8 +44,10 @@ public class ElasticSearchDocumentAnnotationProcessor extends AbstractProcessor 
 
             verifyDuplicateElasticsearchFieldAnnotations(elasticsearchDocument, element.toString());
 
+            response = true;
+
         }
-        return true;//claim the annotations
+        return response;//claim the annotations
     }
 
     /**
