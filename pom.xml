@@ -8,6 +8,19 @@
     <artifactId>elasticsearch-annotations</artifactId>
     <version>1.0.1-SNAPSHOT</version>
 
+    <scm>
+        <url>
+            scm:git:git@github-build-elastic-annotations:vossie/elasticsearch-annotations.git
+        </url>
+        <connection>
+            scm:git:git@github-build-elastic-annotations:vossie/elasticsearch-annotations.git
+        </connection>
+        <developerConnection>
+            scm:git:git@github-build-elastic-annotations:vossie/elasticsearch-annotations.git
+        </developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
