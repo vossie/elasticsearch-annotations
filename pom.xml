@@ -21,6 +21,23 @@
         <tag>HEAD</tag>
     </scm>
 
+    <distributionManagement>
+
+        <!-- Publish versioned releases here -->
+        <repository>
+            <id>deployment</id>
+            <name>Internal Releases</name>
+            <url>http://nexus.gsmai.local:8081/nexus/content/repositories/releases/</url>
+        </repository>
+
+        <!-- Publish snapshots here -->
+        <snapshotRepository>
+            <id>deployment</id>
+            <name>Internal Releases</name>
+            <url>http://nexus.gsmai.local:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
