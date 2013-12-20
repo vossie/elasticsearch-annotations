@@ -2,7 +2,6 @@ package com.vossie.elasticsearch.annotations.common;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
 import com.vossie.elasticsearch.annotations.ElasticsearchType;
-import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
 import com.vossie.elasticsearch.annotations.util.AttributeNameHelper;
 import com.vossie.elasticsearch.annotations.util.ESTypeAttributeConstraints;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -11,7 +10,6 @@ import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Copyright © 2013 Carel Vosloo.
@@ -29,7 +27,7 @@ public class ElasticsearchFieldMetadata {
     private Map<String, ElasticsearchFieldMetadata> children;
 
     public ElasticsearchFieldMetadata(String fieldName, ElasticsearchType elasticsearchType, boolean isArray,
-                                      Map<String,ElasticsearchFieldMetadata> children) throws InvalidAttributeForType {
+                                      Map<String,ElasticsearchFieldMetadata> children)  {
 
         this.isArray = isArray;
         this.fieldName = fieldName;
@@ -40,7 +38,7 @@ public class ElasticsearchFieldMetadata {
     }
 
     public ElasticsearchFieldMetadata(String fieldName, ElasticsearchField elasticsearchFieldField,
-                                      Map<String,ElasticsearchFieldMetadata> children) throws InvalidAttributeForType {
+                                      Map<String,ElasticsearchFieldMetadata> children)  {
 
         this.fieldName = fieldName;
         this.children = Collections.unmodifiableMap(children);
@@ -49,7 +47,7 @@ public class ElasticsearchFieldMetadata {
         setAttributes(this.elasticsearchField.fieldName().toString(), this.elasticsearchField);
     }
 
-    private void setAttributes(String typeName, Annotation annotation) throws InvalidAttributeForType {
+    private void setAttributes(String typeName, Annotation annotation)  {
 
         // Todo: Find a way of doing this without the spring dependency.
         Map<String, Object> allAttributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(annotation));
@@ -79,7 +77,7 @@ public class ElasticsearchFieldMetadata {
                 if(!constraints.getAttributeNames().contains(attributeName))
                     continue;
 
-                throw new InvalidAttributeForType(typeName,attributeName, annotation.getClass().getCanonicalName());
+//                throw new InvalidAttributeForType(typeName,attributeName, annotation.getClass().getCanonicalName());
             }
 
             tempAttributes.put(attributeName, value);

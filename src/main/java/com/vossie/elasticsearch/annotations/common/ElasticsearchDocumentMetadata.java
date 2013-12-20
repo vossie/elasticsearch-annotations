@@ -3,7 +3,6 @@ package com.vossie.elasticsearch.annotations.common;
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.enums.FieldName;
-import com.vossie.elasticsearch.annotations.exceptions.*;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import java.io.IOException;
@@ -27,8 +26,7 @@ public class ElasticsearchDocumentMetadata {
     private Map<String,ElasticsearchFieldMetadata> elasticsearchRootFields;
     private Map<String, Object> attributes;
 
-    public ElasticsearchDocumentMetadata(Class<?> clazz, ElasticsearchDocument elasticsearchDocument, Map<String, ElasticsearchFieldMetadata> elasticsearchFields, Map<String, ElasticsearchFieldMetadata> elasticsearchRootFields)
-            throws UnableToLoadConstraints, InvalidAttributeForType, ClassNotAnnotated, InvalidParentDocumentSpecified {
+    public ElasticsearchDocumentMetadata(Class<?> clazz, ElasticsearchDocument elasticsearchDocument, Map<String, ElasticsearchFieldMetadata> elasticsearchFields, Map<String, ElasticsearchFieldMetadata> elasticsearchRootFields) {
 
         // Set the type name
         this.typeName = (elasticsearchDocument.type().equals(Empty.NULL))
@@ -42,12 +40,6 @@ public class ElasticsearchDocumentMetadata {
         // Todo: Find a way of doing this without the spring dependency.
         this.attributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(elasticsearchDocument));
 
-        // Initialize the XContent builder
-        try {
-            MetadataXContentBuilder.getXContentBuilder(this).string();
-        } catch (IOException e) {
-            throw new UnableToLoadConstraints(e);
-        }
     }
 
     public Map<String, ElasticsearchFieldMetadata> getElasticsearchFields() {
@@ -75,7 +67,7 @@ public class ElasticsearchDocumentMetadata {
      * Get the parent
      * @return Parent
      */
-    public ElasticsearchDocumentMetadata getParent() throws InvalidParentDocumentSpecified {
+    public ElasticsearchDocumentMetadata getParent()  {
 
         if(!hasParent())
             return null;
@@ -85,11 +77,7 @@ public class ElasticsearchDocumentMetadata {
                     : null;
 
         if(parentClass != null)
-            try {
-                return ElasticsearchMapping.get(parentClass);
-            } catch (AnnotationException e) {
-                throw new InvalidParentDocumentSpecified("Invalid parent type specified.");
-            }
+            return ElasticsearchMapping.get(parentClass);
 
         return null;
     }
@@ -175,7 +163,12 @@ public class ElasticsearchDocumentMetadata {
      */
     @Override
     public String toString() {
-        return toMapping();
+        try {
+            return toMapping();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -183,19 +176,8 @@ public class ElasticsearchDocumentMetadata {
      * @return The mapping.
      * @throws IOException
      */
-    public String toMapping() {
+    public String toMapping() throws IOException {
 
-        try {
-            return MetadataXContentBuilder.getXContentBuilder(this).string();
-
-        } catch (AnnotationException e) {
-            // This has been tested in the constructor so there is no need to report the errors.
-            e.printStackTrace();
-        } catch (IOException e) {
-            // This has been tested in the constructor so there is no need to report the errors.
-            e.printStackTrace();
-        }
-
-        return null;
+        return MetadataXContentBuilder.getXContentBuilder(this).string();
     }
 }

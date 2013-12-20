@@ -3,10 +3,6 @@ package com.vossie.elasticsearch.annotations;
 import com.vossie.elasticsearch.annotations.common.ElasticsearchDocumentMetadata;
 import com.vossie.elasticsearch.annotations.common.ElasticsearchFieldMetadata;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
-import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
-import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
-import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
-import com.vossie.elasticsearch.annotations.exceptions.UnableToLoadConstraints;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -33,14 +29,14 @@ public abstract class ElasticsearchMapping {
      * @return The ElasticsearchDocument details
      * @throws ClassNotAnnotated if the annotation is not found.
      */
-    private static ElasticsearchDocument getElasticsearchType(Class<?> clazz) throws ClassNotAnnotated {
+    private static ElasticsearchDocument getElasticsearchType(Class<?> clazz) {
 
         ElasticsearchDocument doc = clazz.getAnnotation(ElasticsearchDocument.class);
 
         if (doc != null)
             return doc;
 
-        throw new ClassNotAnnotated(clazz);
+        return null;
     }
 
     private static Field[] getAllDeclaredFields(Class<?> clazz) {
@@ -72,10 +68,8 @@ public abstract class ElasticsearchMapping {
      * Retrieve the metadata describing the annotated class fields.
      * @param clazz The class to scan
      * @return Returns a list containing the field metadata
-     * @throws InvalidAttributeForType If the wrong attribute has been set based on the type of field
      */
-    private static Map<String, ElasticsearchFieldMetadata> getElasticsearchFieldsMetadata(Class<?> clazz)
-            throws InvalidAttributeForType {
+    private static Map<String, ElasticsearchFieldMetadata> getElasticsearchFieldsMetadata(Class<?> clazz) {
 
         Map<String, ElasticsearchFieldMetadata> elasticsearchFieldMappings = new HashMap<>();
 
@@ -139,8 +133,7 @@ public abstract class ElasticsearchMapping {
     }
 
 
-    private static Map<String, ElasticsearchFieldMetadata> getElasticsearchSystemFieldsMetadata(ElasticsearchField[] systemFields)
-            throws InvalidAttributeForType {
+    private static Map<String, ElasticsearchFieldMetadata> getElasticsearchSystemFieldsMetadata(ElasticsearchField[] systemFields) {
 
         Map<String, ElasticsearchFieldMetadata> elasticsearchFieldMappings = new HashMap<>();
 
@@ -164,10 +157,8 @@ public abstract class ElasticsearchMapping {
      * Get the document and field metadata associated with this mapping by class.
      * @param clazz The class to inspect.
      * @return Returns the meta data used to describe this entity.
-     * @throws com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified
-     * @throws ClassNotAnnotated
      */
-    public static ElasticsearchDocumentMetadata get(Class<?> clazz) throws ClassNotAnnotated, InvalidAttributeForType, UnableToLoadConstraints, InvalidParentDocumentSpecified {
+    public static ElasticsearchDocumentMetadata get(Class<?> clazz) {
 
         // Check the cache to see if we have already parsed this reference.
         if(mappingCache.containsKey(clazz))
@@ -175,6 +166,9 @@ public abstract class ElasticsearchMapping {
 
         // Get the annotation.
         ElasticsearchDocument elasticsearchDocument = getElasticsearchType(clazz);
+
+        if(elasticsearchDocument == null)
+            return null;
 
         ElasticsearchDocumentMetadata documentMetadata = new ElasticsearchDocumentMetadata(
                 clazz,

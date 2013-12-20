@@ -2,6 +2,8 @@ package com.vossie.elasticsearch.annotations.util;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
+import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
+import com.vossie.elasticsearch.annotations.common.Empty;
 import com.vossie.elasticsearch.annotations.enums.ElasticsearchAnnotationTypeNames;
 import com.vossie.elasticsearch.annotations.enums.FieldName;
 
@@ -69,6 +71,20 @@ public class ElasticSearchDocumentAnnotationProcessor extends AbstractProcessor 
         }
 
         return true;
+    }
+
+    private void validateParentType(ElasticsearchDocument elasticsearchDocument) {
+
+        for (ElasticsearchField elasticsearchField : elasticsearchDocument._elasticsearchFields()) {
+            if (!elasticsearchField.fieldName().equals(FieldName._PARENT.toString()))
+                continue;
+
+            if(elasticsearchField.type().toString().equals(Empty.class.toString()))
+                break;
+
+            if(ElasticsearchMapping.get(elasticsearchField.type()) == null)
+                throw new RuntimeException("Invalid parent type specified");
+        }
     }
 
 }

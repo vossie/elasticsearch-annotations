@@ -2,10 +2,6 @@ package com.vossie.elasticsearch.annotations.common;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.enums.FieldName;
-import com.vossie.elasticsearch.annotations.exceptions.ClassNotAnnotated;
-import com.vossie.elasticsearch.annotations.exceptions.InvalidAttributeForType;
-import com.vossie.elasticsearch.annotations.exceptions.InvalidParentDocumentSpecified;
-import com.vossie.elasticsearch.annotations.exceptions.UnableToLoadConstraints;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +23,7 @@ public final class MetadataXContentBuilder {
 
     private static HashMap<String, XContentBuilder> cache = new HashMap<>();
 
-    protected static XContentBuilder getXContentBuilder(ElasticsearchDocumentMetadata elasticsearchDocumentMetadata)
-            throws ClassNotAnnotated, InvalidAttributeForType, UnableToLoadConstraints, InvalidParentDocumentSpecified {
+    protected static XContentBuilder getXContentBuilder(ElasticsearchDocumentMetadata elasticsearchDocumentMetadata) {
 
         String key = String.format("%s-%s", elasticsearchDocumentMetadata.getIndexName(), elasticsearchDocumentMetadata.getTypeName());
 
@@ -93,7 +88,7 @@ public final class MetadataXContentBuilder {
      * @param fields The fields to append
      * @throws UnableToLoadConstraints Occurs when the constraints file cannot be loaded.
      */
-    private static void setXContentBuilderFields(XContentBuilder xbMapping, Map<String, ElasticsearchFieldMetadata> fields) throws UnableToLoadConstraints {
+    private static void setXContentBuilderFields(XContentBuilder xbMapping, Map<String, ElasticsearchFieldMetadata> fields) {
 
         if(fields.keySet().size() < 1)
             return;
@@ -120,7 +115,7 @@ public final class MetadataXContentBuilder {
             xbMapping.endObject();
 
         } catch (IOException e) {
-            throw new UnableToLoadConstraints(e);
+            throw new RuntimeException("");
         }
     }
 }
