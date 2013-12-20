@@ -53,7 +53,7 @@ public final class MetadataXContentBuilder {
                                 elasticsearchDocumentMetadata.getParent().getTypeName()
                         );
                     }
-                    if(rootField.getAttributes().get(attributeName).getClass().isArray()) {
+                    else if(rootField.getAttributes().get(attributeName).getClass().isArray()) {
                         xbMapping.field(attributeName,rootField.getAttributes().get(attributeName));
                     }
                     else
