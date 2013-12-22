@@ -59,15 +59,15 @@ public class TestElasticsearchMapping {
         ElasticsearchMapping.get(InvalidParentTypeAnnotationTestClass.class);
     }
 
-//    @Test
-//    public void testGettingTweetMapping() throws InvalidParentDocumentSpecified, ClassNotAnnotated, IOException, JSONException, InvalidAttributeForType, UnableToLoadConstraints {
-//
-//        ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.get(Tweet.class);
-//        String json = documentMetadata.toMapping();
-//
-//        String expected = "{\"tweet\":{\"_parent\":{\"type\":\"user\"},\"properties\":{\"user\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"postDate\":{\"type\":\"date\"},\"message\":{\"type\":\"string\"}}}}";
-//        JSONAssert.assertEquals(expected,json,false);
-//    }
+    @Test
+    public void testGettingTweetMapping() throws IOException, JSONException {
+
+        ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.get(Tweet.class);
+        String json = documentMetadata.toMapping();
+
+        String expected = "{\"tweet\":{\"_parent\":{\"type\":\"user\"},\"properties\":{\"user\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"postDate\":{\"type\":\"date\"},\"message\":{\"type\":\"string\"}}}}";
+        JSONAssert.assertEquals(expected,json,false);
+    }
 
     @Test
     public void testGettingParentMappingFromChild() throws IOException, JSONException {

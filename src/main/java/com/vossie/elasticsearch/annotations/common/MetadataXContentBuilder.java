@@ -86,7 +86,6 @@ public final class MetadataXContentBuilder {
      * Populate the child field nodes.
      * @param xbMapping The content builder to use.
      * @param fields The fields to append
-     * @throws UnableToLoadConstraints Occurs when the constraints file cannot be loaded.
      */
     private static void setXContentBuilderFields(XContentBuilder xbMapping, Map<String, ElasticsearchFieldMetadata> fields) {
 
