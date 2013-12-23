@@ -97,12 +97,6 @@ public class TestElasticsearchMapping {
         assertFalse(new ESTypeAttributeConstraints().isValidAttributeForType(FieldType.GEO_POINT.toString(), "term_vector"));
     }
 
-    @Test
-    public void testSettingAnInvalidAttributeForType() {
-
-        ElasticsearchMapping.get(UserWithInvalidAttribute.class);
-    }
-
 //    @Test
 //    public void testSavingMappingToElasticInstance() throws InvalidAttributeForType, ClassNotAnnotated, InvalidParentDocumentSpecified, IOException, JSONException, UnableToLoadConstraints {
 //

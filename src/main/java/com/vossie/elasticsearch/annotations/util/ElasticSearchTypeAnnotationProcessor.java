@@ -19,13 +19,9 @@ import java.util.Set;
 /**
 * Created by rpatadia on 17/12/2013.
 */
-@SupportedAnnotationTypes({ElasticsearchAnnotationTypeNames.ELASTICSEARCH_FIELD})
+@SupportedAnnotationTypes({ElasticsearchAnnotationTypeNames.ELASTICSEARCH_TYPE})
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class ElasticSearchTypeAnnotationProcessor extends AbstractProcessor {
-
-    public ElasticSearchTypeAnnotationProcessor() {
-        super();
-    }
 
     @Override
     public boolean process(Set<? extends TypeElement> typeElements,
@@ -51,7 +47,7 @@ public class ElasticSearchTypeAnnotationProcessor extends AbstractProcessor {
     }
 
     /**
-     * This operation will check for duplicate occurrences of ElasticsearchFields in the annotations
+     * This operation is used to validate the use of ElasticSearchTypes in the annotations
      * @param elasticsearchType - this is an instance of the ElasticSearchDocument type
      * @return
      */
