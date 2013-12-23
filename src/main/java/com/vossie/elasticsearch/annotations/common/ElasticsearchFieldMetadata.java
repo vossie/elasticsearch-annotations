@@ -34,7 +34,7 @@ public class ElasticsearchFieldMetadata {
         this.elasticsearchType = elasticsearchType;
         this.children = Collections.unmodifiableMap(children);
 
-        setAttributes(this.elasticsearchType.type().toString(), this.elasticsearchType);
+        setAttributes(this.elasticsearchType);
     }
 
     public ElasticsearchFieldMetadata(String fieldName, ElasticsearchField elasticsearchFieldField,
@@ -44,47 +44,12 @@ public class ElasticsearchFieldMetadata {
         this.children = Collections.unmodifiableMap(children);
         this.elasticsearchField = elasticsearchFieldField;
 
-        setAttributes(this.elasticsearchField._fieldName().toString(), this.elasticsearchField);
+        setAttributes(this.elasticsearchField);
     }
 
-    private void setAttributes(String typeName, Annotation annotation)  {
+    private void setAttributes( Annotation annotation)  {
 
-        // Todo: Find a way of doing this without the spring dependency.
-        Map<String, Object> allAttributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(annotation));
-
-        ESTypeAttributeConstraints constraints = new ESTypeAttributeConstraints();
-        Map<String, Object> tempAttributes = new HashMap<>();
-
-        for(String key : allAttributes.keySet()) {
-
-            String attributeName = AttributeNameHelper.getAttributeName(annotation, key);
-            Object value = allAttributes.get(key);
-
-            if(value.toString().equals(Empty.NULL))
-                continue;
-
-            if(value.getClass().isArray() && ((Object[]) value).length == 0)
-                continue;
-
-            if(value.toString().equals("0") || value.toString().equals("0.0"))
-                continue;
-
-            if(value.toString().equals(Empty.class.toString()))
-                continue;
-
-            else if(!constraints.isValidAttributeForType(typeName, attributeName)) {
-
-                if(!constraints.getAttributeNames().contains(attributeName))
-                    continue;
-
-//                throw new InvalidAttributeForType(typeName,attributeName, annotation.getClass().getCanonicalName());
-            }
-
-            tempAttributes.put(attributeName, value);
-        }
-
-
-        this.attributes = Collections.unmodifiableMap(tempAttributes);
+        this.attributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(annotation));
     }
 
     public Map<String, Object> getAttributes() {

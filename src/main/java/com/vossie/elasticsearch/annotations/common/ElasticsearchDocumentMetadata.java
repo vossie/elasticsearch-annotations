@@ -22,11 +22,11 @@ public class ElasticsearchDocumentMetadata {
 
     private String typeName;
     private ElasticsearchDocument elasticsearchDocument;
+    private Map<String,ElasticsearchFieldMetadata> elasticsearchTypes;
     private Map<String,ElasticsearchFieldMetadata> elasticsearchFields;
-    private Map<String,ElasticsearchFieldMetadata> elasticsearchRootFields;
     private Map<String, Object> attributes;
 
-    public ElasticsearchDocumentMetadata(Class<?> clazz, ElasticsearchDocument elasticsearchDocument, Map<String, ElasticsearchFieldMetadata> elasticsearchFields, Map<String, ElasticsearchFieldMetadata> elasticsearchRootFields) {
+    public ElasticsearchDocumentMetadata(Class<?> clazz, ElasticsearchDocument elasticsearchDocument, Map<String, ElasticsearchFieldMetadata> elasticsearchTypes, Map<String, ElasticsearchFieldMetadata> elasticsearchFields) {
 
         // Set the type name
         this.typeName = (elasticsearchDocument.type().equals(Empty.NULL))
@@ -34,16 +34,16 @@ public class ElasticsearchDocumentMetadata {
                 : elasticsearchDocument.type();
 
         this.elasticsearchDocument = elasticsearchDocument;
+        this.elasticsearchTypes = Collections.unmodifiableMap(elasticsearchTypes);
         this.elasticsearchFields = Collections.unmodifiableMap(elasticsearchFields);
-        this.elasticsearchRootFields = Collections.unmodifiableMap(elasticsearchRootFields);
 
         // Todo: Find a way of doing this without the spring dependency.
         this.attributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(elasticsearchDocument));
 
     }
 
-    public Map<String, ElasticsearchFieldMetadata> getElasticsearchFields() {
-        return elasticsearchFields;
+    public Map<String, ElasticsearchFieldMetadata> getElasticsearchProperties() {
+        return elasticsearchTypes;
     }
 
     /**
@@ -69,11 +69,8 @@ public class ElasticsearchDocumentMetadata {
      */
     public ElasticsearchDocumentMetadata getParent()  {
 
-        if(!hasParent())
-            return null;
-
-        Class<?> parentClass = (this.elasticsearchRootFields.get(FieldName._PARENT.toString()).getAttributes().containsKey("type"))
-                    ?(Class<?>) this.elasticsearchRootFields.get(FieldName._PARENT.toString()).getAttributes().get("type")
+        Class<?> parentClass = (this.elasticsearchFields.get(FieldName._PARENT.toString()).getAttributes().containsKey("type"))
+                    ?(Class<?>) this.elasticsearchFields.get(FieldName._PARENT.toString()).getAttributes().get("type")
                     : null;
 
         if(parentClass != null)
@@ -82,9 +79,6 @@ public class ElasticsearchDocumentMetadata {
         return null;
     }
 
-    public boolean hasParent() {
-        return (this.elasticsearchRootFields.containsKey(FieldName._PARENT.toString()));
-    }
 
     /**
      * Should we store the source data in the index.
@@ -94,8 +88,8 @@ public class ElasticsearchDocumentMetadata {
      * @return True if the source is stored.
      */
     public boolean isSourceStoredWithIndex() {
-        return (this.elasticsearchRootFields.containsKey(FieldName._SOURCE.toString()))
-                ? Boolean.valueOf(this.elasticsearchRootFields.get(FieldName._SOURCE.toString()).getAttributes().get("enabled").toString())
+        return (this.elasticsearchFields.containsKey(FieldName._SOURCE.toString()))
+                ? Boolean.valueOf(this.elasticsearchFields.get(FieldName._SOURCE.toString()).getAttributes().get("enabled").toString())
                 : true;
     }
 
@@ -103,8 +97,37 @@ public class ElasticsearchDocumentMetadata {
      * Get a list of field names.
      * @return
      */
+    public String[] getPropertyNames() {
+        return this.getElasticsearchProperties().keySet().toArray(new String[this.getElasticsearchProperties().size()]);
+    }
+
+    /**
+     * Get all the fields in this mapping.
+     * @return Map of indexed fields.
+     */
+    public Map<String, ElasticsearchFieldMetadata> getProperties() {
+        return this.elasticsearchTypes;
+    }
+
+    /**
+     * Get the metadata associated with a specific field.
+     * @param fieldName The name of the field to retrieve.
+     * @return The meta data if found otherwise null.
+     */
+    public ElasticsearchFieldMetadata getPropertyMetaData(String fieldName) {
+
+        return (this.elasticsearchTypes.containsKey(fieldName))
+                ? this.elasticsearchTypes.get(fieldName)
+                : null;
+    }
+
+
+    /**
+     * Get a list of field names.
+     * @return
+     */
     public String[] getFieldNames() {
-        return this.getElasticsearchFields().keySet().toArray(new String[this.getElasticsearchFields().size()]);
+        return this.getFields().keySet().toArray(new String[this.getFields().size()]);
     }
 
     /**
@@ -122,37 +145,8 @@ public class ElasticsearchDocumentMetadata {
      */
     public ElasticsearchFieldMetadata getFieldMetaData(String fieldName) {
 
-        return (this.elasticsearchFields.containsKey(fieldName))
-                ? this.elasticsearchFields.get(fieldName)
-                : null;
-    }
-
-
-    /**
-     * Get a list of field names.
-     * @return
-     */
-    public String[] getRootFieldNames() {
-        return this.getRootFields().keySet().toArray(new String[this.getRootFields().size()]);
-    }
-
-    /**
-     * Get all the fields in this mapping.
-     * @return Map of indexed fields.
-     */
-    public Map<String, ElasticsearchFieldMetadata> getRootFields() {
-        return this.elasticsearchRootFields;
-    }
-
-    /**
-     * Get the metadata associated with a specific field.
-     * @param fieldName The name of the field to retrieve.
-     * @return The meta data if found otherwise null.
-     */
-    public ElasticsearchFieldMetadata getRootFieldMetaData(String fieldName) {
-
-        if(this.elasticsearchRootFields.containsKey(fieldName))
-            return this.elasticsearchRootFields.get(fieldName);
+        if(this.elasticsearchFields.containsKey(fieldName))
+            return this.elasticsearchFields.get(fieldName);
 
         return null;
     }

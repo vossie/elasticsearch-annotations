@@ -11,7 +11,9 @@ import org.elasticsearch.cluster.metadata.IndexMetaData;
 import org.elasticsearch.cluster.metadata.MappingMetaData;
 import org.elasticsearch.indices.IndexAlreadyExistsException;
 import org.elasticsearch.node.Node;
+import org.elasticsearch.node.NodeBuilder;
 import org.json.JSONException;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
@@ -31,21 +33,21 @@ public class TestElasticsearchMapping {
 
     private static Node node;
 
-//    @BeforeClass
-//    public static void init() {
-//
-//        node = NodeBuilder.nodeBuilder()
-//                .node();
-//
-//        node
-//                .client()
-//                .admin()
-//                .cluster()
-//                .prepareHealth()
-//                .setWaitForGreenStatus()
-//                .execute()
-//                .actionGet();
-//    }
+    @BeforeClass
+    public static void init() {
+
+        node = NodeBuilder.nodeBuilder()
+                .node();
+
+        node
+                .client()
+                .admin()
+                .cluster()
+                .prepareHealth()
+                .setWaitForGreenStatus()
+                .execute()
+                .actionGet();
+    }
 
     @Test
     public void testForClassNotAnnotatedException() {

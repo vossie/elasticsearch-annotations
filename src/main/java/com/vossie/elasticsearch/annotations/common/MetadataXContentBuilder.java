@@ -39,32 +39,32 @@ public final class MetadataXContentBuilder {
                     .startObject(elasticsearchDocumentMetadata.getTypeName());
 
 
-            for(String rootFieldName : elasticsearchDocumentMetadata.getRootFieldNames()) {
+            for(String fieldName : elasticsearchDocumentMetadata.getFieldNames()) {
 
-                ElasticsearchFieldMetadata rootField = elasticsearchDocumentMetadata.getRootFieldMetaData(rootFieldName);
-                xbMapping.startObject(rootField.getFieldName());
+                ElasticsearchFieldMetadata field = elasticsearchDocumentMetadata.getFieldMetaData(fieldName);
+                xbMapping.startObject(field.getFieldName());
 
-                for(String attributeName : rootField.getAttributes().keySet()) {
+                for(String attributeName : field.getAttributes().keySet()) {
 
-                    if(rootFieldName.equals(FieldName._PARENT.toString()) && attributeName.equals("type")) {
+                    if(fieldName.equals(FieldName._PARENT.toString()) && attributeName.equals("type")) {
 
                         xbMapping.field(
                                 attributeName,
                                 elasticsearchDocumentMetadata.getParent().getTypeName()
                         );
                     }
-                    else if(rootField.getAttributes().get(attributeName).getClass().isArray()) {
-                        xbMapping.field(attributeName,rootField.getAttributes().get(attributeName));
+                    else if(field.getAttributes().get(attributeName).getClass().isArray()) {
+                        xbMapping.field(attributeName,field.getAttributes().get(attributeName));
                     }
                     else
-                        xbMapping.field(attributeName,rootField.getAttributes().get(attributeName).toString());
+                        xbMapping.field(attributeName,field.getAttributes().get(attributeName).toString());
                 }
 
                 xbMapping.endObject();
             }
 
             // Add the fields.
-            setXContentBuilderFields(xbMapping, elasticsearchDocumentMetadata.getFields());
+            setXContentBuilderFields(xbMapping, elasticsearchDocumentMetadata.getProperties());
 
             // End
             xbMapping
