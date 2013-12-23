@@ -1,6 +1,6 @@
 package com.vossie.test;
 
-import com.vossie.elasticsearch.annotations.util.ElasticSearchDocumentAnnotationProcessor;
+import com.vossie.elasticsearch.annotations.util.ElasticSearchTypeAnnotationProcessor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,21 +25,21 @@ import static org.junit.Assert.assertTrue;
  */
 public class ElasticSearchTypeAnnotationProcessorTest {
 
-    private ElasticSearchDocumentAnnotationProcessor annotationProcessor;
+    private ElasticSearchTypeAnnotationProcessor annotationProcessor;
 
     private File sandBoxDir;
 
     @Before
     public void setUp() throws IOException {
-        annotationProcessor = new ElasticSearchDocumentAnnotationProcessor();
+        annotationProcessor = new ElasticSearchTypeAnnotationProcessor();
         sandBoxDir = new File("target");
     }
 
     @Test(expected = RuntimeException.class)
-    public void testCustomAnnotationProcessorDuplicateFields() throws URISyntaxException {
+    public void testCustomAnnotationProcessorInvalidTypeAttributes() throws URISyntaxException {
 
         // given
-        String[] testSourceFileNames = new String[] { "ClassWithDuplicateFields.java" };
+        String[] testSourceFileNames = new String[] {"ClassWithInvalidTypeAttributes.java"};
         JavaCompiler.CompilationTask task = processAnnotations(testSourceFileNames, annotationProcessor);
 
         // Perform the compilation task.
@@ -48,10 +48,10 @@ public class ElasticSearchTypeAnnotationProcessorTest {
 
 
     @Test
-    public void testCustomAnnotationProcessorValid() throws URISyntaxException {
+    public void testCustomAnnotationProcessorValidTypeAttributes() throws URISyntaxException {
 
         // given
-        String[] testSourceFileNames = new String[] { "ClassWithValidFields.java" };
+        String[] testSourceFileNames = new String[] {"ClassWithValidTypeAttributes.java"};
         JavaCompiler.CompilationTask task = processAnnotations(testSourceFileNames, annotationProcessor);
 
         // Perform the compilation task.
@@ -59,7 +59,7 @@ public class ElasticSearchTypeAnnotationProcessorTest {
     }
 
 
-    private JavaCompiler.CompilationTask processAnnotations(String[] testSourceFileNames, ElasticSearchDocumentAnnotationProcessor annotationProcessor) throws URISyntaxException {
+    private JavaCompiler.CompilationTask processAnnotations(String[] testSourceFileNames, ElasticSearchTypeAnnotationProcessor annotationProcessor) throws URISyntaxException {
         // Get an instance of java compiler
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 

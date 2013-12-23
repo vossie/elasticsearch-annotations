@@ -16,6 +16,8 @@ import java.lang.annotation.Target;
  *
  * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-types.html
  */
+
+//TODO add attributes for all ElasticsearchTypes
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface ElasticsearchType {
@@ -145,5 +147,14 @@ public @interface ElasticsearchType {
      * "format" : "YYYY-MM-dd"
      */
     public String format() default Empty.NULL;
+
+    // geo_shape
+
+    /**
+     * Name of the PrefixTree implementation to be used
+     * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-geo-shape-type.html
+     * @return
+     */
+    public String tree() default Empty.NULL;
 
 }
