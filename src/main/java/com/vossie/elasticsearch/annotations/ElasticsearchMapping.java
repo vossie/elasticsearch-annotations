@@ -142,12 +142,12 @@ public abstract class ElasticsearchMapping {
             for (ElasticsearchField systemField : systemFields){
 
                 ElasticsearchFieldMetadata metadata = new ElasticsearchFieldMetadata(
-                        systemField.fieldName().toString(),
+                        systemField._fieldName().toString(),
                         systemField,
                         new HashMap<String,ElasticsearchFieldMetadata>()
                 );
 
-                elasticsearchFieldMappings.put(systemField.fieldName().toString(), metadata);
+                elasticsearchFieldMappings.put(systemField._fieldName().toString(), metadata);
             }
 
         return elasticsearchFieldMappings;

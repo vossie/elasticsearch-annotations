@@ -14,7 +14,7 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
         type = "my_type",
         _elasticsearchFields = {
                 @ElasticsearchField(
-                        fieldName = FieldName._SOURCE,
+                        _fieldName = FieldName._SOURCE,
                         includes = {
                                 "path1.*", "path2.*"
                         },
@@ -23,7 +23,7 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
                         }
                 ),
                 @ElasticsearchField(
-                        fieldName = FieldName._SOURCE,
+                        _fieldName = FieldName._SOURCE,
                         includes = {
                                 "path1.*", "path2.*"
                         },

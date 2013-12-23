@@ -44,7 +44,7 @@ public class ElasticsearchFieldMetadata {
         this.children = Collections.unmodifiableMap(children);
         this.elasticsearchField = elasticsearchFieldField;
 
-        setAttributes(this.elasticsearchField.fieldName().toString(), this.elasticsearchField);
+        setAttributes(this.elasticsearchField._fieldName().toString(), this.elasticsearchField);
     }
 
     private void setAttributes(String typeName, Annotation annotation)  {

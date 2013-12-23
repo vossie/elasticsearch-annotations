@@ -1,5 +1,3 @@
-package com.vossie.test;
-
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
 import com.vossie.elasticsearch.annotations.ElasticsearchType;
@@ -21,19 +19,10 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
                         excludes = {
                                 "pat3.*"
                         }
-                ),
-                @ElasticsearchField(
-                        _fieldName = FieldName._SOURCE,
-                        includes = {
-                                "path1.*", "path2.*"
-                        },
-                        excludes = {
-                                "pat3.*"
-                        }
                 )
         }
 )
-public class ClassWithDuplicateFields {
+public class ClassWithValidFields {
 
     @ElasticsearchType(type = FieldType.STRING)
     private String myValue;

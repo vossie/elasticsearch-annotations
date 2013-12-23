@@ -37,14 +37,26 @@ public class ElasticSearchDocumentAnnotationProcessorTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void testCustomAnnotationProcessor() throws URISyntaxException {
+    public void testCustomAnnotationProcessorDuplicateFields() throws URISyntaxException {
 
         // given
         String[] testSourceFileNames = new String[] { "ClassWithDuplicateFields.java" };
         JavaCompiler.CompilationTask task = processAnnotations(testSourceFileNames, annotationProcessor);
 
         // Perform the compilation task.
-        assertFalse("Fail - Duplicate fields should not be accepted",task.call());
+        task.call();
+    }
+
+
+    @Test
+    public void testCustomAnnotationProcessorValid() throws URISyntaxException {
+
+        // given
+        String[] testSourceFileNames = new String[] { "ClassWithValidFields.java" };
+        JavaCompiler.CompilationTask task = processAnnotations(testSourceFileNames, annotationProcessor);
+
+        // Perform the compilation task.
+        assertTrue("Fail - Duplicate fields should not be accepted",task.call());
     }
 
 

@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface ElasticsearchField {
 
-    public FieldName fieldName();
+    public FieldName _fieldName();
 
 
     /**

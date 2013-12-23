@@ -64,10 +64,10 @@ public class ElasticSearchDocumentAnnotationProcessor extends AbstractProcessor 
 
         for(ElasticsearchField elasticsearchField : elasticsearchDocument._elasticsearchFields()) {
 
-            if(fieldNames.contains(elasticsearchField.fieldName())) {
-                throw new RuntimeException(String.format("Class %s is using duplicate annotated Elasticsearch fields %s. ", className, elasticsearchField.fieldName().toString()));
+            if(fieldNames.contains(elasticsearchField._fieldName())) {
+                throw new RuntimeException(String.format("Class %s is using duplicate annotated Elasticsearch fields %s. ", className, elasticsearchField._fieldName().toString()));
             }
-            fieldNames.add(elasticsearchField.fieldName());
+            fieldNames.add(elasticsearchField._fieldName());
         }
 
         return true;
@@ -76,7 +76,7 @@ public class ElasticSearchDocumentAnnotationProcessor extends AbstractProcessor 
     private void validateParentType(ElasticsearchDocument elasticsearchDocument) {
 
         for (ElasticsearchField elasticsearchField : elasticsearchDocument._elasticsearchFields()) {
-            if (!elasticsearchField.fieldName().equals(FieldName._PARENT.toString()))
+            if (!elasticsearchField._fieldName().equals(FieldName._PARENT.toString()))
                 continue;
 
             if(elasticsearchField.type().toString().equals(Empty.class.toString()))

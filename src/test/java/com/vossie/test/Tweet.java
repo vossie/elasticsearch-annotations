@@ -16,58 +16,58 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
 //        type = "tweet"    /** optional, if not set it will use the simple class name in a lower hyphenated format */,
         _elasticsearchFields = {
                 @ElasticsearchField(
-                        fieldName = FieldName._ID,
+                        _fieldName = FieldName._ID,
                         index = "not_analyzed",
                         store = "yes"
                 ),
                 @ElasticsearchField(
-                        fieldName = FieldName._TYPE,
+                        _fieldName = FieldName._TYPE,
                         index = "no",
                         store = "yes"
                 ),
                 @ElasticsearchField(
-                    fieldName = FieldName._SOURCE,
+                    _fieldName = FieldName._SOURCE,
                     enabled = BooleanValue.TRUE
                 ),
                 @ElasticsearchField(
-                        fieldName = FieldName._ALL,
+                        _fieldName = FieldName._ALL,
                         enabled = BooleanValue.TRUE
                 ),
                 @ElasticsearchField(
-                        fieldName = FieldName._ANALYZER,
+                        _fieldName = FieldName._ANALYZER,
                         path = "user"
                 ),
                 @ElasticsearchField(
-                        fieldName = FieldName._BOOST,
+                        _fieldName = FieldName._BOOST,
                         name = "my_boost",
                         null_value = "1.0"
                 ),
                 @ElasticsearchField(
-                        fieldName = FieldName._PARENT,
+                        _fieldName = FieldName._PARENT,
                         type = User.class
                 ),
                 @ElasticsearchField(
-                        fieldName = FieldName._ROUTING,
+                        _fieldName = FieldName._ROUTING,
                         required = BooleanValue.FALSE,
                         path = "blog.post_id"
                 ),
                 @ElasticsearchField(
-                        fieldName = FieldName._INDEX,
+                        _fieldName = FieldName._INDEX,
                         enabled = BooleanValue.FALSE
                 ),
                 @ElasticsearchField(
-                        fieldName = FieldName._SIZE,
+                        _fieldName = FieldName._SIZE,
                         enabled = BooleanValue.FALSE,
                         store = "yes"
                 ),
                 @ElasticsearchField(
-                        fieldName = FieldName._TIMESTAMP,
+                        _fieldName = FieldName._TIMESTAMP,
                         enabled = BooleanValue.FALSE,
                         path = "post_date",
                         format = "dateOptionalTime"
                 ),
                 @ElasticsearchField(
-                        fieldName = FieldName._TTL,
+                        _fieldName = FieldName._TTL,
                         enabled = BooleanValue.TRUE,
                         defaultValue = "1d"
                 )

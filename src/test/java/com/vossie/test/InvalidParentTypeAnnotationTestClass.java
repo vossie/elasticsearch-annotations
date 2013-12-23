@@ -16,7 +16,7 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
         index = "test",
         _elasticsearchFields = {
                 @ElasticsearchField(
-                        fieldName = FieldName._PARENT,
+                        _fieldName = FieldName._PARENT,
                         type = Object.class
                 )
         }
