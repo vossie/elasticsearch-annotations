@@ -22,11 +22,11 @@ public class ElasticsearchDocumentMetadata {
 
     private String typeName;
     private ElasticsearchDocument elasticsearchDocument;
-    private Map<String,ElasticsearchFieldMetadata> elasticsearchTypes;
-    private Map<String,ElasticsearchFieldMetadata> elasticsearchFields;
+    private Map<String,ElasticsearchNodeMetadata> elasticsearchTypes;
+    private Map<String,ElasticsearchNodeMetadata> elasticsearchFields;
     private Map<String, Object> attributes;
 
-    public ElasticsearchDocumentMetadata(Class<?> clazz, ElasticsearchDocument elasticsearchDocument, Map<String, ElasticsearchFieldMetadata> elasticsearchTypes, Map<String, ElasticsearchFieldMetadata> elasticsearchFields) {
+    public ElasticsearchDocumentMetadata(Class<?> clazz, ElasticsearchDocument elasticsearchDocument, Map<String, ElasticsearchNodeMetadata> elasticsearchTypes, Map<String, ElasticsearchNodeMetadata> elasticsearchFields) {
 
         // Set the type name
         this.typeName = (elasticsearchDocument.type().equals(Empty.NULL))
@@ -42,7 +42,7 @@ public class ElasticsearchDocumentMetadata {
 
     }
 
-    public Map<String, ElasticsearchFieldMetadata> getElasticsearchProperties() {
+    public Map<String, ElasticsearchNodeMetadata> getElasticsearchProperties() {
         return elasticsearchTypes;
     }
 
@@ -105,7 +105,7 @@ public class ElasticsearchDocumentMetadata {
      * Get all the fields in this mapping.
      * @return Map of indexed fields.
      */
-    public Map<String, ElasticsearchFieldMetadata> getProperties() {
+    public Map<String, ElasticsearchNodeMetadata> getProperties() {
         return this.elasticsearchTypes;
     }
 
@@ -114,7 +114,7 @@ public class ElasticsearchDocumentMetadata {
      * @param fieldName The name of the field to retrieve.
      * @return The meta data if found otherwise null.
      */
-    public ElasticsearchFieldMetadata getPropertyMetaData(String fieldName) {
+    public ElasticsearchNodeMetadata getPropertyMetaData(String fieldName) {
 
         return (this.elasticsearchTypes.containsKey(fieldName))
                 ? this.elasticsearchTypes.get(fieldName)
@@ -134,7 +134,7 @@ public class ElasticsearchDocumentMetadata {
      * Get all the fields in this mapping.
      * @return Map of indexed fields.
      */
-    public Map<String, ElasticsearchFieldMetadata> getFields() {
+    public Map<String, ElasticsearchNodeMetadata> getFields() {
         return this.elasticsearchFields;
     }
 
@@ -143,7 +143,7 @@ public class ElasticsearchDocumentMetadata {
      * @param fieldName The name of the field to retrieve.
      * @return The meta data if found otherwise null.
      */
-    public ElasticsearchFieldMetadata getFieldMetaData(String fieldName) {
+    public ElasticsearchNodeMetadata getFieldMetaData(String fieldName) {
 
         if(this.elasticsearchFields.containsKey(fieldName))
             return this.elasticsearchFields.get(fieldName);

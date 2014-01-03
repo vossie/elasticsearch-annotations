@@ -41,7 +41,7 @@ public final class MetadataXContentBuilder {
 
             for(String fieldName : elasticsearchDocumentMetadata.getFieldNames()) {
 
-                ElasticsearchFieldMetadata field = elasticsearchDocumentMetadata.getFieldMetaData(fieldName);
+                ElasticsearchNodeMetadata field = elasticsearchDocumentMetadata.getFieldMetaData(fieldName);
                 xbMapping.startObject(field.getFieldName());
 
                 for(String attributeName : field.getAttributes().keySet()) {
@@ -87,7 +87,7 @@ public final class MetadataXContentBuilder {
      * @param xbMapping The content builder to use.
      * @param fields The fields to append
      */
-    private static void setXContentBuilderFields(XContentBuilder xbMapping, Map<String, ElasticsearchFieldMetadata> fields) {
+    private static void setXContentBuilderFields(XContentBuilder xbMapping, Map<String, ElasticsearchNodeMetadata> fields) {
 
         if(fields.keySet().size() < 1)
             return;
@@ -98,7 +98,7 @@ public final class MetadataXContentBuilder {
             // Iterate over all the annotated fields
             for(String fieldName : fields.keySet()) {
 
-                ElasticsearchFieldMetadata elasticsearchField = fields.get(fieldName);
+                ElasticsearchNodeMetadata elasticsearchField = fields.get(fieldName);
 
                 xbMapping.startObject(elasticsearchField.getFieldName());
 

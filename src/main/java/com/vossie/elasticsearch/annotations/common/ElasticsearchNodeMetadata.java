@@ -3,7 +3,6 @@ package com.vossie.elasticsearch.annotations.common;
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
 import com.vossie.elasticsearch.annotations.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.util.AttributeNameHelper;
-import com.vossie.elasticsearch.annotations.util.ESTypeAttributeConstraints;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import java.lang.annotation.Annotation;
@@ -17,17 +16,17 @@ import java.util.Map;
  * Date: 06/12/2013
  * Time: 09:36
  */
-public class ElasticsearchFieldMetadata {
+public class ElasticsearchNodeMetadata {
 
     private boolean isArray;
     private String fieldName;
     private Map<String, Object> attributes;
     private ElasticsearchType elasticsearchType;
     private ElasticsearchField elasticsearchField;
-    private Map<String, ElasticsearchFieldMetadata> children;
+    private Map<String, ElasticsearchNodeMetadata> children;
 
-    public ElasticsearchFieldMetadata(String fieldName, ElasticsearchType elasticsearchType, boolean isArray,
-                                      Map<String,ElasticsearchFieldMetadata> children)  {
+    public ElasticsearchNodeMetadata(String fieldName, ElasticsearchType elasticsearchType, boolean isArray,
+                                     Map<String, ElasticsearchNodeMetadata> children)  {
 
         this.isArray = isArray;
         this.fieldName = fieldName;
@@ -37,8 +36,8 @@ public class ElasticsearchFieldMetadata {
         setAttributes(this.elasticsearchType);
     }
 
-    public ElasticsearchFieldMetadata(String fieldName, ElasticsearchField elasticsearchFieldField,
-                                      Map<String,ElasticsearchFieldMetadata> children)  {
+    public ElasticsearchNodeMetadata(String fieldName, ElasticsearchField elasticsearchFieldField,
+                                     Map<String, ElasticsearchNodeMetadata> children)  {
 
         this.fieldName = fieldName;
         this.children = Collections.unmodifiableMap(children);
@@ -84,7 +83,7 @@ public class ElasticsearchFieldMetadata {
         return fieldName;
     }
 
-    public Map<String, ElasticsearchFieldMetadata> getChildren() {
+    public Map<String, ElasticsearchNodeMetadata> getChildren() {
         return this.children;
     }
 

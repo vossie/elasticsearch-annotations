@@ -1,7 +1,7 @@
 package com.vossie.elasticsearch.annotations;
 
 import com.vossie.elasticsearch.annotations.common.ElasticsearchDocumentMetadata;
-import com.vossie.elasticsearch.annotations.common.ElasticsearchFieldMetadata;
+import com.vossie.elasticsearch.annotations.common.ElasticsearchNodeMetadata;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
 
 import java.lang.reflect.Field;
@@ -69,9 +69,9 @@ public abstract class ElasticsearchMapping {
      * @param clazz The class to scan
      * @return Returns a list containing the field metadata
      */
-    private static Map<String, ElasticsearchFieldMetadata> getElasticsearchFieldsMetadata(Class<?> clazz) {
+    private static Map<String, ElasticsearchNodeMetadata> getElasticsearchFieldsMetadata(Class<?> clazz) {
 
-        Map<String, ElasticsearchFieldMetadata> elasticsearchFieldMappings = new HashMap<>();
+        Map<String, ElasticsearchNodeMetadata> elasticsearchFieldMappings = new HashMap<>();
 
         if(clazz == null)
             return elasticsearchFieldMappings;
@@ -89,7 +89,7 @@ public abstract class ElasticsearchMapping {
             if(elasticsearchType == null)
                 continue;
 
-            ElasticsearchFieldMetadata elasticsearchFieldMetadata;
+            ElasticsearchNodeMetadata elasticsearchNodeMetadata;
             boolean isArray = false;
             Class<?> childClass = null;
 
@@ -123,28 +123,28 @@ public abstract class ElasticsearchMapping {
             }
 
             // Set the children
-            elasticsearchFieldMetadata = new ElasticsearchFieldMetadata(field.getName(), elasticsearchType, isArray, getElasticsearchFieldsMetadata(childClass));
+            elasticsearchNodeMetadata = new ElasticsearchNodeMetadata(field.getName(), elasticsearchType, isArray, getElasticsearchFieldsMetadata(childClass));
 
             // Add to the response list
-            elasticsearchFieldMappings.put(elasticsearchFieldMetadata.getFieldName(), elasticsearchFieldMetadata);
+            elasticsearchFieldMappings.put(elasticsearchNodeMetadata.getFieldName(), elasticsearchNodeMetadata);
         }
 
         return elasticsearchFieldMappings;
     }
 
 
-    private static Map<String, ElasticsearchFieldMetadata> getElasticsearchSystemFieldsMetadata(ElasticsearchField[] systemFields) {
+    private static Map<String, ElasticsearchNodeMetadata> getElasticsearchSystemFieldsMetadata(ElasticsearchField[] systemFields) {
 
-        Map<String, ElasticsearchFieldMetadata> elasticsearchFieldMappings = new HashMap<>();
+        Map<String, ElasticsearchNodeMetadata> elasticsearchFieldMappings = new HashMap<>();
 
         // Add the system fields
         if(systemFields != null)
             for (ElasticsearchField systemField : systemFields){
 
-                ElasticsearchFieldMetadata metadata = new ElasticsearchFieldMetadata(
+                ElasticsearchNodeMetadata metadata = new ElasticsearchNodeMetadata(
                         systemField._fieldName().toString(),
                         systemField,
-                        new HashMap<String,ElasticsearchFieldMetadata>()
+                        new HashMap<String,ElasticsearchNodeMetadata>()
                 );
 
                 elasticsearchFieldMappings.put(systemField._fieldName().toString(), metadata);
