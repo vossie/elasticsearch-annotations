@@ -27,7 +27,7 @@ public abstract class ElasticsearchMapping {
      * Get the ElasticsearchDocument annotations for the provided class object.
      * @param clazz The class to inspect.
      * @return The ElasticsearchDocument details
-     * @throws ClassNotAnnotated if the annotation is not found.
+     *
      */
     private static ElasticsearchDocument getElasticsearchType(Class<?> clazz) {
 

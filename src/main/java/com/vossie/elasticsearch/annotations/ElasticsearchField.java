@@ -76,9 +76,9 @@ public @interface ElasticsearchField {
      */
     public BooleanValue required() default BooleanValue.NULL;
 
-    public String[] includes() default {};
-
-    public String[] excludes() default {};
+//    public String[] includes() default {};
+//
+//    public String[] excludes() default {};
 
     /**
      * Maps to default

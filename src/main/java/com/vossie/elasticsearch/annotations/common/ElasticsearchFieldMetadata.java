@@ -49,7 +49,31 @@ public class ElasticsearchFieldMetadata {
 
     private void setAttributes( Annotation annotation)  {
 
-        this.attributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(annotation));
+        Map<String, Object> allAttributes = AnnotationUtils.getAnnotationAttributes(annotation);
+
+        Map<String, Object> tempAttributes = new HashMap<>();
+
+        for(String key : allAttributes.keySet()) {
+
+            String attributeName = AttributeNameHelper.getAttributeName(annotation, key);
+            Object value = allAttributes.get(key);
+
+            if(key.toString() == "_fieldName")
+                continue;
+
+            if(value.toString().equals(Empty.NULL))
+                continue;
+
+            if(value.toString().equals("0") || value.toString().equals("0.0"))
+                continue;
+
+            if(value.toString().equals(Empty.class.toString()))
+                continue;
+
+            tempAttributes.put(attributeName, value);
+        }
+
+        this.attributes = Collections.unmodifiableMap(tempAttributes);
     }
 
     public Map<String, Object> getAttributes() {
