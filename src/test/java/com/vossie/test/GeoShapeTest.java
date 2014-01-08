@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Created by rpatadia on 03/01/2014.
  */
-public class GeoShapeTests {
+public class GeoShapeTest {
 
     @Test
     public void parsePolygonCoordinatesValid() throws IOException, JSONException {

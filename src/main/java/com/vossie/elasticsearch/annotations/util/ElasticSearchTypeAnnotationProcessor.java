@@ -1,7 +1,6 @@
 package com.vossie.elasticsearch.annotations.util;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchType;
-import com.vossie.elasticsearch.types.ElasticsearchGeoShape;
 import com.vossie.elasticsearch.annotations.common.Empty;
 import com.vossie.elasticsearch.annotations.enums.ElasticsearchAnnotationTypeNames;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
@@ -40,9 +39,11 @@ public class ElasticSearchTypeAnnotationProcessor extends AbstractProcessor {
             if(elasticsearchType == null)
                 continue;
 
-
             if(elasticsearchType.type().equals(FieldType.GEO_SHAPE)) {
-                if(!(element.asType() instanceof ElasticsearchGeoShape)) {
+                // TODO
+                // Temporary fix - need to find a better solution since this is little kludgey because it relies on a string that is a fully-qualified class-name.
+                // If the namespace changes in the future, this could cause subtle errors.
+                if(!("com.vossie.elasticsearch.types.ElasticsearchGeoShape".equals(element.asType().toString()))) {
                     throw new RuntimeException("For type of GEO shape the object must implement ElasticsearchGeoShape.");
                 }
             }

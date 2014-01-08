@@ -58,6 +58,28 @@ public class ElasticSearchTypeAnnotationProcessorTest {
         assertTrue("Fail - Duplicate fields should not be accepted",task.call());
     }
 
+    @Test
+    public void testCustomAnnotationProcessorValidGeoshapeAttributes() throws URISyntaxException {
+
+        // given
+        String[] testSourceFileNames = new String[] {"ClassWithValidGeoshape.java"};
+        JavaCompiler.CompilationTask task = processAnnotations(testSourceFileNames, annotationProcessor);
+
+        // Perform the compilation task.
+        assertTrue("Fail - Duplicate fields should not be accepted",task.call());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testCustomAnnotationProcessorInvalidGeoshapeAttributes() throws URISyntaxException {
+
+        // given
+        String[] testSourceFileNames = new String[] {"ClassWithInvalidGeoshape.java"};
+        JavaCompiler.CompilationTask task = processAnnotations(testSourceFileNames, annotationProcessor);
+
+        // Perform the compilation task.
+        assertTrue("Fail - Duplicate fields should not be accepted",task.call());
+    }
+
 
     private JavaCompiler.CompilationTask processAnnotations(String[] testSourceFileNames, ElasticSearchTypeAnnotationProcessor annotationProcessor) throws URISyntaxException {
         // Get an instance of java compiler
