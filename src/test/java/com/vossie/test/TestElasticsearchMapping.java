@@ -67,16 +67,16 @@ public class TestElasticsearchMapping {
         ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.get(Tweet.class);
         String json = documentMetadata.toMapping();
 
-        String expected = "{\"tweet\":{\"_parent\":{\"type\":\"user\"},\"properties\":{\"user\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"postDate\":{\"type\":\"date\"},\"message\":{\"type\":\"string\"}}}}";
-        JSONAssert.assertEquals(expected,json,false);
+        String expected = "{\"tweet\":{\"_boost\":{\"null_value\":\"1.0\",\"name\":\"my_boost\"},\"_type\":{\"index\":\"no\",\"store\":\"yes\"},\"_source\":{\"enabled\":\"true\"},\"_id\":{\"index\":\"not_analyzed\",\"store\":\"yes\"},\"_routing\":{\"path\":\"blog.post_id\",\"required\":\"false\"},\"_analyzer\":{\"path\":\"user\"},\"_timestamp\":{\"enabled\":\"false\",\"path\":\"post_date\",\"format\":\"dateOptionalTime\"},\"_index\":{\"enabled\":\"false\"},\"_ttl\":{\"enabled\":\"true\",\"default\":\"1d\"},\"_size\":{\"enabled\":\"false\",\"store\":\"yes\"},\"_all\":{\"enabled\":\"true\"},\"_parent\":{\"type\":\"user\"},\"properties\":{\"message\":{\"index\":\"analyzed\",\"store\":\"true\",\"null_value\":\"na\",\"type\":\"string\"},\"rank\":{\"type\":\"float\"},\"priority\":{\"type\":\"integer\"},\"hes_my_special_tweet\":{\"type\":\"boolean\"},\"postDate\":{\"format\":\"YYYY-MM-dd\",\"type\":\"date\"},\"user\":{\"index\":\"not_analyzed\",\"type\":\"string\"}}}}";
+        JSONAssert.assertEquals(expected,json,true);
     }
 
     @Test
     public void testGettingParentMappingFromChild() throws IOException, JSONException {
 
         String json = ElasticsearchMapping.get(Tweet.class).getParent().toMapping();
-        String expected = "{\"user\":{\"properties\":{\"dateOfBirth\":{\"format\":\"dateOptionalTime\",\"type\":\"date\"},\"location\":{\"type\":\"geo_point\",\"properties\":{\"lon\":{\"type\":\"double\"},\"lat\":{\"type\":\"double\"}}},\"citiesVisited\":{\"type\":\"nested\",\"properties\":{\"location\":{\"type\":\"geo_point\",\"properties\":{\"lon\":{\"type\":\"double\"},\"lat\":{\"type\":\"double\"}}},\"name\":{\"type\":\"string\"}}},\"user\":{\"type\":\"string\"}}}}";
-        JSONAssert.assertEquals(expected,json,false);
+        String expected = "{\"user\":{\"properties\":{\"dateOfBirth\":{\"format\":\"dateOptionalTime\",\"type\":\"date\"},\"location\":{\"type\":\"geo_point\",\"properties\":{\"lon\":{\"type\":\"double\"},\"lat\":{\"type\":\"double\"}}},\"citiesVisited\":{\"type\":\"nested\",\"properties\":{\"location\":{\"type\":\"geo_point\",\"properties\":{\"lon\":{\"type\":\"double\"},\"lat\":{\"type\":\"double\"}}},\"name\":{\"type\":\"string\"}}},\"user\":{\"store\":\"true\",\"type\":\"string\"}}}}";
+        JSONAssert.assertEquals(expected,json,true);
     }
 
     @Test

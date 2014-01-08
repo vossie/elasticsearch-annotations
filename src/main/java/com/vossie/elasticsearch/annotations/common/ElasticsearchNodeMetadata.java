@@ -60,6 +60,11 @@ public class ElasticsearchNodeMetadata {
             if(key.toString() == "_fieldName")
                 continue;
 
+            if (value.getClass().isArray()){
+                if (((String[]) value).length ==0)
+                    continue;
+            }
+
             if(value.toString().equals(Empty.NULL))
                 continue;
 
