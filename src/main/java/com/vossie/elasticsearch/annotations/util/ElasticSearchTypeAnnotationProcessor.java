@@ -1,8 +1,10 @@
 package com.vossie.elasticsearch.annotations.util;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchType;
+import com.vossie.elasticsearch.types.ElasticsearchGeoShape;
 import com.vossie.elasticsearch.annotations.common.Empty;
 import com.vossie.elasticsearch.annotations.enums.ElasticsearchAnnotationTypeNames;
+import com.vossie.elasticsearch.annotations.enums.FieldType;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -37,6 +39,13 @@ public class ElasticSearchTypeAnnotationProcessor extends AbstractProcessor {
 
             if(elasticsearchType == null)
                 continue;
+
+
+            if(elasticsearchType.type().equals(FieldType.GEO_SHAPE)) {
+                if(!(element.asType() instanceof ElasticsearchGeoShape)) {
+                    throw new RuntimeException("For type of GEO shape the object must implement ElasticsearchGeoShape.");
+                }
+            }
 
             verifyDuplicateElasticsearchFieldAnnotations(elasticsearchType);
 
@@ -81,6 +90,8 @@ public class ElasticSearchTypeAnnotationProcessor extends AbstractProcessor {
 
                 throw new RuntimeException();
             }
+
+
         }
     }
 

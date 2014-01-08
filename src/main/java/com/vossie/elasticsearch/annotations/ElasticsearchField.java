@@ -76,9 +76,18 @@ public @interface ElasticsearchField {
      */
     public BooleanValue required() default BooleanValue.NULL;
 
-//    public String[] includes() default {};
-//
-//    public String[] excludes() default {};
+    /**
+     * Allow to specify paths in the source that would be included when it’s stored, supporting * as wildcard annotation
+     * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-source-field.html
+     * @return
+     */
+    public String[] includes() default {};
+
+    /**
+     * Allow to specify paths in the source that would be excluded when it’s stored, supporting * as wildcard annotation
+     * @return
+     */
+    public String[] excludes() default {};
 
     /**
      * Maps to default

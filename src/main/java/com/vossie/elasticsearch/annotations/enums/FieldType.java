@@ -94,27 +94,6 @@ public enum FieldType {
         }
     },
 
-    ENVELOPE {
-        @Override
-        public String toString() {
-            return "envelope";
-        }
-    },
-
-    POLYGON {
-        @Override
-        public String toString() {
-            return "polygon";
-        }
-    },
-
-    MULTI_POLYGON {
-        @Override
-        public String toString() {
-            return "multipolygon";
-        }
-    },
-
     // <<<<<<< Number types >>>>>>>
 
     FLOAT {

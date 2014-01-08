@@ -97,21 +97,14 @@ public class TestElasticsearchMapping {
         assertFalse(new ESTypeAttributeConstraints().isValidAttributeForType(FieldType.GEO_POINT.toString(), "term_vector"));
     }
 
-//    @Test
-//    public void testSavingMappingToElasticInstance() throws InvalidAttributeForType, ClassNotAnnotated, InvalidParentDocumentSpecified, IOException, JSONException, UnableToLoadConstraints {
-//
-//        ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.get(User.class);
-//        assertTrue(createIndex(User.class));
-//        MappingMetaData json = getMapping(documentMetadata.getIndexName(), documentMetadata.getTypeName());
-//    }
-
-
-
     @Test
-    public void testMyTypeDocument () throws URISyntaxException {
+    public void testSavingMappingToElasticInstance() throws IOException {
 
-        ElasticsearchMapping.get(myType.class);
+        ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.get(Tweet.class);
+        assertTrue(createIndex(Tweet.class));
+        MappingMetaData json = getMapping(documentMetadata.getIndexName(), documentMetadata.getTypeName());
     }
+
 
 //    @Test
 //    public void testMockEntityDao() {
