@@ -1,5 +1,6 @@
 package com.vossie.test;
 
+import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.common.ElasticsearchDocumentMetadata;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
@@ -68,6 +69,61 @@ public class TestElasticsearchMapping {
         String json = documentMetadata.toMapping();
 
         String expected = "{\"tweet\":{\"_boost\":{\"null_value\":\"1.0\",\"name\":\"my_boost\"},\"_type\":{\"index\":\"no\",\"store\":\"yes\"},\"_source\":{\"enabled\":\"true\"},\"_id\":{\"index\":\"not_analyzed\",\"store\":\"yes\"},\"_routing\":{\"path\":\"blog.post_id\",\"required\":\"false\"},\"_analyzer\":{\"path\":\"user\"},\"_timestamp\":{\"enabled\":\"false\",\"path\":\"post_date\",\"format\":\"dateOptionalTime\"},\"_index\":{\"enabled\":\"false\"},\"_ttl\":{\"enabled\":\"true\",\"default\":\"1d\"},\"_size\":{\"enabled\":\"false\",\"store\":\"yes\"},\"_all\":{\"enabled\":\"true\"},\"_parent\":{\"type\":\"user\"},\"properties\":{\"message\":{\"index\":\"analyzed\",\"store\":\"true\",\"null_value\":\"na\",\"type\":\"string\"},\"rank\":{\"type\":\"float\"},\"priority\":{\"type\":\"integer\"},\"hes_my_special_tweet\":{\"type\":\"boolean\"},\"postDate\":{\"format\":\"YYYY-MM-dd\",\"type\":\"date\"},\"user\":{\"index\":\"not_analyzed\",\"type\":\"string\"}}}}";
+        JSONAssert.assertEquals(expected,json,true);
+    }
+
+    @Test
+    public void testGettingMyTweetMapping() throws IOException,JSONException {
+        ElasticsearchDocumentMetadata elasticsearchDocumentMetadata = ElasticsearchMapping.get(MyTweet.class);
+        String json = elasticsearchDocumentMetadata.toMapping();
+
+        String expected = "{\"tweet\":{\"_index\":{\"enabled\":\"true\"},\"properties\":{\"message\":{\"index\":\"analyzed\",\"store\":\"true\",\"null_value\":\"na\",\"type\":\"string\"},\"rank\":{\"type\":\"float\"},\"myMessage\":{\"index\":\"analyzed\",\"type\":\"string\"},\"priority\":{\"type\":\"integer\"},\"hes_my_special_tweet\":{\"type\":\"boolean\"},\"postDate\":{\"format\":\"YYYY-MM-dd\",\"type\":\"date\"},\"user\":{\"index\":\"not_analyzed\",\"type\":\"string\"}}}}";
+        JSONAssert.assertEquals(expected,json,true);
+    }
+
+
+    @Test
+    public void testGettingLocationWithInnerClassMapping() throws IOException,JSONException {
+        ElasticsearchDocumentMetadata elasticsearchDocumentMetadata = ElasticsearchMapping.get(LocationWithInnerClass.class);
+        String json = elasticsearchDocumentMetadata.toMapping();
+
+        String expected = "{\"anyType\":{\"_source\":{\"enabled\":\"true\"},\"properties\":{\"userName\":{\"index\":\"analyzed\",\"type\":\"string\"}}}}";
+        JSONAssert.assertEquals(expected,json,true);
+    }
+
+    @Test
+    public void testGettingInnerClassMapping() throws IOException,JSONException {
+        ElasticsearchDocumentMetadata elasticsearchDocumentMetadata = ElasticsearchMapping.get(LocationWithInnerClass.Location.class);
+        String json = elasticsearchDocumentMetadata.toMapping();
+
+        String expected = "{\"locationType\":{\"_boost\":{\"null_value\":\"1.0\",\"name\":\"my_boost\"},\"_index\":{\"enabled\":\"false\"},\"_size\":{\"enabled\":\"false\",\"store\":\"yes\"},\"properties\":{\"lon\":{\"type\":\"double\"},\"lat\":{\"type\":\"double\"}}}}";
+        JSONAssert.assertEquals(expected,json,true);
+    }
+
+    @Test
+    public void testGettingLocationWithLocalClassMapping() throws IOException,JSONException {
+        ElasticsearchDocumentMetadata elasticsearchDocumentMetadata = ElasticsearchMapping.get(LocationWithLocalClass.class);
+        String json = elasticsearchDocumentMetadata.toMapping();
+
+        String expected = "{\"anyType\":{\"_source\":{\"enabled\":\"true\"},\"properties\":{\"userName\":{\"index\":\"analyzed\",\"type\":\"string\"}}}}";
+        JSONAssert.assertEquals(expected,json,true);
+    }
+
+    @Test
+    public void testGettingLocationWithStaticInnerClassMapping() throws IOException,JSONException {
+        ElasticsearchDocumentMetadata elasticsearchDocumentMetadata = ElasticsearchMapping.get(LocationWithStaticInnerClass.class);
+        String json = elasticsearchDocumentMetadata.toMapping();
+
+        String expected = "{\"anyType\":{\"_source\":{\"enabled\":\"true\"},\"properties\":{\"userName\":{\"index\":\"analyzed\",\"type\":\"string\"}}}}";
+        JSONAssert.assertEquals(expected,json,true);
+    }
+
+    @Test
+    public void testGettingLocationOfStaticInnerClassMapping() throws IOException,JSONException {
+        ElasticsearchDocumentMetadata elasticsearchDocumentMetadata = ElasticsearchMapping.get(LocationWithStaticInnerClass.Location.class);
+        String json = elasticsearchDocumentMetadata.toMapping();
+
+        String expected = "{\"locationType\":{\"_boost\":{\"null_value\":\"1.0\",\"name\":\"my_boost\"},\"_index\":{\"enabled\":\"true\"},\"properties\":{\"lon\":{\"type\":\"double\"},\"lat\":{\"type\":\"double\"}}}}";
         JSONAssert.assertEquals(expected,json,true);
     }
 
