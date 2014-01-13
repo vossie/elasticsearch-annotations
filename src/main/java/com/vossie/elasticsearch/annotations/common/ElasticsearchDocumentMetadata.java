@@ -80,6 +80,11 @@ public class ElasticsearchDocumentMetadata {
     }
 
 
+    public boolean hasParent() {
+        return (this.elasticsearchFields.containsKey(FieldName._PARENT.toString()));
+    }
+
+
     /**
      * Should we store the source data in the index.
      * The _source field is an automatically generated field that stores the actual JSON that was used as the indexed document. It is not indexed (searchable), just stored. When executing "fetch" requests, like get or search, the _source field is returned by default.
