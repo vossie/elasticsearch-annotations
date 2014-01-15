@@ -2,10 +2,7 @@
 
 Allows the creation of json mapping files based on class and field annotations.
 
-This library can be used in any project which uses [elasticsearch mappings](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping.html) for managing data in the search engine.
-
-[elasticsearch mappings]:[http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping.html].
-
+This library can be used in any project which uses <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping.html" target="_blank">elasticsearch mappings</a> for managing data in the search engine.
 
 Tested using Java 1.7 & Elasticsearch 0.95
 
@@ -26,7 +23,7 @@ You can generate json string for the ElasticSearch engine for a class annotated 
     String mapping = documentMetadata.toMapping(); // Return the json mapping file
 
 ## Example Class:
-An example of a class which uses [source field][] metadata, as shown on the ElasticSearch guide:
+An example of a class which uses <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-source-field.html" target="_blank">source field</a> metadata, as shown on the ElasticSearch guide:
 
     @ElasticsearchDocument(
             index = "my-index",
@@ -40,32 +37,17 @@ An example of a class which uses [source field][] metadata, as shown on the Elas
                             excludes = {
                                     "pat3.*"
                             }
-                    ),
-                    @ElasticsearchField(
-                            _fieldName = FieldName._SOURCE,
-                            includes = {
-                                    "path1.*", "path2.*"
-                            },
-                            excludes = {
-                                    "pat3.*"
-                            }
                     )
             }
     )
 
     public class myType {
-
-        @ElasticsearchType(type = FieldType.STRING)
         private String myValue;
     }
 
-[source field]:[http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-source-field.html].
 
 
-Below is another example of a Tweet class, which shows some of the possible combinations of ElasticSearch [field][] and [type][] mappings which can be applied to a class.
-
-[field]:[http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-fields.html]
-[type]:[http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-types.html]
+Below is another example of a Tweet class, which shows some of the possible combinations of ElasticSearch <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-fields.html" target="_blank">field</a> and <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-types.html" target="_blank">type</a> mappings which can be applied to a class.
 
      @ElasticsearchDocument /** required to be able to parse the annotations*/(
              index = "twitter", // name of the index
@@ -270,6 +252,4 @@ The library has been unit tested with a combination of metadata usage, for examp
 
 ## Version
 
-Current stable version of elasticsearch-annotations is [1.13][]
-
-[1.13]:[https://github.com/vossie/elasticsearch-annotations/commit/3dd7259b5d75b4d818ef19027802f8ab09caad5c]
+Current stable version of elasticsearch-annotations is <a href="https://github.com/vossie/elasticsearch-annotations/commit/3dd7259b5d75b4d818ef19027802f8ab09caad5c" target="_blank">1.13</a>
