@@ -1,81 +1,141 @@
-elasticsearch-annotations
-=========================
+# elasticsearch-annotations
 
 Allows the creation of json mapping files based on class and field annotations.
 
+This library can be used in any project which uses [elasticsearch mappings][] for managing data in the search engine.
+
+[elasticsearch mappings]:[http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping.html].
+
+
 Tested using Java 1.7 & Elasticsearch 0.95
 
-Usage:
 
+## Set Up
+
+Run 'mvn clean install' to build the library.
+
+Add the packaged jar to your project to start using it.
+
+
+## Usage:
+
+You can generate json string for the ElasticSearch engine for a class annotated using the library, as shown below:
+
+    // provide the name of the class which has been annotated using the library for which you need to 'get' the ElasticSearch mapping
     ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.get(Tweet.class);
     String mapping = documentMetadata.toMapping(); // Return the json mapping file
 
- Example class:
+## Example Class:
+An example of a class which uses [source field][] metadata, as shown on the ElasticSearch guide:
 
-     @ElasticsearchDocument /** required */(
-             index = "twitter",
+    @ElasticsearchDocument(
+            index = "my-index",
+            type = "my_type",
+            _elasticsearchFields = {
+                    @ElasticsearchField(
+                            _fieldName = FieldName._SOURCE,
+                            includes = {
+                                    "path1.*", "path2.*"
+                            },
+                            excludes = {
+                                    "pat3.*"
+                            }
+                    ),
+                    @ElasticsearchField(
+                            _fieldName = FieldName._SOURCE,
+                            includes = {
+                                    "path1.*", "path2.*"
+                            },
+                            excludes = {
+                                    "pat3.*"
+                            }
+                    )
+            }
+    )
+
+    public class myType {
+
+        @ElasticsearchType(type = FieldType.STRING)
+        private String myValue;
+    }
+
+[source field]:[http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-source-field.html].
+
+
+Below is another example of a Tweet class, which shows some of the possible combinations of ElasticSearch [field][] and [type][] mappings which can be applied to a class.
+
+[field]:[http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-fields.html]
+[type]:[http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-types.html]
+
+     @ElasticsearchDocument /** required to be able to parse the annotations*/(
+             index = "twitter", // name of the index
              //type = "tweet"    /** optional, if not set it will use the simple class name in a lower hyphenated format */,
-             _rootFields = {
-                     @ElasticsearchRootField(
-                             _rootFieldName = SystemField._ID,
+
+             // Specify the elasticsearch fields for which you want to add the metadata for.
+             _elasticsearchFields = {
+                    @ElasticsearchField(
+                             _fieldName = FieldName._ID,
                              index = "not_analyzed",
                              store = "yes"
                      ),
-                     @ElasticsearchRootField(
-                             _rootFieldName = SystemField._TYPE,
+                     @ElasticsearchField(
+                             _fieldName = FieldName._TYPE,
                              index = "no",
                              store = "yes"
                      ),
-                     @ElasticsearchRootField(
-                         _rootFieldName = SystemField._SOURCE,
-                         enabled = BooleanValue.TRUE
-                     ),
-                     @ElasticsearchRootField(
-                             _rootFieldName = SystemField._ALL,
+                     @ElasticsearchField(
+                             _fieldName = FieldName._SOURCE,
                              enabled = BooleanValue.TRUE
                      ),
-                     @ElasticsearchRootField(
-                             _rootFieldName = SystemField._ANALYZER,
+                     @ElasticsearchField(
+                             _fieldName = FieldName._ALL,
+                             enabled = BooleanValue.TRUE
+                     ),
+                     @ElasticsearchField(
+                             _fieldName = FieldName._ANALYZER,
                              path = "user"
                      ),
-                     @ElasticsearchRootField(
-                             _rootFieldName = SystemField._BOOST,
+                     @ElasticsearchField(
+                             _fieldName = FieldName._BOOST,
                              name = "my_boost",
                              null_value = "1.0"
                      ),
-                     @ElasticsearchRootField(
-                             _rootFieldName = SystemField._PARENT,
+                     @ElasticsearchField(
+                             _fieldName = FieldName._PARENT,
                              type = User.class
                      ),
-                     @ElasticsearchRootField(
-                             _rootFieldName = SystemField._ROUTING,
+                     @ElasticsearchField(
+                             _fieldName = FieldName._ROUTING,
                              required = BooleanValue.FALSE,
                              path = "blog.post_id"
                      ),
-                     @ElasticsearchRootField(
-                             _rootFieldName = SystemField._INDEX,
+                     @ElasticsearchField(
+                             _fieldName = FieldName._INDEX,
                              enabled = BooleanValue.FALSE
                      ),
-                     @ElasticsearchRootField(
-                             _rootFieldName = SystemField._SIZE,
+                     @ElasticsearchField(
+                             _fieldName = FieldName._SIZE,
                              enabled = BooleanValue.FALSE,
                              store = "yes"
                      ),
-                     @ElasticsearchRootField(
-                             _rootFieldName = SystemField._TIMESTAMP,
+                     @ElasticsearchField(
+                             _fieldName = FieldName._TIMESTAMP,
                              enabled = BooleanValue.FALSE,
                              path = "post_date",
                              format = "dateOptionalTime"
                      ),
-                     @ElasticsearchRootField(
-                             _rootFieldName = SystemField._TTL,
+                     @ElasticsearchField(
+                             _fieldName = FieldName._TTL,
                              enabled = BooleanValue.TRUE,
                              defaultValue = "1d"
                      )
              }
      )
+
+     //Class for which the above set of annotations will be applied
      public class Tweet {
 
+         // Annotations applied to the instance variables, as well, for elastic search types
          @ElasticsearchField(
                  type = FieldType.STRING,
                  index = "not_analyzed"
@@ -119,48 +179,14 @@ Usage:
              this.user = user;
          }
 
-         public String getPostDate() {
-             return postDate;
-         }
-
-         public void setPostDate(String postDate) {
-             this.postDate = postDate;
-         }
-
-         public String getMessage() {
-             return message;
-         }
-
-         public void setMessage(String message) {
-             this.message = message;
-         }
-
-         public Boolean getHes_my_special_tweet() {
-             return hes_my_special_tweet;
-         }
-
-         public void setHes_my_special_tweet(Boolean hes_my_special_tweet) {
-             this.hes_my_special_tweet = hes_my_special_tweet;
-         }
-
-         public Integer getPriority() {
-             return priority;
-         }
-
-         public void setPriority(Integer priority) {
-             this.priority = priority;
-         }
-
-         public Float getRank() {
-             return rank;
-         }
-
-         public void setRank(Float rank) {
-             this.rank = rank;
-         }
+         // setter/getter methods for other variables
      }
 
- Produces:
+## Output:
+
+Above Tweet class annotations produces the following output when we try to 'get' the ElasticsearchMappings for the class:
+
+First level of the json is a set of document metadata, followed by properties which provide the type metadata.
 
     {
         "tweet": {
@@ -235,3 +261,15 @@ Usage:
             }
         }
     }
+
+
+## Testing
+
+The library has been unit tested with a combination of metadata usage, for example, saving to elasticsearch, inner class annotations, sub class annotations, geoshape annotations, etc.
+
+
+## Version
+
+Current stable version of elasticsearch-annotations is [1.13][]
+
+[1.13]:[https://github.com/vossie/elasticsearch-annotations/commit/3dd7259b5d75b4d818ef19027802f8ab09caad5c]
