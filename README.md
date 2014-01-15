@@ -2,7 +2,7 @@
 
 Allows the creation of json mapping files based on class and field annotations.
 
-This library can be used in any project which uses [elasticsearch mappings][] for managing data in the search engine.
+This library can be used in any project which uses [elasticsearch mappings](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping.html) for managing data in the search engine.
 
 [elasticsearch mappings]:[http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping.html].
 
