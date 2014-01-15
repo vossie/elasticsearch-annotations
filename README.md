@@ -7,14 +7,14 @@ This library can be used in any project which uses <a href="http://www.elasticse
 Tested using Java 1.7 & Elasticsearch 0.95
 
 
-## Set Up
+### Set Up
 
 Run 'mvn clean install' to build the library.
 
 Add the packaged jar to your project to start using it.
 
 
-## Usage:
+### Usage:
 
 You can generate json string for the ElasticSearch engine for a class annotated using the library, as shown below:
 
@@ -22,7 +22,7 @@ You can generate json string for the ElasticSearch engine for a class annotated 
     ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.get(Tweet.class);
     String mapping = documentMetadata.toMapping(); // Return the json mapping file
 
-## Example Class:
+### Example Class:
 An example of a class which uses <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-source-field.html" target="_blank">source field</a> metadata, as shown on the ElasticSearch guide:
 
     @ElasticsearchDocument(
@@ -164,7 +164,7 @@ Below is another example of a Tweet class, which shows some of the possible comb
          // setter/getter methods for other variables
      }
 
-## Output:
+### Output:
 
 Above Tweet class annotations produces the following output when we try to 'get' the ElasticsearchMappings for the class:
 
@@ -245,11 +245,11 @@ First level of the json is a set of document metadata, followed by properties wh
     }
 
 
-## Testing
+### Testing
 
 The library has been unit tested with a combination of metadata usage, for example, saving to elasticsearch, inner class annotations, sub class annotations, geoshape annotations, etc.
 
 
-## Version
+### Version
 
 Current stable version of elasticsearch-annotations is <a href="https://github.com/vossie/elasticsearch-annotations/commit/3dd7259b5d75b4d818ef19027802f8ab09caad5c" target="_blank">1.13</a>
