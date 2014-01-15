@@ -35,7 +35,7 @@ An example of a class which uses <a href="http://www.elasticsearch.org/guide/en/
                                     "path1.*", "path2.*"
                             },
                             excludes = {
-                                    "pat3.*"
+                                    "path3.*"
                             }
                     )
             }
