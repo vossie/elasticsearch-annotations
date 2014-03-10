@@ -3,12 +3,12 @@ package com.vossie.elasticsearch.annotations.common;
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.enums.FieldName;
+import com.vossie.elasticsearch.annotations.enums.FieldType;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.google.common.base.CaseFormat.LOWER_HYPHEN;
@@ -182,20 +182,45 @@ public class ElasticsearchDocumentMetadata {
         return MetadataXContentBuilder.getXContentBuilder(this).string();
     }
 
-    public List<String> asList(){
+    private Map<String,FieldType> _allAsFlatList;
+    public Map<String,FieldType> asMap(){
 
-        List<String> response = new ArrayList<>();
+        if(_allAsFlatList != null)
+            return _allAsFlatList;
 
-        for (String field : this.getFieldNames()) {
-            StringBuilder sb = new StringBuilder();
+        Map<String,FieldType> response = new HashMap<>();
 
-            sb.append(getTypeName());
-            sb.append(".");
-            sb.append(field);
+        response.put(getTypeName(),FieldType.OBJECT);
 
-            response.add(sb.toString());
+
+        for (String field : this.getElasticsearchProperties().keySet()) {
+
+
+            ElasticsearchNodeMetadata nodeMetadata = this.getElasticsearchProperties().get(field);
+
+            String prefix=getTypeName() +"."+ nodeMetadata.getFieldName();
+            response.put(prefix, (FieldType) nodeMetadata.getAttributes().get("type"));
+
+            loopThroughFields(response,prefix,nodeMetadata);
         }
 
-        return response;
+        _allAsFlatList=response;
+        return _allAsFlatList;
+    }
+
+    private Map<String,FieldType> loopThroughFields(Map<String,FieldType> list, String preFix, ElasticsearchNodeMetadata nodeMetadata){
+
+        if(list==null || list.size()<1)
+            return list;
+
+        for (String field : nodeMetadata.getChildren().keySet()) {
+
+            ElasticsearchNodeMetadata n = nodeMetadata.getChildren().get(field);
+            String current = preFix + "." + field;
+            list.put(current, (FieldType) n.getAttributes().get("type"));
+            loopThroughFields(list, current, n);
+        }
+
+        return list;
     }
 }
