@@ -6,7 +6,9 @@ import com.vossie.elasticsearch.annotations.enums.FieldName;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static com.google.common.base.CaseFormat.LOWER_HYPHEN;
@@ -178,5 +180,22 @@ public class ElasticsearchDocumentMetadata {
     public String toMapping() throws IOException {
 
         return MetadataXContentBuilder.getXContentBuilder(this).string();
+    }
+
+    public List<String> asList(){
+
+        List<String> response = new ArrayList<>();
+
+        for (String field : this.getFieldNames()) {
+            StringBuilder sb = new StringBuilder();
+
+            sb.append(getTypeName());
+            sb.append(".");
+            sb.append(field);
+
+            response.add(sb.toString());
+        }
+
+        return response;
     }
 }

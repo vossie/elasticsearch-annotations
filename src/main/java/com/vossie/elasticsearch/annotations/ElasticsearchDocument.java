@@ -35,23 +35,4 @@ public @interface ElasticsearchDocument {
      * @return
      */
     public ElasticsearchField[] _elasticsearchFields() default {};
-
-
-    //TODO: Implement index_analyzer
-//    public String index_analyzer() default Empty.NULL;
-
-    //TODO: Implement search_analyzer
-//    public String search_analyzer() default Empty.NULL;
-
-    //TODO: Implement dynamic_date_formats
-//    public String[] dynamic_date_formats() default Empty.NULL;
-
-    //TODO: Implement date_detection
-//    public BooleanValue date_detection() default BooleanValue.NULL;
-
-    //TODO: Implement numeric_detection
-//    public BooleanValue numeric_detection() default BooleanValue.NULL;
-
-    //TODO: Implement dynamic_templates
-//    public String[] dynamic_templates() default Empty.NULL;
 }

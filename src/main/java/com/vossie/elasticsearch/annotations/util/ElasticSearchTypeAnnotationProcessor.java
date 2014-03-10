@@ -48,7 +48,7 @@ public class ElasticSearchTypeAnnotationProcessor extends AbstractProcessor {
                 }
             }
 
-            verifyDuplicateElasticsearchFieldAnnotations(elasticsearchType);
+            validateElasticsearchFieldAnnotations(elasticsearchType, element);
 
             response = true;
 
@@ -61,7 +61,7 @@ public class ElasticSearchTypeAnnotationProcessor extends AbstractProcessor {
      * @param elasticsearchType - this is an instance of the ElasticSearchDocument type
      * @return
      */
-    private void verifyDuplicateElasticsearchFieldAnnotations(ElasticsearchType elasticsearchType) {
+    private void validateElasticsearchFieldAnnotations(ElasticsearchType elasticsearchType, Element element) {
 
         Map<String, Object> allAttributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(elasticsearchType));
 
@@ -89,7 +89,9 @@ public class ElasticSearchTypeAnnotationProcessor extends AbstractProcessor {
                 if(!constraints.getAttributeNames().contains(attributeName))
                     continue;
 
-                throw new RuntimeException();
+                throw new RuntimeException(
+                        String.format("Error: [ %s ] is not a valid attribute for [ %s ] in %s",key,element.getSimpleName(),element.getEnclosingElement().getSimpleName())
+                );
             }
 
 
