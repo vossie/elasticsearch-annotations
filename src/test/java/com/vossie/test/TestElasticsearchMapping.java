@@ -1,6 +1,5 @@
 package com.vossie.test;
 
-import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.common.ElasticsearchDocumentMetadata;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
@@ -19,7 +18,6 @@ import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -173,7 +171,7 @@ public class TestElasticsearchMapping {
 
     public MappingMetaData getMapping(String indexName, String typeName) {
 
-        ClusterState cs = node.client().admin().cluster().prepareState().setFilterIndices(indexName).execute().actionGet().getState();
+        ClusterState cs = node.client().admin().cluster().prepareState().setIndices(indexName).execute().actionGet().getState();
         IndexMetaData imd = cs.getMetaData().index(indexName);
 
         return imd.mapping(typeName);
