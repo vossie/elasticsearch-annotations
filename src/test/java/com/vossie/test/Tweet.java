@@ -1,6 +1,8 @@
 package com.vossie.test;
 
-import com.vossie.elasticsearch.annotations.*;
+import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
+import com.vossie.elasticsearch.annotations.ElasticsearchField;
+import com.vossie.elasticsearch.annotations.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.FieldName;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
@@ -13,7 +15,7 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
  */
 @ElasticsearchDocument /** required */(
         index = "twitter",
-//        type = "tweet"    /** optional, if not set it will use the simple class name in a lower hyphenated format */,
+//      type = "tweet"    /** optional, if not set it will use the simple class name in a lower hyphenated format */,
         _elasticsearchFields = {
                 @ElasticsearchField(
                         _fieldName = FieldName._ID,
@@ -73,7 +75,7 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
                 )
         }
 )
-public class Tweet {
+public class Tweet extends TweetIndex {
 
     @ElasticsearchType(
             type = FieldType.STRING,

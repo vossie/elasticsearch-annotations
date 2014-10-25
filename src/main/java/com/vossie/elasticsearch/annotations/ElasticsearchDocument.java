@@ -2,10 +2,7 @@ package com.vossie.elasticsearch.annotations;
 
 import com.vossie.elasticsearch.annotations.common.Empty;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Copyright © 2013 Carel Vosloo.
@@ -15,10 +12,11 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@Inherited
 public @interface ElasticsearchDocument {
 
     /**
-     *  The elastic index to use name.
+     *  The elasticsearch index name.
      * @return
      */
     public String index();

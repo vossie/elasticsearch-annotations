@@ -1,6 +1,7 @@
 package com.vossie.elasticsearch.annotations;
 
 import com.vossie.elasticsearch.annotations.common.ElasticsearchDocumentMetadata;
+import com.vossie.elasticsearch.annotations.common.ElasticsearchIndexMetadata;
 import com.vossie.elasticsearch.annotations.common.ElasticsearchNodeMetadata;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
 
@@ -20,6 +21,7 @@ import java.util.Map;
 public abstract class ElasticsearchMapping {
 
     private static HashMap<Class<?>, ElasticsearchDocumentMetadata> mappingCache = new HashMap<>();
+    private static HashMap<Class<?>, ElasticsearchIndexMetadata> indexCache = new HashMap<>();
 
     public static final String OBJECT_PROPERTIES= "properties";
 
@@ -31,12 +33,25 @@ public abstract class ElasticsearchMapping {
      */
     private static ElasticsearchDocument getElasticsearchType(Class<?> clazz) {
 
-        ElasticsearchDocument doc = clazz.getAnnotation(ElasticsearchDocument.class);
+        return clazz.getAnnotation(ElasticsearchDocument.class);
+    }
 
-        if (doc != null)
-            return doc;
+    /**
+     * Get the ElasticsearchDocument annotations for the provided class object.
+     * @param clazz The class to inspect.
+     * @return The ElasticsearchDocument details
+     *
+     */
+    private static ElasticsearchIndex getElasticsearchIndex(Class<?> clazz) {
 
-        return null;
+        ElasticsearchIndex elasticsearchIndex = clazz.getAnnotation(ElasticsearchIndex.class);
+
+        if(elasticsearchIndex != null)
+            return elasticsearchIndex;
+
+        elasticsearchIndex = clazz.getSuperclass().getAnnotation(ElasticsearchIndex.class);
+
+        return elasticsearchIndex;
     }
 
     private static Field[] getAllDeclaredFields(Class<?> clazz) {
@@ -174,7 +189,8 @@ public abstract class ElasticsearchMapping {
                 clazz,
                 elasticsearchDocument,
                 getElasticsearchFieldsMetadata(clazz),
-                getElasticsearchSystemFieldsMetadata(elasticsearchDocument._elasticsearchFields())
+                getElasticsearchSystemFieldsMetadata(elasticsearchDocument._elasticsearchFields()),
+                getIndex(clazz)
         );
 
         // Add this item to the local cache for fast lookup.
@@ -182,5 +198,31 @@ public abstract class ElasticsearchMapping {
 
         // Return the reference.
         return mappingCache.get(clazz);
+    }
+
+    /**
+     * Get the document and field metadata associated with this mapping by class.
+     * @param clazz The class to inspect.
+     * @return Returns the meta data used to describe this entity.
+     */
+    public static ElasticsearchIndexMetadata getIndex(Class<?> clazz) {
+
+        // Check the cache to see if we have already parsed this reference.
+        if(indexCache.containsKey(clazz))
+            return indexCache.get(clazz);
+
+        // Get the annotation.
+        ElasticsearchIndexMetadata elasticsearchIndex = new ElasticsearchIndexMetadata(clazz, getElasticsearchIndex(clazz));
+
+        if(elasticsearchIndex == null)
+            return null;
+
+
+
+        // Add this item to the local cache for fast lookup.
+        indexCache.put(clazz, elasticsearchIndex );
+
+        // Return the reference.
+        return indexCache.get(clazz);
     }
 }

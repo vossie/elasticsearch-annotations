@@ -22,13 +22,14 @@ import static com.google.common.base.CaseFormat.UPPER_CAMEL;
  */
 public class ElasticsearchDocumentMetadata {
 
-    private String typeName;
-    private ElasticsearchDocument elasticsearchDocument;
-    private Map<String,ElasticsearchNodeMetadata> elasticsearchTypes;
-    private Map<String,ElasticsearchNodeMetadata> elasticsearchFields;
-    private Map<String, Object> attributes;
+    private final String typeName;
+    private final ElasticsearchDocument elasticsearchDocument;
+    private final Map<String,ElasticsearchNodeMetadata> elasticsearchTypes;
+    private final Map<String,ElasticsearchNodeMetadata> elasticsearchFields;
+    private final Map<String, Object> attributes;
+    private final ElasticsearchIndexMetadata elasticsearchIndex;
 
-    public ElasticsearchDocumentMetadata(Class<?> clazz, ElasticsearchDocument elasticsearchDocument, Map<String, ElasticsearchNodeMetadata> elasticsearchTypes, Map<String, ElasticsearchNodeMetadata> elasticsearchFields) {
+    public ElasticsearchDocumentMetadata(Class<?> clazz, ElasticsearchDocument elasticsearchDocument, Map<String, ElasticsearchNodeMetadata> elasticsearchTypes, Map<String, ElasticsearchNodeMetadata> elasticsearchFields, ElasticsearchIndexMetadata elasticsearchIndex) {
 
         // Set the type name
         this.typeName = (elasticsearchDocument.type().equals(Empty.NULL))
@@ -42,6 +43,7 @@ public class ElasticsearchDocumentMetadata {
         // Todo: Find a way of doing this without the spring dependency.
         this.attributes = Collections.unmodifiableMap(AnnotationUtils.getAnnotationAttributes(elasticsearchDocument));
 
+        this.elasticsearchIndex = elasticsearchIndex;
     }
 
     public Map<String, ElasticsearchNodeMetadata> getElasticsearchProperties() {
@@ -128,6 +130,9 @@ public class ElasticsearchDocumentMetadata {
                 : null;
     }
 
+    public ElasticsearchIndexMetadata getElasticsearchIndex() {
+        return elasticsearchIndex;
+    }
 
     /**
      * Get a list of field names.
