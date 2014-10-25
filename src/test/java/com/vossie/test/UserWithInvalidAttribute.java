@@ -1,6 +1,7 @@
 package com.vossie.test;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
+import com.vossie.elasticsearch.annotations.ElasticsearchIndex;
 import com.vossie.elasticsearch.annotations.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
 import com.vossie.elasticsearch.annotations.enums.TermVector;
@@ -11,7 +12,8 @@ import com.vossie.elasticsearch.annotations.enums.TermVector;
  * Date: 06/12/2013
  * Time: 12:32
  */
-@ElasticsearchDocument(index = "twitter", type = "twitterUser")
+@ElasticsearchIndex(_indexName = "twitter")
+@ElasticsearchDocument(type = "twitterUser")
 public class UserWithInvalidAttribute {
 
     @ElasticsearchType(type = FieldType.STRING, index = "not_analyzed")

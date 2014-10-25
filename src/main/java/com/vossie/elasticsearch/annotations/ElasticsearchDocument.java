@@ -16,10 +16,11 @@ import java.lang.annotation.*;
 public @interface ElasticsearchDocument {
 
     /**
-     *  The elasticsearch index name.
+     *  The class reference to the location of the ElasticsearchIndex annotation
+     *  containing the index information.
      * @return
      */
-    public String index();
+    public Class<?> index() default Empty.class;
 
     /**
      * The object type name to index as.

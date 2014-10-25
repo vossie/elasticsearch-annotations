@@ -1,6 +1,7 @@
 package com.vossie.test;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
+import com.vossie.elasticsearch.annotations.ElasticsearchIndex;
 import com.vossie.elasticsearch.annotations.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
 import com.vossie.elasticsearch.annotations.enums.FieldName;
@@ -12,8 +13,8 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
  * Date: 09/12/2013
  * Time: 21:12
  */
+@ElasticsearchIndex(_indexName = "test")
 @ElasticsearchDocument(
-        index = "test",
         _elasticsearchFields = {
                 @ElasticsearchField(
                         _fieldName = FieldName._PARENT,

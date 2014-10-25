@@ -14,7 +14,7 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
  * Time: 12:28
  */
 @ElasticsearchDocument /** required */(
-        index = "twitter",
+        index = TweetIndex.class,
 //      type = "tweet"    /** optional, if not set it will use the simple class name in a lower hyphenated format */,
         _elasticsearchFields = {
                 @ElasticsearchField(
@@ -75,7 +75,7 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
                 )
         }
 )
-public class Tweet extends TweetIndex {
+public class Tweet {
 
     @ElasticsearchType(
             type = FieldType.STRING,

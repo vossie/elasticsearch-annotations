@@ -11,7 +11,7 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
  * Created by rpatadia on 08/01/2014.
  */
 @ElasticsearchDocument(
-        index = "myTweet",
+        index = TweetIndex.class,
         type = "tweet",
         _elasticsearchFields = {
                 @ElasticsearchField(

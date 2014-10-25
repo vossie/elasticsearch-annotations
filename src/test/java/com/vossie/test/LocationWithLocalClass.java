@@ -2,6 +2,7 @@ package com.vossie.test;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
+import com.vossie.elasticsearch.annotations.ElasticsearchIndex;
 import com.vossie.elasticsearch.annotations.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.FieldName;
@@ -10,8 +11,8 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
 /**
  * Created by rpatadia on 09/01/2014.
  */
+@ElasticsearchIndex(_indexName = "locationWithLocalClass")
 @ElasticsearchDocument(
-        index = "locationWithLocalClass",
         type = "anyType",
         _elasticsearchFields = {
                 @ElasticsearchField(
@@ -29,8 +30,8 @@ public class LocationWithLocalClass {
     private String userName;
 
     public LocationWithLocalClass (){
+        @ElasticsearchIndex(_indexName = "locationLocalClass")
         @ElasticsearchDocument(
-                index = "locationLocalClass",
                 type = "locationType",
                 _elasticsearchFields = {
                         @ElasticsearchField(

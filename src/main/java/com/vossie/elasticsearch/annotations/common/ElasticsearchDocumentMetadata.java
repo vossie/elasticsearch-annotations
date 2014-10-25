@@ -55,7 +55,7 @@ public class ElasticsearchDocumentMetadata {
      * @return index name
      */
     public String getIndexName(){
-        return this.elasticsearchDocument.index();
+        return this.getElasticsearchIndex().getIndexName();
     }
 
     /**

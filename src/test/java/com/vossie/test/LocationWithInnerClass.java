@@ -2,6 +2,7 @@ package com.vossie.test;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
+import com.vossie.elasticsearch.annotations.ElasticsearchIndex;
 import com.vossie.elasticsearch.annotations.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.FieldName;
@@ -10,8 +11,8 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
 /**
  * Created by rpatadia on 08/01/2014.
  */
+@ElasticsearchIndex(_indexName = "locationWithInnerClass")
 @ElasticsearchDocument(
-        index = "locationWithInnerClass",
         type = "anyType",
         _elasticsearchFields = {
                 @ElasticsearchField(
@@ -37,8 +38,8 @@ public class LocationWithInnerClass {
     }
 
 
+    @ElasticsearchIndex(_indexName = "locationInnerClass")
     @ElasticsearchDocument(
-            index = "locationInnerClass",
             type = "locationType",
             _elasticsearchFields = {
                     @ElasticsearchField(

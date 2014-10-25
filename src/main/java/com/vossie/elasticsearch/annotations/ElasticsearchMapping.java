@@ -3,6 +3,7 @@ package com.vossie.elasticsearch.annotations;
 import com.vossie.elasticsearch.annotations.common.ElasticsearchDocumentMetadata;
 import com.vossie.elasticsearch.annotations.common.ElasticsearchIndexMetadata;
 import com.vossie.elasticsearch.annotations.common.ElasticsearchNodeMetadata;
+import com.vossie.elasticsearch.annotations.common.Empty;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
 
 import java.lang.reflect.Field;
@@ -20,8 +21,8 @@ import java.util.Map;
  */
 public abstract class ElasticsearchMapping {
 
-    private static HashMap<Class<?>, ElasticsearchDocumentMetadata> mappingCache = new HashMap<>();
-    private static HashMap<Class<?>, ElasticsearchIndexMetadata> indexCache = new HashMap<>();
+    private static final HashMap<Class<?>, ElasticsearchDocumentMetadata> mappingCache = new HashMap<>();
+    private static final HashMap<String, ElasticsearchIndexMetadata> indexCache = new HashMap<>();
 
     public static final String OBJECT_PROPERTIES= "properties";
 
@@ -185,12 +186,21 @@ public abstract class ElasticsearchMapping {
         if(elasticsearchDocument == null)
             return null;
 
+        // If a class is provided to get the index information from then use that else try to see if the current class has the ES index annotation set.
+        ElasticsearchIndexMetadata elasticsearchIndexMetadata = (elasticsearchDocument.index().isAssignableFrom(Empty.class))
+                ? getIndex(clazz)
+                : getIndex(elasticsearchDocument.index());
+
+        if(elasticsearchIndexMetadata == null) {
+            throw new RuntimeException("No ElasticsearchIndex annotation found containing the index information for " + elasticsearchDocument.type());
+        }
+
         ElasticsearchDocumentMetadata documentMetadata = new ElasticsearchDocumentMetadata(
                 clazz,
                 elasticsearchDocument,
                 getElasticsearchFieldsMetadata(clazz),
                 getElasticsearchSystemFieldsMetadata(elasticsearchDocument._elasticsearchFields()),
-                getIndex(clazz)
+                elasticsearchIndexMetadata
         );
 
         // Add this item to the local cache for fast lookup.
@@ -207,22 +217,17 @@ public abstract class ElasticsearchMapping {
      */
     public static ElasticsearchIndexMetadata getIndex(Class<?> clazz) {
 
-        // Check the cache to see if we have already parsed this reference.
-        if(indexCache.containsKey(clazz))
-            return indexCache.get(clazz);
-
         // Get the annotation.
         ElasticsearchIndexMetadata elasticsearchIndex = new ElasticsearchIndexMetadata(clazz, getElasticsearchIndex(clazz));
 
         if(elasticsearchIndex == null)
             return null;
 
-
-
         // Add this item to the local cache for fast lookup.
-        indexCache.put(clazz, elasticsearchIndex );
+        if(!indexCache.containsKey(elasticsearchIndex.getIndexName()))
+            indexCache.put(elasticsearchIndex.getIndexName(), elasticsearchIndex );
 
         // Return the reference.
-        return indexCache.get(clazz);
+        return elasticsearchIndex;
     }
 }

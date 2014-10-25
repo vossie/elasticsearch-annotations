@@ -1,6 +1,7 @@
 package com.vossie.test;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
+import com.vossie.elasticsearch.annotations.ElasticsearchIndex;
 import com.vossie.elasticsearch.annotations.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
@@ -13,7 +14,8 @@ import java.util.List;
  * Date: 06/12/2013
  * Time: 12:32
  */
-@ElasticsearchDocument(index = "twitter")
+@ElasticsearchIndex(_indexName = "twitter")
+@ElasticsearchDocument()
 public class User {
 
     @ElasticsearchType(
