@@ -27,7 +27,7 @@ public @interface ElasticsearchIndex {
     public String settings() default "";
 
     /**
-     * The format that the settings as being provided in.
+     * The format that the settings are stored in.
      * In future we will add URL, file, etc.
      * @return
      */
