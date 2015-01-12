@@ -12,13 +12,15 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
  */
 public class Cities {
 
-    @ElasticsearchType(type = FieldType.STRING)
+    @ElasticsearchType(
+            type = FieldType.STRING,
+            fields = {
+                    @ElasticsearchMultiFieldType(_name = "raw", type = FieldType.STRING, index = "not_analyzed")
+            }
+    )
     private String name;
 
-    @ElasticsearchType(
-            type = FieldType.GEO_POINT,
-            fields = {@ElasticsearchMultiFieldType(_name = "raw", type = FieldType.STRING, index = "not_analyzed")}
-    )
+    @ElasticsearchType(type = FieldType.GEO_POINT)
     private Location location;
 
     public String getName() {
