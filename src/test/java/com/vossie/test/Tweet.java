@@ -2,6 +2,7 @@ package com.vossie.test;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
+import com.vossie.elasticsearch.annotations.ElasticsearchMultiFieldType;
 import com.vossie.elasticsearch.annotations.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.FieldName;
@@ -93,7 +94,10 @@ public class Tweet {
             type = FieldType.STRING,
             store = BooleanValue.TRUE,
             index = "analyzed",
-            null_value = "na"
+            null_value = "na",
+            fields = {
+                    @ElasticsearchMultiFieldType(_name = "raw", index = "not_analyzed", type = FieldType.STRING)
+            }
     )
     private String message;
 

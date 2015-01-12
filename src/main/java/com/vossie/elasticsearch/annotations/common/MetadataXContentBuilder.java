@@ -1,6 +1,7 @@
 package com.vossie.elasticsearch.annotations.common;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
+import com.vossie.elasticsearch.annotations.ElasticsearchMultiFieldType;
 import com.vossie.elasticsearch.annotations.enums.FieldName;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.slf4j.LoggerFactory;
@@ -101,13 +102,8 @@ public final class MetadataXContentBuilder {
                 ElasticsearchNodeMetadata elasticsearchField = fields.get(fieldName);
 
                 xbMapping.startObject(elasticsearchField.getFieldName());
-
-                for(String attribute : elasticsearchField.getAttributes().keySet()) {
-                    xbMapping.field(attribute, elasticsearchField.getAttributes().get(attribute));
-                }
-
-                setXContentBuilderFields(xbMapping, elasticsearchField.getChildren());
-
+                    setFields(elasticsearchField, xbMapping);
+                    setXContentBuilderFields(xbMapping, elasticsearchField.getChildren());
                 xbMapping.endObject();
             }
 
@@ -115,6 +111,29 @@ public final class MetadataXContentBuilder {
 
         } catch (IOException e) {
             throw new RuntimeException("");
+        }
+    }
+
+    private static void setFields(ElasticsearchNodeMetadata elasticsearchField, XContentBuilder xbMapping) throws IOException {
+
+        for(String attribute : elasticsearchField.getAttributes().keySet()) {
+            Object values = elasticsearchField.getAttributes().get(attribute);
+
+            if(ElasticsearchMultiFieldType[].class.isAssignableFrom(values.getClass())) {
+
+                xbMapping.startObject(attribute);
+                for(ElasticsearchMultiFieldType fieldType:  (ElasticsearchMultiFieldType[]) values) {
+
+                    xbMapping.startObject(fieldType._name());
+                    xbMapping.field("index", fieldType.index());
+                    xbMapping.field("type", fieldType.type());
+                    xbMapping.endObject();
+                }
+                xbMapping.endObject();
+            }
+            else {
+                xbMapping.field(attribute, elasticsearchField.getAttributes().get(attribute));
+            }
         }
     }
 }

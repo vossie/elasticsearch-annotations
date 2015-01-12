@@ -61,7 +61,7 @@ public class ElasticsearchNodeMetadata {
                 continue;
 
             if (value.getClass().isArray()){
-                if (((String[]) value).length ==0)
+                if (((Object[]) value).length ==0)
                     continue;
             }
 
