@@ -14,12 +14,28 @@ import java.lang.annotation.Target;
  * Date: 06/12/2013
  * Time: 09:28
  *
- * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-types.html
+ * http://www.elasticsearch.org/guide/en/elasticsearch/reference/0.90/mapping-multi-field-type.html
+ * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/_multi_fields.html
  */
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.LOCAL_VARIABLE)
 public @interface ElasticsearchMultiFieldType {
+
+    /**
+     * The system field for the name of this sub-field.
+     * Example:
+     *
+     * Source;
+     * {@ElasticsearchMultiFieldType(_name = "raw", type = FieldType.STRING, index = "not_analyzed")}
+     *
+     * Result;
+     * "fields": {
+     *  "raw":   { "type": "string", "index": "not_analyzed" }
+     *  }
+     * @return
+     */
+    public String _name();
 
     /**
      * The type of field this is.

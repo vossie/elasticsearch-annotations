@@ -17,7 +17,7 @@ public class Cities {
 
     @ElasticsearchType(
             type = FieldType.GEO_POINT,
-            fields = {@ElasticsearchMultiFieldType(type = FieldType.STRING, index = "not_analyzed")}
+            fields = {@ElasticsearchMultiFieldType(_name = "raw", type = FieldType.STRING, index = "not_analyzed")}
     )
     private Location location;
 
