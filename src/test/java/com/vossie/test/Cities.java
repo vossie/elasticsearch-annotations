@@ -1,5 +1,6 @@
 package com.vossie.test;
 
+import com.vossie.elasticsearch.annotations.ElasticsearchMultiFieldType;
 import com.vossie.elasticsearch.annotations.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
 
@@ -14,7 +15,10 @@ public class Cities {
     @ElasticsearchType(type = FieldType.STRING)
     private String name;
 
-    @ElasticsearchType(type = FieldType.GEO_POINT)
+    @ElasticsearchType(
+            type = FieldType.GEO_POINT,
+            fields = {@ElasticsearchMultiFieldType(type = FieldType.STRING, index = "not_analyzed")}
+    )
     private Location location;
 
     public String getName() {

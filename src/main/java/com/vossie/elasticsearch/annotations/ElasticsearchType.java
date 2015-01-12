@@ -1,18 +1,12 @@
 package com.vossie.elasticsearch.annotations;
 
 import com.vossie.elasticsearch.annotations.common.Empty;
-import com.vossie.elasticsearch.annotations.enums.BooleanValue;
-import com.vossie.elasticsearch.annotations.enums.FieldType;
-import com.vossie.elasticsearch.annotations.enums.IndexOption;
-import com.vossie.elasticsearch.annotations.enums.PostingsFormat;
-import com.vossie.elasticsearch.annotations.enums.TermVector;
+import com.vossie.elasticsearch.annotations.enums.*;
 
-import java.awt.*;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.Objects;
 
 /**
  * Copyright © 2013 Carel Vosloo.
@@ -151,6 +145,17 @@ public @interface ElasticsearchType {
      * @return
      */
     public BooleanValue include_in_all() default BooleanValue.NULL;
+
+    /**
+     * The multi_field type allows to map several core_types of the same value.
+     * This can come very handy, for example, when wanting to map a string type,
+     * once when it’s analyzed and once when it’s not_analyzed.
+     * Each JSON field can be mapped to a specific core type. JSON itself already
+     * provides us with some typing, with its support for string, integer/long, float/double,
+     * boolean, and null.
+     * @return ElasticsearchMultiFieldType Array
+     */
+    public ElasticsearchMultiFieldType[] fields() default {};
 
     //numbers
     /**
