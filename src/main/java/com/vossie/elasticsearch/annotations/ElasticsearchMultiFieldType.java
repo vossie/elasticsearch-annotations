@@ -51,4 +51,12 @@ public @interface ElasticsearchMultiFieldType {
      * @return
      */
     public String index() default Empty.NULL;
+
+    /**
+     * http://stackoverflow.com/questions/22099906/unexpected-case-insensitive-string-sorting-in-elasticsearch
+     * The analyzer used to analyze the text contents when analyzed during indexing and when searching using
+     * a query string. Defaults to the globally configured analyzer.
+     */
+    public String analyzer() default Empty.NULL;
 }
+

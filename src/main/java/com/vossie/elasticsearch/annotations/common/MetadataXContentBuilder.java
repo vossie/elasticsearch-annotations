@@ -125,8 +125,7 @@ public final class MetadataXContentBuilder {
                 for(ElasticsearchMultiFieldType fieldType:  (ElasticsearchMultiFieldType[]) values) {
 
                     xbMapping.startObject(fieldType._name());
-                    xbMapping.field("index", fieldType.index());
-                    xbMapping.field("type", fieldType.type());
+                    setElasticsearchMultiFieldType(fieldType, xbMapping);
                     xbMapping.endObject();
                 }
                 xbMapping.endObject();
@@ -135,5 +134,17 @@ public final class MetadataXContentBuilder {
                 xbMapping.field(attribute, elasticsearchField.getAttributes().get(attribute));
             }
         }
+    }
+
+    private static void setElasticsearchMultiFieldType(ElasticsearchMultiFieldType fieldType, XContentBuilder xbMapping) throws IOException {
+
+        if(!fieldType.index().equals(Empty.NULL))
+            xbMapping.field("index", fieldType.index());
+
+        if(!fieldType.type().equals(Empty.NULL))
+            xbMapping.field("type", fieldType.type());
+
+        if(!fieldType.analyzer().equals(Empty.NULL))
+            xbMapping.field("analyzer", fieldType.analyzer());
     }
 }
