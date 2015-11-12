@@ -2,7 +2,7 @@ package com.vossie.elasticsearch.annotations.common;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchIndex;
 import com.vossie.elasticsearch.annotations.enums.SettingsFormat;
-import org.elasticsearch.common.settings.ImmutableSettings;
+import org.elasticsearch.common.settings.Settings;
 
 /**
  * Copyright (c) 2014 Carel Vosloo <code@bronzegate.com>
@@ -20,7 +20,7 @@ public class ElasticsearchIndexMetadata {
 
     private final String indexName;
 
-    private final ImmutableSettings.Builder settings;
+    private final Settings.Builder settings;
 
     private final Class<?> clazz;
 
@@ -32,7 +32,7 @@ public class ElasticsearchIndexMetadata {
         return indexName;
     }
 
-    public ImmutableSettings.Builder getSettings() {
+    public Settings.Builder getSettings() {
         return settings;
     }
 
@@ -40,14 +40,14 @@ public class ElasticsearchIndexMetadata {
         return (getSettings() != null);
     }
 
-    private ImmutableSettings.Builder loadSettings(SettingsFormat settingsFormat, String source) {
+    private Settings.Builder loadSettings(SettingsFormat settingsFormat, String source) {
 
         if(source == null || source.isEmpty())
             return null;
 
         switch (settingsFormat) {
             case JSON: {
-                return ImmutableSettings.settingsBuilder().loadFromSource(source);
+                return Settings.settingsBuilder().loadFromSource(source);
             }
         }
 

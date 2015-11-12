@@ -72,6 +72,13 @@ public @interface ElasticsearchField {
 
     /**
      * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-fields.html
+     * This is to support use in Scala annotations
+     * @return String or ___null if it is not set.
+     */
+    public String typeAsString() default Empty.NULL;
+
+    /**
+     * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-fields.html
      * @return String or ___null if it is not set.
      */
     public BooleanValue required() default BooleanValue.NULL;
