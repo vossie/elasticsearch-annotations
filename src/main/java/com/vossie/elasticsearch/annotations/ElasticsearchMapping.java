@@ -5,15 +5,12 @@ import com.vossie.elasticsearch.annotations.common.ElasticsearchIndexMetadata;
 import com.vossie.elasticsearch.annotations.common.ElasticsearchNodeMetadata;
 import com.vossie.elasticsearch.annotations.common.Empty;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
+import scala.Option;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Copyright © 2013 Carel Vosloo.
@@ -123,13 +120,30 @@ public abstract class ElasticsearchMapping {
                 // If it is an array we need the component type
                 isArray = field.getType().isArray();
 
+
                 // Get the child class
                 childClass = (isArray)
                         ? field.getType().getComponentType()
                         : field.getType();
 
+                if(field.getType().isAssignableFrom(Option.class)) {
+                    ParameterizedType fieldType = (ParameterizedType) field.getGenericType();
+                    childClass = (Class<?>) fieldType.getActualTypeArguments()[0];
+                }
 
-                if (Collection.class.isAssignableFrom(field.getType())){
+                if(Option.class.isAssignableFrom(field.getType())) {
+                    ParameterizedType fieldType = (ParameterizedType) field.getGenericType();
+                    childClass = (Class<?>) fieldType.getActualTypeArguments()[0];
+
+                    isArray = childClass.isArray();
+
+                    childClass = (isArray)
+                            ? childClass.getComponentType()
+                            : childClass;
+                }
+
+
+                if (Collection.class.isAssignableFrom(childClass)){
                     isArray = true;
 
                     Type type = field.getGenericType();
