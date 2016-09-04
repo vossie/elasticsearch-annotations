@@ -126,11 +126,7 @@ public abstract class ElasticsearchMapping {
                         ? field.getType().getComponentType()
                         : field.getType();
 
-                if(field.getType().isAssignableFrom(Option.class)) {
-                    ParameterizedType fieldType = (ParameterizedType) field.getGenericType();
-                    childClass = (Class<?>) fieldType.getActualTypeArguments()[0];
-                }
-
+                // Scala options handler
                 if(Option.class.isAssignableFrom(field.getType())) {
                     ParameterizedType fieldType = (ParameterizedType) field.getGenericType();
                     childClass = (Class<?>) fieldType.getActualTypeArguments()[0];
