@@ -49,120 +49,123 @@ An example of a class which uses <a href="http://www.elasticsearch.org/guide/en/
 
 Below is another example of a Tweet class, which shows some of the possible combinations of ElasticSearch <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-fields.html" target="_blank">field</a> and <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-types.html" target="_blank">type</a> mappings which can be applied to a class.
 
-     @ElasticsearchDocument /** required to be able to parse the annotations*/(
-             index = "twitter", // name of the index
-             //type = "tweet"    /** optional, if not set it will use the simple class name in a lower hyphenated format */,
-
-             // Specify the elasticsearch fields for which you want to add the metadata for.
-             _elasticsearchFields = {
+    @ElasticsearchDocument /** required */(
+            index = TweetIndex.class,
+    //      type = "tweet"    /** optional, if not set it will use the simple class name in a lower hyphenated format */,
+            _elasticsearchFields = {
                     @ElasticsearchField(
-                             _fieldName = FieldName._ID,
-                             index = "not_analyzed",
-                             store = "yes"
-                     ),
-                     @ElasticsearchField(
-                             _fieldName = FieldName._TYPE,
-                             index = "no",
-                             store = "yes"
-                     ),
-                     @ElasticsearchField(
-                             _fieldName = FieldName._SOURCE,
-                             enabled = BooleanValue.TRUE
-                     ),
-                     @ElasticsearchField(
-                             _fieldName = FieldName._ALL,
-                             enabled = BooleanValue.TRUE
-                     ),
-                     @ElasticsearchField(
-                             _fieldName = FieldName._ANALYZER,
-                             path = "user"
-                     ),
-                     @ElasticsearchField(
-                             _fieldName = FieldName._BOOST,
-                             name = "my_boost",
-                             null_value = "1.0"
-                     ),
-                     @ElasticsearchField(
-                             _fieldName = FieldName._PARENT,
-                             type = User.class
-                     ),
-                     @ElasticsearchField(
-                             _fieldName = FieldName._ROUTING,
-                             required = BooleanValue.FALSE,
-                             path = "blog.post_id"
-                     ),
-                     @ElasticsearchField(
-                             _fieldName = FieldName._INDEX,
-                             enabled = BooleanValue.FALSE
-                     ),
-                     @ElasticsearchField(
-                             _fieldName = FieldName._SIZE,
-                             enabled = BooleanValue.FALSE,
-                             store = "yes"
-                     ),
-                     @ElasticsearchField(
-                             _fieldName = FieldName._TIMESTAMP,
-                             enabled = BooleanValue.FALSE,
-                             path = "post_date",
-                             format = "dateOptionalTime"
-                     ),
-                     @ElasticsearchField(
-                             _fieldName = FieldName._TTL,
-                             enabled = BooleanValue.TRUE,
-                             defaultValue = "1d"
-                     )
-             }
-     )
+                        _fieldName = FieldName._SOURCE,
+                        enabled = BooleanValue.TRUE
+                    ),
+                    @ElasticsearchField(
+                            _fieldName = FieldName._ALL,
+                            enabled = BooleanValue.TRUE
+                    ),
+                    @ElasticsearchField(
+                            _fieldName = FieldName._PARENT,
+                            type = User.class
+                    ),
+                    @ElasticsearchField(
+                            _fieldName = FieldName._TIMESTAMP,
+                            enabled = BooleanValue.FALSE,
+                            format = "dateOptionalTime"
+                    ),
+                    @ElasticsearchField(
+                            _fieldName = FieldName._TTL,
+                            enabled = BooleanValue.TRUE,
+                            defaultValue = "1d"
+                    )
+            }
+    )
+    public class Tweet {
+    
+        @ElasticsearchType(
+                type = FieldType.STRING,
+                index = "not_analyzed"
+        )
+        private String user;
+    
+        @ElasticsearchType(
+                type = FieldType.DATE,
+                format = "YYYY-MM-dd"
+        )
+        private String postDate;
+    
+        @ElasticsearchType(
+                type = FieldType.STRING,
+                store = BooleanValue.TRUE,
+                index = "analyzed",
+                null_value = "na",
+                fields = {
+                        @ElasticsearchMultiFieldType(_name = "raw", index = "not_analyzed", type = FieldType.STRING)
+                }
+        )
+        private String message;
+    
+        @ElasticsearchType(
+                type = FieldType.BOOLEAN
+        )
+        private Boolean hes_my_special_tweet;
+    
+        @ElasticsearchType(
+                type = FieldType.INTEGER
+        )
+        private Integer priority;
+    
+        @ElasticsearchType(
+                type = FieldType.FLOAT
+        )
+        private Float rank;
+    
+        public String getUser() {
+            return user;
+        }
+    
+        public void setUser(String user) {
+            this.user = user;
+        }
+    
+        public String getPostDate() {
+            return postDate;
+        }
+    
+        public void setPostDate(String postDate) {
+            this.postDate = postDate;
+        }
+    
+        public String getMessage() {
+            return message;
+        }
+    
+        public void setMessage(String message) {
+            this.message = message;
+        }
+    
+        public Boolean getHes_my_special_tweet() {
+            return hes_my_special_tweet;
+        }
+    
+        public void setHes_my_special_tweet(Boolean hes_my_special_tweet) {
+            this.hes_my_special_tweet = hes_my_special_tweet;
+        }
+    
+        public Integer getPriority() {
+            return priority;
+        }
+    
+        public void setPriority(Integer priority) {
+            this.priority = priority;
+        }
+    
+        public Float getRank() {
+            return rank;
+        }
+    
+        public void setRank(Float rank) {
+            this.rank = rank;
+        }
+    }
 
-     //Class for which the above set of annotations will be applied
-     public class Tweet {
-
-         // Annotations applied to the instance variables, as well, for elastic search types
-         @ElasticsearchField(
-                 type = FieldType.STRING,
-                 index = "not_analyzed"
-         )
-         private String user;
-
-         @ElasticsearchField(
-                 type = FieldType.DATE,
-                 format = "YYYY-MM-dd"
-         )
-         private String postDate;
-
-         @ElasticsearchField(
-                 type = FieldType.STRING,
-                 store = BooleanValue.TRUE,
-                 index = "analyzed",
-                 null_value = "na"
-         )
-         private String message;
-
-         @ElasticsearchField(
-                 type = FieldType.BOOLEAN
-         )
-         private Boolean hes_my_special_tweet;
-
-         @ElasticsearchField(
-                 type = FieldType.INTEGER
-         )
-         private Integer priority;
-
-         @ElasticsearchField(
-                 type = FieldType.FLOAT
-         )
-         private Float rank;
-
-         public String getUser() {
-             return user;
-         }
-
-         public void setUser(String user) {
-             this.user = user;
-         }
-
-         // setter/getter methods for other variables
-     }
 
 ### Output:
 
@@ -171,79 +174,57 @@ Above Tweet class annotations produces the following output when we try to 'get'
 First level of the json is a set of document metadata, followed by properties which provide the type metadata.
 
     {
-        "tweet": {
-            "_boost": {
-                "null_value": "1.0",
-                "name": "my_boost"
-            },
-            "_type": {
-                "index": "no",
-                "store": "yes"
-            },
-            "_source": {
-                "enabled": "true"
-            },
-            "_id": {
+      "tweet": {
+        "_ttl": {
+          "default": "1d",
+          "enabled": "true"
+        },
+        "_parent": {
+          "type": "user"
+        },
+        "_source": {
+          "enabled": "true"
+        },
+        "_timestamp": {
+          "format": "dateOptionalTime",
+          "enabled": "false"
+        },
+        "_all": {
+          "enabled": "true"
+        },
+        "properties": {
+          "postDate": {
+            "format": "YYYY-MM-dd",
+            "type": "date"
+          },
+          "hes_my_special_tweet": {
+            "type": "boolean"
+          },
+          "rank": {
+            "type": "float"
+          },
+          "message": {
+            "null_value": "na",
+            "index": "analyzed",
+            "store": "true",
+            "type": "string",
+            "fields": {
+              "raw": {
                 "index": "not_analyzed",
-                "store": "yes"
-            },
-            "_routing": {
-                "path": "blog.post_id",
-                "required": "false"
-            },
-            "_analyzer": {
-                "path": "user"
-            },
-            "_timestamp": {
-                "enabled": "false",
-                "path": "post_date",
-                "format": "dateOptionalTime"
-            },
-            "_index": {
-                "enabled": "false"
-            },
-            "_ttl": {
-                "enabled": "true",
-                "default": "1d"
-            },
-            "_size": {
-                "enabled": "false",
-                "store": "yes"
-            },
-            "_all": {
-                "enabled": "true"
-            },
-            "_parent": {
-                "type": "user"
-            },
-            "properties": {
-                "message": {
-                    "index": "analyzed",
-                    "store": "true",
-                    "null_value": "na",
-                    "type": "string"
-                },
-                "rank": {
-                    "type": "float"
-                },
-                "priority": {
-                    "type": "integer"
-                },
-                "hes_my_special_tweet": {
-                    "type": "boolean"
-                },
-                "postDate": {
-                    "format": "YYYY-MM-dd",
-                    "type": "date"
-                },
-                "user": {
-                    "index": "not_analyzed",
-                    "type": "string"
-                }
+                "type": "string"
+              }
             }
+          },
+          "priority": {
+            "type": "integer"
+          },
+          "user": {
+            "index": "not_analyzed",
+            "type": "string"
+          }
         }
+      }
     }
-
 
 ### Testing
 

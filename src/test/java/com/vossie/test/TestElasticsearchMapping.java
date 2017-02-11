@@ -9,6 +9,7 @@ import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsReques
 import org.elasticsearch.cluster.ClusterState;
 import org.elasticsearch.cluster.metadata.IndexMetaData;
 import org.elasticsearch.cluster.metadata.MappingMetaData;
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.indices.IndexAlreadyExistsException;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
@@ -36,6 +37,8 @@ public class TestElasticsearchMapping {
     public static void init() {
 
         node = NodeBuilder.nodeBuilder()
+                .settings(Settings.builder()
+                    .put("path.home", "/usr/local/etc/elasticsearch"))
                 .node();
 
         node
@@ -66,7 +69,7 @@ public class TestElasticsearchMapping {
         ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.get(Tweet.class);
         String json = documentMetadata.toMapping();
 
-        String expected = "{\"tweet\":{\"_boost\":{\"null_value\":\"1.0\",\"name\":\"my_boost\"},\"_type\":{\"index\":\"no\",\"store\":\"yes\"},\"_source\":{\"enabled\":\"true\"},\"_id\":{\"index\":\"not_analyzed\",\"store\":\"yes\"},\"_routing\":{\"path\":\"blog.post_id\",\"required\":\"false\"},\"_analyzer\":{\"path\":\"user\"},\"_timestamp\":{\"enabled\":\"false\",\"path\":\"post_date\",\"format\":\"dateOptionalTime\"},\"_index\":{\"enabled\":\"false\"},\"_ttl\":{\"enabled\":\"true\",\"default\":\"1d\"},\"_size\":{\"enabled\":\"false\",\"store\":\"yes\"},\"_all\":{\"enabled\":\"true\"},\"_parent\":{\"type\":\"user\"},\"properties\":{\"message\":{\"index\":\"analyzed\",\"store\":\"true\",\"null_value\":\"na\",\"type\":\"string\",\"fields\":{\"raw\":{\"index\":\"not_analyzed\",\"type\":\"string\"}}},\"rank\":{\"type\":\"float\"},\"priority\":{\"type\":\"integer\"},\"hes_my_special_tweet\":{\"type\":\"boolean\"},\"postDate\":{\"format\":\"YYYY-MM-dd\",\"type\":\"date\"},\"user\":{\"index\":\"not_analyzed\",\"type\":\"string\"}}}}";
+        String expected = "{\"tweet\":{\"_ttl\":{\"default\":\"1d\",\"enabled\":\"true\"},\"_parent\":{\"type\":\"user\"},\"_source\":{\"enabled\":\"true\"},\"_timestamp\":{\"format\":\"dateOptionalTime\",\"enabled\":\"false\"},\"_all\":{\"enabled\":\"true\"},\"properties\":{\"postDate\":{\"format\":\"YYYY-MM-dd\",\"type\":\"date\"},\"hes_my_special_tweet\":{\"type\":\"boolean\"},\"rank\":{\"type\":\"float\"},\"message\":{\"null_value\":\"na\",\"index\":\"analyzed\",\"store\":\"true\",\"type\":\"string\",\"fields\":{\"raw\":{\"index\":\"not_analyzed\",\"type\":\"string\"}}},\"priority\":{\"type\":\"integer\"},\"user\":{\"index\":\"not_analyzed\",\"type\":\"string\"}}}}";
         JSONAssert.assertEquals(expected,json,true);
     }
 
@@ -75,7 +78,7 @@ public class TestElasticsearchMapping {
         ElasticsearchDocumentMetadata elasticsearchDocumentMetadata = ElasticsearchMapping.get(MyTweet.class);
         String json = elasticsearchDocumentMetadata.toMapping();
 
-        String expected = "{\"tweet\":{\"_boost\":{\"null_value\":\"1.0\",\"name\":\"my_boost\"},\"_type\":{\"index\":\"no\",\"store\":\"yes\"},\"_source\":{\"enabled\":\"true\"},\"_id\":{\"index\":\"not_analyzed\",\"store\":\"yes\"},\"_routing\":{\"path\":\"blog.post_id\",\"required\":\"false\"},\"_analyzer\":{\"path\":\"user\"},\"_timestamp\":{\"enabled\":\"false\",\"path\":\"post_date\",\"format\":\"dateOptionalTime\"},\"_index\":{\"enabled\":\"false\"},\"_ttl\":{\"enabled\":\"true\",\"default\":\"1d\"},\"_size\":{\"enabled\":\"false\",\"store\":\"yes\"},\"_all\":{\"enabled\":\"true\"},\"_parent\":{\"type\":\"user\"},\"properties\":{\"message\":{\"index\":\"analyzed\",\"store\":\"true\",\"null_value\":\"na\",\"type\":\"string\",\"fields\":{\"raw\":{\"index\":\"not_analyzed\",\"type\":\"string\"}}},\"rank\":{\"type\":\"float\"},\"priority\":{\"type\":\"integer\"},\"hes_my_special_tweet\":{\"type\":\"boolean\"},\"postDate\":{\"format\":\"YYYY-MM-dd\",\"type\":\"date\"},\"user\":{\"index\":\"not_analyzed\",\"type\":\"string\"}}}}";
+        String expected = "{\"tweet\":{\"_ttl\":{\"default\":\"1d\",\"enabled\":\"true\"},\"_parent\":{\"type\":\"user\"},\"_source\":{\"enabled\":\"true\"},\"_timestamp\":{\"format\":\"dateOptionalTime\",\"enabled\":\"false\"},\"_all\":{\"enabled\":\"true\"},\"properties\":{\"postDate\":{\"format\":\"YYYY-MM-dd\",\"type\":\"date\"},\"hes_my_special_tweet\":{\"type\":\"boolean\"},\"rank\":{\"type\":\"float\"},\"message\":{\"null_value\":\"na\",\"index\":\"analyzed\",\"store\":\"true\",\"type\":\"string\",\"fields\":{\"raw\":{\"index\":\"not_analyzed\",\"type\":\"string\"}}},\"priority\":{\"type\":\"integer\"},\"user\":{\"index\":\"not_analyzed\",\"type\":\"string\"}}}}";
         JSONAssert.assertEquals(expected,json,true);
     }
 
