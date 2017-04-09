@@ -1,7 +1,8 @@
-package com.vossie.test;
+package com.vossie.models;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchMultiFieldType;
 import com.vossie.elasticsearch.annotations.ElasticsearchType;
+import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
 
 /**
@@ -13,9 +14,9 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
 public class Cities {
 
     @ElasticsearchType(
-            type = FieldType.STRING,
+            type = FieldType.TEXT,
             fields = {
-                    @ElasticsearchMultiFieldType(_name = "raw", type = FieldType.STRING, index = "not_analyzed")
+                    @ElasticsearchMultiFieldType(_name = "raw", type = FieldType.KEYWORD, index = BooleanValue.TRUE)
             }
     )
     private String name;

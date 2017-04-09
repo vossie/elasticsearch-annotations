@@ -1,4 +1,4 @@
-package com.vossie.test;
+package com.vossie.models;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
@@ -10,7 +10,7 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
 
 /**
  * Copyright © 2013 Carel Vosloo.
- * com.vossie.test.User: cvosloo
+ * com.vossie.models.User: cvosloo
  * Date: 06/12/2013
  * Time: 12:28
  */
@@ -29,24 +29,14 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
                 @ElasticsearchField(
                         _fieldName = FieldName._PARENT,
                         type = User.class
-                ),
-                @ElasticsearchField(
-                        _fieldName = FieldName._TIMESTAMP,
-                        enabled = BooleanValue.FALSE,
-                        format = "dateOptionalTime"
-                ),
-                @ElasticsearchField(
-                        _fieldName = FieldName._TTL,
-                        enabled = BooleanValue.TRUE,
-                        defaultValue = "1d"
                 )
         }
 )
 public class Tweet {
 
     @ElasticsearchType(
-            type = FieldType.STRING,
-            index = "not_analyzed"
+            type = FieldType.KEYWORD,
+            index = BooleanValue.FALSE // Changing all index values to false for testing.
     )
     private String user;
 
@@ -57,12 +47,11 @@ public class Tweet {
     private String postDate;
 
     @ElasticsearchType(
-            type = FieldType.STRING,
+            type = FieldType.TEXT,
             store = BooleanValue.TRUE,
-            index = "analyzed",
-            null_value = "na",
+            index = BooleanValue.FALSE,
             fields = {
-                    @ElasticsearchMultiFieldType(_name = "raw", index = "not_analyzed", type = FieldType.STRING)
+                    @ElasticsearchMultiFieldType(_name = "raw", index = BooleanValue.FALSE, type = FieldType.KEYWORD)
             }
     )
     private String message;

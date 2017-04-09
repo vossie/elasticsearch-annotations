@@ -1,7 +1,12 @@
 package com.vossie.elasticsearch.annotations;
 
 import com.vossie.elasticsearch.annotations.common.Empty;
-import com.vossie.elasticsearch.annotations.enums.*;
+import com.vossie.elasticsearch.annotations.enums.BooleanValue;
+import com.vossie.elasticsearch.annotations.enums.FieldType;
+import com.vossie.elasticsearch.annotations.enums.FloatValue;
+import com.vossie.elasticsearch.annotations.enums.IndexOption;
+import com.vossie.elasticsearch.annotations.enums.PostingsFormat;
+import com.vossie.elasticsearch.annotations.enums.TermVector;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -67,12 +72,22 @@ public @interface ElasticsearchType {
      * Setting to no disables include_in_all. Defaults to analyzed.
      * @return
      */
-    public String index() default Empty.NULL;
+//    public String index() default Empty.NULL;
+
+    /**
+     * Should the field be searchable? Accepts true (default) and false.
+     */
+    public BooleanValue index() default BooleanValue.NULL;
 
     /**
      * Possible values are no, yes, with_offsets, with_positions, with_positions_offsets. Defaults to no.
      */
-    public String boost() default Empty.NULL;
+//    public String boost() default Empty.NULL;
+
+    /**
+     * Mapping field-level query time boosting. Accepts a floating point number, defaults to 1.0.
+     */
+    public FloatValue boost() default FloatValue.NULL;
 
     /**
      * When there is a (JSON) null value for the field, use the null_value as the field value.

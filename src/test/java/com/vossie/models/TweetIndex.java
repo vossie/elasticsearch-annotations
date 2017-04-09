@@ -1,4 +1,4 @@
-package com.vossie.test;
+package com.vossie.models;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchIndex;
 

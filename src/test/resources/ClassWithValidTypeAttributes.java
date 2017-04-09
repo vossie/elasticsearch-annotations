@@ -25,8 +25,6 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
 )
 public class ClassWithValidTypeAttributes {
 
-    @ElasticsearchType(
-            type = FieldType.STRING
-    )
+    @ElasticsearchType(type = FieldType.KEYWORD)
     private String myValue;
 }

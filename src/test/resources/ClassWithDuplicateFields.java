@@ -36,6 +36,6 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
 )
 public class ClassWithDuplicateFields {
 
-    @ElasticsearchType(type = FieldType.STRING)
+    @ElasticsearchType(type = FieldType.KEYWORD)
     private String myValue;
 }

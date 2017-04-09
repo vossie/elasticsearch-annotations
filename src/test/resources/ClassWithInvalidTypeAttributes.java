@@ -26,7 +26,7 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
 public class ClassWithInvalidTypeAttributes {
 
     @ElasticsearchType(
-            type = FieldType.STRING,
+            type = FieldType.KEYWORD,
             tree = "quadtree"
     )
     private String myValue;

@@ -8,10 +8,17 @@ package com.vossie.elasticsearch.annotations.enums;
  */
 public enum FieldType {
 
-    STRING {
+    TEXT {
         @Override
         public String toString() {
-            return "string";
+            return "text";
+        }
+    },
+
+    KEYWORD {
+        @Override
+        public String toString() {
+            return "keyword";
         }
     },
 

@@ -1,6 +1,7 @@
 package com.vossie.test;
 
 import com.google.gson.Gson;
+import com.vossie.models.Coordinates;
 import org.json.JSONException;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;

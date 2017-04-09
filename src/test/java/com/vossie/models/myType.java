@@ -1,4 +1,4 @@
-package com.vossie.test;
+package com.vossie.models;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
@@ -36,6 +36,6 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
 )
 public class myType {
 
-    @ElasticsearchType(type = FieldType.STRING)
+    @ElasticsearchType(type = FieldType.KEYWORD)
     private String myValue;
 }

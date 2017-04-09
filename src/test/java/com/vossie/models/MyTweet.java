@@ -1,4 +1,4 @@
-package com.vossie.test;
+package com.vossie.models;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchField;
@@ -22,8 +22,8 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
 )
 public class MyTweet extends Tweet {
     @ElasticsearchType(
-            type = FieldType.STRING,
-            index = "analyzed"
+            type = FieldType.TEXT,
+            index = BooleanValue.TRUE
     )
     private String myMessage;
 

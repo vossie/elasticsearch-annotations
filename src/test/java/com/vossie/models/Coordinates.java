@@ -1,14 +1,14 @@
-package com.vossie.test;
+package com.vossie.models;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchIndex;
 import com.vossie.elasticsearch.annotations.ElasticsearchType;
+import com.vossie.elasticsearch.annotations.enums.FieldType;
 import com.vossie.elasticsearch.types.ElasticsearchGeoShape;
 import com.vossie.elasticsearch.types.ElasticsearchGeoShapeEnvelope;
 import com.vossie.elasticsearch.types.ElasticsearchGeoShapeMultipolygon;
 import com.vossie.elasticsearch.types.ElasticsearchGeoShapePoint;
 import com.vossie.elasticsearch.types.ElasticsearchGeoShapePolygon;
-import com.vossie.elasticsearch.annotations.enums.FieldType;
 
 /**
  * Created by rpatadia on 03/01/2014.

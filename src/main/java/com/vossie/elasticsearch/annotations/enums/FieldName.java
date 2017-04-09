@@ -83,19 +83,5 @@ public enum FieldName {
         public String toString() {
             return "_size";
         }
-    },
-
-    _TIMESTAMP {
-        @Override
-        public String toString() {
-            return "_timestamp";
-        }
-    },
-
-    _TTL {
-        @Override
-        public String toString() {
-            return "_ttl";
-        }
     }
 }

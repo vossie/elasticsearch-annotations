@@ -2,13 +2,14 @@ package com.vossie.test;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
+import com.vossie.models.User;
 import org.junit.Test;
 
 import java.util.Map;
 
 /**
  * Copyright © 2013 Carel Vosloo.
- * com.vossie.test.User: cvosloo
+ * com.vossie.models.User: cvosloo
  * Date: 09/12/2013
  * Time: 21:00
  */

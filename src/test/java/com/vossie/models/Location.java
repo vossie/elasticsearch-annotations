@@ -1,11 +1,11 @@
-package com.vossie.test;
+package com.vossie.models;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
 
 /**
  * Copyright © 2013 Carel Vosloo.
- * com.vossie.test.User: cvosloo
+ * com.vossie.models.User: cvosloo
  * Date: 06/12/2013
  * Time: 12:36
  */

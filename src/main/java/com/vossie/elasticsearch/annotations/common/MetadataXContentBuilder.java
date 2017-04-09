@@ -4,11 +4,12 @@ import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.ElasticsearchMultiFieldType;
 import com.vossie.elasticsearch.annotations.enums.FieldName;
 import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
@@ -19,8 +20,6 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
  * Time: 10:02
  */
 public final class MetadataXContentBuilder {
-
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MetadataXContentBuilder.class);
 
     private static HashMap<String, XContentBuilder> cache = new HashMap<>();
 
@@ -78,7 +77,7 @@ public final class MetadataXContentBuilder {
             return xbMapping;
 
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage());
             return null;
         }
     }

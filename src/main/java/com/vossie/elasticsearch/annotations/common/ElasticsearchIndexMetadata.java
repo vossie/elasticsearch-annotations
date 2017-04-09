@@ -3,6 +3,7 @@ package com.vossie.elasticsearch.annotations.common;
 import com.vossie.elasticsearch.annotations.ElasticsearchIndex;
 import com.vossie.elasticsearch.annotations.enums.SettingsFormat;
 import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.xcontent.XContentType;
 
 /**
  * Copyright (c) 2014 Carel Vosloo <code@bronzegate.com>
@@ -47,7 +48,7 @@ public class ElasticsearchIndexMetadata {
 
         switch (settingsFormat) {
             case JSON: {
-                return Settings.settingsBuilder().loadFromSource(source);
+                return Settings.builder().loadFromSource(source, XContentType.JSON);
             }
         }
 

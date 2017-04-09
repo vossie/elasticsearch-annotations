@@ -1,7 +1,8 @@
 package com.vossie.elasticsearch.annotations;
 
 import com.vossie.elasticsearch.annotations.common.Empty;
-import com.vossie.elasticsearch.annotations.enums.*;
+import com.vossie.elasticsearch.annotations.enums.BooleanValue;
+import com.vossie.elasticsearch.annotations.enums.FieldType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -50,7 +51,13 @@ public @interface ElasticsearchMultiFieldType {
      * Setting to no disables include_in_all. Defaults to analyzed.
      * @return
      */
-    public String index() default Empty.NULL;
+//    public String index() default Empty.NULL;
+
+    /**
+     * Should the field be searchable? Accepts true (default) and false.
+     */
+    public BooleanValue index() default BooleanValue.NULL;
+
 
     /**
      * http://stackoverflow.com/questions/22099906/unexpected-case-insensitive-string-sorting-in-elasticsearch
