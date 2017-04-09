@@ -136,6 +136,11 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
         assertFalse(new ESTypeAttributeConstraints().isValidAttributeForType(FieldType.GEO_POINT.toString(), "term_vector"));
     }
 
+    /**
+     * In order to run this test, you will have to start ES instance independently, the directory can be found inside the "apps" directory.
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @Test
     public void testSavingMappingToElasticInstance() throws IOException, InterruptedException {
 
