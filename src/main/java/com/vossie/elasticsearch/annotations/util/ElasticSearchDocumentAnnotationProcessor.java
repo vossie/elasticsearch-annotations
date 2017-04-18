@@ -22,7 +22,10 @@ import java.util.Set;
 * Created by rpatadia on 17/12/2013.
 */
 @SupportedAnnotationTypes({ElasticsearchAnnotationTypeNames.ELASTICSEARCH_DOCUMENT})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+/**
+ * Reverted back to 7 due to this bug - https://bugs.openjdk.java.net/browse/JDK-8077585
+ */
+@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class ElasticSearchDocumentAnnotationProcessor extends AbstractProcessor {
 
     public ElasticSearchDocumentAnnotationProcessor() {
