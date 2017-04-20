@@ -64,6 +64,12 @@ public @interface ElasticsearchMultiFieldType {
      * The analyzer used to analyze the text contents when analyzed during indexing and when searching using
      * a query string. Defaults to the globally configured analyzer.
      */
-    public String analyzer() default Empty.NULL;
+//    public String analyzer() default Empty.NULL;
+
+
+    /**
+     * The analyzer used to analyze the field when part of a query string. Can be updated on an existing field.
+     */
+    public String search_analyzer() default Empty.NULL;
 }
 
