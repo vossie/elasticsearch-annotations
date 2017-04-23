@@ -1,6 +1,5 @@
 package com.vossie.elasticsearch.annotations;
 
-import com.vossie.elasticsearch.annotations.common.Empty;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
 
@@ -24,6 +23,7 @@ import java.lang.annotation.Target;
 public @interface ElasticsearchMultiFieldType {
 
     /**
+     * 5.x does not support analyzer for multifield types
      * The system field for the name of this sub-field.
      * Example:
      *
@@ -57,19 +57,5 @@ public @interface ElasticsearchMultiFieldType {
      * Should the field be searchable? Accepts true (default) and false.
      */
     public BooleanValue index() default BooleanValue.NULL;
-
-
-    /**
-     * http://stackoverflow.com/questions/22099906/unexpected-case-insensitive-string-sorting-in-elasticsearch
-     * The analyzer used to analyze the text contents when analyzed during indexing and when searching using
-     * a query string. Defaults to the globally configured analyzer.
-     */
-//    public String analyzer() default Empty.NULL;
-
-
-    /**
-     * The analyzer used to analyze the field when part of a query string. Can be updated on an existing field.
-     */
-    public String search_analyzer() default Empty.NULL;
 }
 
