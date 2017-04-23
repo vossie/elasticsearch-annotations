@@ -142,8 +142,5 @@ public final class MetadataXContentBuilder {
 
         if(!fieldType.type().equals(Empty.NULL))
             xbMapping.field("type", fieldType.type());
-
-        if(!fieldType.analyzer().equals(Empty.NULL))
-            xbMapping.field("analyzer", fieldType.analyzer());
     }
 }
