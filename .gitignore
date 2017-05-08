@@ -1,9 +1,15 @@
 *.class
 
 # Package Files #
-*.jar
 *.war
 *.ear
 *.iml
 .idea/
 .data/
+!/test/apps/elasticsearch-5.3.0/lib/*
+/test/apps/elasticsearch-5.3.0/data/*
+/test/apps/elasticsearch-5.3.0/logs/*
+!/test/apps/elasticsearch-5.4.0/lib/*
+/test/apps/elasticsearch-5.4.0/data/*
+/test/apps/elasticsearch-5.4.0/logs/*
+#*.jar
