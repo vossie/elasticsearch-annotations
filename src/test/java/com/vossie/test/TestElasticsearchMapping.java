@@ -142,17 +142,19 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
      * @throws InterruptedException
      */
     @Test
-    public void testSavingMappingToElasticInstance() throws IOException, InterruptedException {
+    public void testSavingMappingToElasticInstance() throws IOException, InterruptedException, JSONException {
 
         ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.get(Tweet.class);
         createIndexAndMapping(documentMetadata);
         Thread.sleep(1000);
         String actualMapping = getMapping(documentMetadata);
+        String expected = "{\"twitter1\":{\"mappings\":{\"tweet\":{\"_all\":{\"enabled\":true},\"_parent\":{\"type\":\"user\"},\"_routing\":{\"required\":true},\"properties\":{\"hes_my_special_tweet\":{\"type\":\"boolean\"},\"message\":{\"type\":\"text\",\"index\":false,\"store\":true,\"fields\":{\"raw\":{\"type\":\"keyword\",\"index\":false}}},\"postDate\":{\"type\":\"date\",\"format\":\"YYYY-MM-dd\"},\"priority\":{\"type\":\"integer\"},\"rank\":{\"type\":\"float\"},\"user\":{\"type\":\"keyword\",\"index\":false}}}}}}\n";
 
         if(actualMapping!=null)
             deleteIndex(documentMetadata);
 
         assertTrue(actualMapping != null);
+        JSONAssert.assertEquals(expected,actualMapping,true);
     }
 
 
