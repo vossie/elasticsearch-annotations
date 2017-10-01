@@ -6,7 +6,7 @@
 
     <groupId>com.vossie</groupId>
     <artifactId>elasticsearch-annotations</artifactId>
-    <version>5.6.1.RELEASE</version>
+    <version>5.6.1</version>
 
     <repositories>
         <repository>
