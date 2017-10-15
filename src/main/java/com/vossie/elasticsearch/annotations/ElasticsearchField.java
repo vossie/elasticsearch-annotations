@@ -97,6 +97,12 @@ public @interface ElasticsearchField {
     public String[] excludes() default {};
 
     /**
+     * https://www.elastic.co/guide/en/elasticsearch/reference/5.6/normalizer.html
+     * @return String or ___null if it is not set.
+     */
+    public String normalizer() default Empty.NULL;
+
+    /**
      * Maps to default
      * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-fields.html
      * @return String or ___null if it is not set.

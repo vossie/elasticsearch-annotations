@@ -1,5 +1,6 @@
 package com.vossie.elasticsearch.annotations;
 
+import com.vossie.elasticsearch.annotations.common.Empty;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
 
@@ -51,7 +52,13 @@ public @interface ElasticsearchMultiFieldType {
      * Setting to no disables include_in_all. Defaults to analyzed.
      * @return
      */
-//    public String index() default Empty.NULL;
+    public String analyzer() default Empty.NULL;
+
+    /**
+     * https://www.elastic.co/guide/en/elasticsearch/reference/5.6/normalizer.html
+     * @return String or ___null if it is not set.
+     */
+    public String normalizer() default Empty.NULL;
 
     /**
      * Should the field be searchable? Accepts true (default) and false.
