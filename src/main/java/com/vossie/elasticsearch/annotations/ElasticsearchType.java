@@ -63,7 +63,7 @@ public @interface ElasticsearchType {
      * Set to yes to store actual field in the index, no to not store it.
      * Defaults to no (note, the JSON document itself is stored, and it can be retrieved from it).
      */
-    public BooleanValue store() default BooleanValue.NULL;
+    public BooleanValue store() default BooleanValue.TRUE;
 
     /**
      * Set to analyzed for the field to be indexed and searchable after being broken down into token using an analyzer.
@@ -77,7 +77,7 @@ public @interface ElasticsearchType {
     /**
      * Should the field be searchable? Accepts true (default) and false.
      */
-    public BooleanValue index() default BooleanValue.NULL;
+    public BooleanValue index() default BooleanValue.TRUE;
 
     /**
      * Possible values are no, yes, with_offsets, with_positions, with_positions_offsets. Defaults to no.

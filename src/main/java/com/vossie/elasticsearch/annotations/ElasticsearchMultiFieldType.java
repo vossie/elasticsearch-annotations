@@ -63,6 +63,6 @@ public @interface ElasticsearchMultiFieldType {
     /**
      * Should the field be searchable? Accepts true (default) and false.
      */
-    public BooleanValue index() default BooleanValue.NULL;
+    public BooleanValue index() default BooleanValue.TRUE;
 }
 
