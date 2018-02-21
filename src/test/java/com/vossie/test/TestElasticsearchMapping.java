@@ -51,7 +51,7 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
         ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.get(Tweet.class);
         String json = documentMetadata.toMapping();
 
-        String expected = "{\"tweet\":{\"_parent\":{\"type\":\"user\"},\"_source\":{\"enabled\":\"true\"},\"_all\":{\"enabled\":\"true\"},\"properties\":{\"postDate\":{\"format\":\"YYYY-MM-dd\",\"type\":\"date\"},\"hes_my_special_tweet\":{\"type\":\"boolean\"},\"rank\":{\"type\":\"float\"},\"message\":{\"index\":\"false\",\"store\":\"true\",\"type\":\"text\",\"fields\":{\"raw\":{\"index\":\"false\",\"type\":\"keyword\"}}},\"priority\":{\"type\":\"integer\"},\"user\":{\"index\":\"false\",\"type\":\"keyword\"}}}}";
+        String expected = "{\"tweet\":{\"_parent\":{\"type\":\"user\"},\"_source\":{\"enabled\":\"true\"},\"_all\":{\"enabled\":\"true\"},\"properties\":{\"postDate\":{\"format\":\"YYYY-MM-dd\",\"index\":\"true\",\"store\":\"true\",\"type\":\"date\"},\"hes_my_special_tweet\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"boolean\"},\"rank\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"float\"},\"message\":{\"index\":\"false\",\"store\":\"true\",\"type\":\"text\",\"fields\":{\"raw\":{\"index\":\"false\",\"type\":\"keyword\"}}},\"priority\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"integer\"},\"user\":{\"index\":\"false\",\"store\":\"true\",\"type\":\"keyword\"}}}}";
         JSONAssert.assertEquals(expected,json,true);
     }
 
@@ -60,7 +60,7 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
         ElasticsearchDocumentMetadata elasticsearchDocumentMetadata = ElasticsearchMapping.get(MyTweet.class);
         String json = elasticsearchDocumentMetadata.toMapping();
 
-        String expected = "{\"tweet\":{\"_parent\":{\"type\":\"user\"},\"_source\":{\"enabled\":\"true\"},\"_all\":{\"enabled\":\"true\"},\"properties\":{\"postDate\":{\"format\":\"YYYY-MM-dd\",\"type\":\"date\"},\"hes_my_special_tweet\":{\"type\":\"boolean\"},\"rank\":{\"type\":\"float\"},\"message\":{\"index\":\"false\",\"store\":\"true\",\"type\":\"text\",\"fields\":{\"raw\":{\"index\":\"false\",\"type\":\"keyword\"}}},\"priority\":{\"type\":\"integer\"},\"user\":{\"index\":\"false\",\"type\":\"keyword\"}}}}";
+        String expected = "{\"my-tweet\":{\"_index\":{\"enabled\":\"true\"},\"properties\":{\"postDate\":{\"format\":\"YYYY-MM-dd\",\"index\":\"true\",\"store\":\"true\",\"type\":\"date\"},\"hes_my_special_tweet\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"boolean\"},\"rank\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"float\"},\"message\":{\"index\":\"false\",\"store\":\"true\",\"type\":\"text\",\"fields\":{\"raw\":{\"index\":\"false\",\"type\":\"keyword\"}}},\"priority\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"integer\"},\"user\":{\"index\":\"false\",\"store\":\"true\",\"type\":\"keyword\"},\"myMessage\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"text\"}}}}";
         JSONAssert.assertEquals(expected,json,true);
     }
 
@@ -70,7 +70,7 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
         ElasticsearchDocumentMetadata elasticsearchDocumentMetadata = ElasticsearchMapping.get(LocationWithInnerClass.class);
         String json = elasticsearchDocumentMetadata.toMapping();
 
-        String expected = "{\"anyType\":{\"_source\":{\"enabled\":\"true\"},\"properties\":{\"userName\":{\"index\":\"true\",\"type\":\"keyword\"}}}}";
+        String expected = "{\"anyType\":{\"_source\":{\"enabled\":\"true\"},\"properties\":{\"userName\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"keyword\"}}}}";
         JSONAssert.assertEquals(expected,json,true);
     }
 
@@ -79,7 +79,7 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
         ElasticsearchDocumentMetadata elasticsearchDocumentMetadata = ElasticsearchMapping.get(LocationWithInnerClass.Location.class);
         String json = elasticsearchDocumentMetadata.toMapping();
 
-        String expected = "{\"locationType\":{\"_boost\":{\"null_value\":\"1.0\",\"name\":\"my_boost\"},\"_index\":{\"enabled\":\"false\"},\"_size\":{\"enabled\":\"false\",\"store\":\"yes\"},\"properties\":{\"lon\":{\"type\":\"double\"},\"lat\":{\"type\":\"double\"}}}}";
+        String expected = "{\"locationType\":{\"_size\":{\"store\":\"yes\",\"enabled\":\"false\"},\"_boost\":{\"null_value\":\"1.0\",\"name\":\"my_boost\"},\"_index\":{\"enabled\":\"false\"},\"properties\":{\"lon\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"double\"},\"lat\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"double\"}}}}";
         JSONAssert.assertEquals(expected,json,true);
     }
 
@@ -88,7 +88,7 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
         ElasticsearchDocumentMetadata elasticsearchDocumentMetadata = ElasticsearchMapping.get(LocationWithLocalClass.class);
         String json = elasticsearchDocumentMetadata.toMapping();
 
-        String expected = "{\"anyType\":{\"_source\":{\"enabled\":\"true\"},\"properties\":{\"userName\":{\"index\":\"true\",\"type\":\"keyword\"}}}}";
+        String expected = "{\"anyType\":{\"_source\":{\"enabled\":\"true\"},\"properties\":{\"userName\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"keyword\"}}}}";
         JSONAssert.assertEquals(expected,json,true);
     }
 
@@ -97,7 +97,7 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
         ElasticsearchDocumentMetadata elasticsearchDocumentMetadata = ElasticsearchMapping.get(LocationWithStaticInnerClass.class);
         String json = elasticsearchDocumentMetadata.toMapping();
 
-        String expected = "{\"anyType\":{\"_source\":{\"enabled\":\"true\"},\"properties\":{\"userName\":{\"index\":\"true\",\"type\":\"keyword\"}}}}";
+        String expected = "{\"anyType\":{\"_source\":{\"enabled\":\"true\"},\"properties\":{\"userName\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"keyword\"}}}}";
         JSONAssert.assertEquals(expected,json,true);
     }
 
@@ -106,7 +106,7 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
         ElasticsearchDocumentMetadata elasticsearchDocumentMetadata = ElasticsearchMapping.get(LocationWithStaticInnerClass.Location.class);
         String json = elasticsearchDocumentMetadata.toMapping();
 
-        String expected = "{\"locationType\":{\"_boost\":{\"null_value\":\"1.0\",\"name\":\"my_boost\"},\"_index\":{\"enabled\":\"true\"},\"properties\":{\"lon\":{\"type\":\"double\"},\"lat\":{\"type\":\"double\"}}}}";
+        String expected = "{\"locationType\":{\"_boost\":{\"null_value\":\"1.0\",\"name\":\"my_boost\"},\"_index\":{\"enabled\":\"true\"},\"properties\":{\"lon\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"double\"},\"lat\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"double\"}}}}";
         JSONAssert.assertEquals(expected,json,true);
     }
 
@@ -114,7 +114,7 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
     public void testGettingParentMappingFromChild() throws IOException, JSONException {
 
         String json = ElasticsearchMapping.get(Tweet.class).getParent().toMapping();
-        String expected = "{\"user\":{\"properties\":{\"dateOfBirth\":{\"format\":\"dateOptionalTime\",\"type\":\"date\"},\"location\":{\"type\":\"geo_point\",\"properties\":{\"lon\":{\"type\":\"double\"},\"lat\":{\"type\":\"double\"}}},\"citiesVisited\":{\"type\":\"nested\",\"properties\":{\"location\":{\"type\":\"geo_point\",\"properties\":{\"lon\":{\"type\":\"double\"},\"lat\":{\"type\":\"double\"}}},\"name\":{\"type\":\"text\",\"fields\":{\"raw\":{\"index\":\"true\",\"type\":\"keyword\"}}}}},\"user\":{\"store\":\"true\",\"type\":\"keyword\"}}}}";
+        String expected = "{\"user\":{\"properties\":{\"dateOfBirth\":{\"format\":\"dateOptionalTime\",\"index\":\"true\",\"store\":\"true\",\"type\":\"date\"},\"location\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"geo_point\",\"properties\":{\"lon\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"double\"},\"lat\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"double\"}}},\"citiesVisited\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"nested\",\"properties\":{\"name\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"text\",\"fields\":{\"raw\":{\"index\":\"true\",\"type\":\"keyword\"}}},\"location\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"geo_point\",\"properties\":{\"lon\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"double\"},\"lat\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"double\"}}}}},\"user\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"keyword\"}}}}";
         JSONAssert.assertEquals(expected,json,true);
     }
 
@@ -148,7 +148,7 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
         createIndexAndMapping(documentMetadata);
         Thread.sleep(1000);
         String actualMapping = getMapping(documentMetadata);
-        String expected = "{\"twitter1\":{\"mappings\":{\"tweet\":{\"_all\":{\"enabled\":true},\"_parent\":{\"type\":\"user\"},\"_routing\":{\"required\":true},\"properties\":{\"hes_my_special_tweet\":{\"type\":\"boolean\"},\"message\":{\"type\":\"text\",\"index\":false,\"store\":true,\"fields\":{\"raw\":{\"type\":\"keyword\",\"index\":false}}},\"postDate\":{\"type\":\"date\",\"format\":\"YYYY-MM-dd\"},\"priority\":{\"type\":\"integer\"},\"rank\":{\"type\":\"float\"},\"user\":{\"type\":\"keyword\",\"index\":false}}}}}}\n";
+        String expected = "{\"twitter1\":{\"mappings\":{\"tweet\":{\"_parent\":{\"type\":\"user\"},\"_routing\":{\"required\":true},\"properties\":{\"hes_my_special_tweet\":{\"type\":\"boolean\",\"store\":true},\"message\":{\"type\":\"text\",\"index\":false,\"store\":true,\"fields\":{\"raw\":{\"type\":\"keyword\",\"index\":false}}},\"postDate\":{\"type\":\"date\",\"store\":true,\"format\":\"YYYY-MM-dd\"},\"priority\":{\"type\":\"integer\",\"store\":true},\"rank\":{\"type\":\"float\",\"store\":true},\"user\":{\"type\":\"keyword\",\"index\":false,\"store\":true}}}}}}\n";
 
         if(actualMapping!=null)
             deleteIndex(documentMetadata);

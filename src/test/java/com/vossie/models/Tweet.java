@@ -23,10 +23,6 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
                     enabled = BooleanValue.TRUE
                 ),
                 @ElasticsearchField(
-                        _fieldName = FieldName._ALL,
-                        enabled = BooleanValue.TRUE
-                ),
-                @ElasticsearchField(
                         _fieldName = FieldName._PARENT,
                         type = User.class
                 )

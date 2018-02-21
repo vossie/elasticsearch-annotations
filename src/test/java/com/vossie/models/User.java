@@ -14,7 +14,7 @@ import java.util.List;
  * Date: 06/12/2013
  * Time: 12:32
  */
-@ElasticsearchIndex(_indexName = "twitter")
+@ElasticsearchIndex(_indexName = "user")
 @ElasticsearchDocument()
 public class User {
 

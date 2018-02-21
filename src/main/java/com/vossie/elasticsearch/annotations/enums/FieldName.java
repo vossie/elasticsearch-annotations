@@ -36,13 +36,6 @@ public enum FieldName {
         }
     },
 
-    _ALL {
-        @Override
-        public String toString() {
-            return "_all";
-        }
-    },
-
     _ANALYZER {
         @Override
         public String toString() {
