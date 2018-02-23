@@ -154,14 +154,6 @@ public @interface ElasticsearchType {
 
 
     /**
-     *Should the field be included in the _all field (if enabled).
-     * If index is set to no this defaults to false, otherwise, defaults to true or
-     * to the parent object type setting.
-     * @return
-     */
-    public BooleanValue include_in_all() default BooleanValue.NULL;
-
-    /**
      * The multi_field type allows to map several core_types of the same value.
      * This can come very handy, for example, when wanting to map a string type,
      * once when it’s analyzed and once when it’s not_analyzed.
