@@ -1,0 +1,1 @@
+[2018-02-21T11:26:26,267][WARN ][o.e.d.i.m.AllFieldMapper ] [_all] is deprecated in 6.0+ and will be removed in 7.0. As a replacement, you can use [copy_to] on mapping fields to create your own catch all field.

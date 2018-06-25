@@ -4,6 +4,7 @@ import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.enums.FieldName;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
+import org.elasticsearch.common.Strings;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import java.io.IOException;
@@ -184,7 +185,7 @@ public class ElasticsearchDocumentMetadata {
      */
     public String toMapping() throws IOException {
 
-        return MetadataXContentBuilder.getXContentBuilder(this).string();
+        return Strings.toString(MetadataXContentBuilder.getXContentBuilder(this));
     }
 
     private Map<String,FieldType> _allAsFlatList;

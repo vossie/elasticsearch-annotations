@@ -10,7 +10,16 @@ import com.vossie.models.LocationWithLocalClass;
 import com.vossie.models.LocationWithStaticInnerClass;
 import com.vossie.models.MyTweet;
 import com.vossie.models.Tweet;
-import org.elasticsearch.client.transport.TransportClient;
+import org.apache.http.HttpHost;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
+import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
+import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
+import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.test.ESIntegTestCase;
 import org.json.JSONException;
 import org.junit.Test;
@@ -19,7 +28,6 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -30,8 +38,6 @@ import java.net.URL;
  * Time: 21:00
  */
 public class TestElasticsearchMapping extends ESIntegTestCase {
-
-    private static TransportClient transportClient;
 
     @Test
     public void testForClassNotAnnotatedException() {
@@ -51,7 +57,7 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
         ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.get(Tweet.class);
         String json = documentMetadata.toMapping();
 
-        String expected = "{\"tweet\":{\"_parent\":{\"type\":\"user\"},\"_source\":{\"enabled\":\"true\"},\"_all\":{\"enabled\":\"true\"},\"properties\":{\"postDate\":{\"format\":\"YYYY-MM-dd\",\"index\":\"true\",\"store\":\"true\",\"type\":\"date\"},\"hes_my_special_tweet\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"boolean\"},\"rank\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"float\"},\"message\":{\"index\":\"false\",\"store\":\"true\",\"type\":\"text\",\"fields\":{\"raw\":{\"index\":\"false\",\"type\":\"keyword\"}}},\"priority\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"integer\"},\"user\":{\"index\":\"false\",\"store\":\"true\",\"type\":\"keyword\"}}}}";
+        String expected = "{\"tweet\":{\"_parent\":{\"type\":\"user\"},\"_source\":{\"enabled\":\"true\"},\"properties\":{\"postDate\":{\"format\":\"YYYY-MM-dd\",\"index\":\"true\",\"store\":\"true\",\"type\":\"date\"},\"hes_my_special_tweet\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"boolean\"},\"rank\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"float\"},\"message\":{\"index\":\"false\",\"store\":\"true\",\"type\":\"text\",\"fields\":{\"raw\":{\"index\":\"false\",\"type\":\"keyword\"}}},\"priority\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"integer\"},\"user\":{\"index\":\"false\",\"store\":\"true\",\"type\":\"keyword\"}}}}";
         JSONAssert.assertEquals(expected,json,true);
     }
 
@@ -145,15 +151,28 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
     public void testSavingMappingToElasticInstance() throws IOException, InterruptedException, JSONException {
 
         ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.get(Tweet.class);
-        createIndexAndMapping(documentMetadata);
-        Thread.sleep(1000);
-        String actualMapping = getMapping(documentMetadata);
-        String expected = "{\"twitter1\":{\"mappings\":{\"tweet\":{\"_parent\":{\"type\":\"user\"},\"_routing\":{\"required\":true},\"properties\":{\"hes_my_special_tweet\":{\"type\":\"boolean\",\"store\":true},\"message\":{\"type\":\"text\",\"index\":false,\"store\":true,\"fields\":{\"raw\":{\"type\":\"keyword\",\"index\":false}}},\"postDate\":{\"type\":\"date\",\"store\":true,\"format\":\"YYYY-MM-dd\"},\"priority\":{\"type\":\"integer\",\"store\":true},\"rank\":{\"type\":\"float\",\"store\":true},\"user\":{\"type\":\"keyword\",\"index\":false,\"store\":true}}}}}}\n";
 
-        if(actualMapping!=null)
-            deleteIndex(documentMetadata);
+        RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")));
+
+        // Create new index
+        CreateIndexResponse indexResponse = client.indices().create(new CreateIndexRequest(documentMetadata.getIndexName()));
+        assertEquals(documentMetadata.getIndexName(), indexResponse.index());
+
+        // Put type mapping
+        PutMappingResponse mappingResponse = client.indices().putMapping(new PutMappingRequest().indices(documentMetadata.getIndexName()).type(documentMetadata.getTypeName()).source(documentMetadata.toMapping(), XContentType.JSON));
+        assertTrue(mappingResponse.isAcknowledged());
+
+        // Assert mappings
+        String actualMapping = getMapping(documentMetadata);
 
         assertTrue(actualMapping != null);
+
+        // Delete existing index
+        DeleteIndexResponse deleteIndexResponse = client.indices().delete(new DeleteIndexRequest(documentMetadata.getIndexName()));
+        assertTrue(deleteIndexResponse.isAcknowledged());
+
+        String expected = "{\"twitter1\":{\"mappings\":{\"tweet\":{\"_parent\":{\"type\":\"user\"},\"_routing\":{\"required\":true},\"properties\":{\"hes_my_special_tweet\":{\"type\":\"boolean\",\"store\":true},\"message\":{\"type\":\"text\",\"index\":false,\"store\":true,\"fields\":{\"raw\":{\"type\":\"keyword\",\"index\":false}}},\"postDate\":{\"type\":\"date\",\"store\":true,\"format\":\"YYYY-MM-dd\"},\"priority\":{\"type\":\"integer\",\"store\":true},\"rank\":{\"type\":\"float\",\"store\":true},\"user\":{\"type\":\"keyword\",\"index\":false,\"store\":true}}}}}}\n";
+
         JSONAssert.assertEquals(expected,actualMapping,true);
     }
 
@@ -190,43 +209,5 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
         }
 
         return null;
-    }
-
-    private void deleteIndex(ElasticsearchDocumentMetadata elasticsearchDocumentMetadata) throws IOException {
-        URL url = new URL("http://localhost:9200/" + elasticsearchDocumentMetadata.getIndexName());
-        HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
-        httpCon.setDoOutput(true);
-        httpCon.setRequestMethod("DELETE");
-        httpCon.connect();
-        System.out.println("=======Delete response is ======== " + httpCon.getResponseCode());
-    }
-
-    private void createIndexAndMapping(ElasticsearchDocumentMetadata documentMetadata) throws IOException, InterruptedException {
-        String indexUrlString = "http://localhost:9200/" + documentMetadata.getIndexName();
-        String typeMappingString = "http://localhost:9200/" + documentMetadata.getIndexName() + "/_mapping/" + documentMetadata.getTypeName();
-
-        int indexResponse = doHttpPut(indexUrlString, null);
-        System.out.println("========= Index creation response == " + indexResponse);
-
-        Thread.sleep(1000);
-
-        if( indexResponse == 200)
-            System.out.println("========= Type creation response == " + doHttpPut(typeMappingString, documentMetadata.toMapping()));
-    }
-
-    private int doHttpPut(String urlString, String body) throws IOException  {
-        URL url = new URL(urlString);
-        HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
-        httpCon.setDoOutput(true);
-        httpCon.setRequestMethod("PUT");
-        httpCon.setRequestProperty("content-type", "application/json");
-        httpCon.setRequestProperty("Accept", "application/json");
-        OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
-        if(body!= null)
-            out.write(body);
-        out.flush();
-        out.close();
-
-        return httpCon.getResponseCode();
     }
 }

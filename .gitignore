@@ -15,4 +15,7 @@
 !/test/apps/elasticsearch-6.2.1/lib/*
 /test/apps/elasticsearch-6.2.1/data/*
 /test/apps/elasticsearch-6.2.1/logs/*
+!/test/apps/elasticsearch-6.3.0/lib/*
+/test/apps/elasticsearch-6.3.0/data/*
+/test/apps/elasticsearch-6.3.0/logs/*
 #*.jar
