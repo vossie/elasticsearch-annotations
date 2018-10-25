@@ -15,6 +15,7 @@
         </repository>
     </repositories>
 
+
     <scm>
         <url>
             scm:git:git@github-build-elastic-annotations:vossie/elasticsearch-annotations.git
