@@ -5,11 +5,6 @@ import com.vossie.elasticsearch.annotations.enums.SettingsFormat;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentType;
 
-/**
- * Copyright (c) 2014 Carel Vosloo <code@bronzegate.com>
- * All rights reserved. No warranty, explicit or implicit, provided.
- * Created: 25/10/14 08:50 by carel
- */
 public class ElasticsearchIndexMetadata {
 
     public ElasticsearchIndexMetadata(Class<?> clazz, ElasticsearchIndex elasticsearchIndex) {

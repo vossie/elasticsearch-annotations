@@ -11,11 +11,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Copyright © 2013 Carel Vosloo.
- * User: cvosloo
- * Date: 06/12/2013
- * Time: 09:28
- *
  * Each mapping has a number of fields associated with it which can be used to control how
  * the document metadata (eg _all) is indexed.
  *

@@ -13,12 +13,6 @@ import java.util.logging.Logger;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
-/**
- * Copyright © 2013 GSMA. GSM and the GSM Logo are registered and owned by the GSMA.
- * User: cvosloo
- * Date: 10/12/2013
- * Time: 10:02
- */
 public final class MetadataXContentBuilder {
 
     private static HashMap<String, XContentBuilder> cache = new HashMap<>();

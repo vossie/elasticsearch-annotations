@@ -7,12 +7,6 @@ import org.junit.Test;
 
 import java.util.Map;
 
-/**
- * Copyright © 2013 Carel Vosloo.
- * com.vossie.models.User: cvosloo
- * Date: 09/12/2013
- * Time: 21:00
- */
 public class TestElasticsearchMappingAsList {
 
     @Test

@@ -7,12 +7,6 @@ import com.vossie.elasticsearch.annotations.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.enums.FieldName;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
 
-/**
- * Copyright © 2013 Carel Vosloo.
- * com.vossie.models.User: cvosloo
- * Date: 09/12/2013
- * Time: 21:12
- */
 @ElasticsearchIndex(_indexName = "test")
 @ElasticsearchDocument(
         _elasticsearchFields = {

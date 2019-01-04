@@ -14,9 +14,9 @@ import org.apache.http.HttpHost;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
-import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
@@ -31,12 +31,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Copyright © 2013 Carel Vosloo.
- * com.vossie.models.User: cvosloo
- * Date: 09/12/2013
- * Time: 21:00
- */
 public class TestElasticsearchMapping extends ESIntegTestCase {
 
     @Test
@@ -155,20 +149,23 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
         RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")));
 
         // Create new index
-        CreateIndexResponse indexResponse = client.indices().create(new CreateIndexRequest(documentMetadata.getIndexName()));
+        CreateIndexRequest createIndexRequest = new CreateIndexRequest(documentMetadata.getIndexName());
+        CreateIndexResponse indexResponse = client.indices().create(createIndexRequest, RequestOptions.DEFAULT);
         assertEquals(documentMetadata.getIndexName(), indexResponse.index());
 
         // Put type mapping
-        PutMappingResponse mappingResponse = client.indices().putMapping(new PutMappingRequest().indices(documentMetadata.getIndexName()).type(documentMetadata.getTypeName()).source(documentMetadata.toMapping(), XContentType.JSON));
+        PutMappingRequest putMappingRequest = new PutMappingRequest().indices(documentMetadata.getIndexName()).type(documentMetadata.getTypeName()).source(documentMetadata.toMapping(), XContentType.JSON);
+        AcknowledgedResponse mappingResponse = client.indices().putMapping(putMappingRequest, RequestOptions.DEFAULT);
         assertTrue(mappingResponse.isAcknowledged());
 
         // Assert mappings
         String actualMapping = getMapping(documentMetadata);
 
-        assertTrue(actualMapping != null);
+        assertNotNull(actualMapping);
 
         // Delete existing index
-        DeleteIndexResponse deleteIndexResponse = client.indices().delete(new DeleteIndexRequest(documentMetadata.getIndexName()));
+        DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(documentMetadata.getIndexName());
+        AcknowledgedResponse deleteIndexResponse = client.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
         assertTrue(deleteIndexResponse.isAcknowledged());
 
         String expected = "{\"twitter1\":{\"mappings\":{\"tweet\":{\"_parent\":{\"type\":\"user\"},\"_routing\":{\"required\":true},\"properties\":{\"hes_my_special_tweet\":{\"type\":\"boolean\",\"store\":true},\"message\":{\"type\":\"text\",\"index\":false,\"store\":true,\"fields\":{\"raw\":{\"type\":\"keyword\",\"index\":false}}},\"postDate\":{\"type\":\"date\",\"store\":true,\"format\":\"YYYY-MM-dd\"},\"priority\":{\"type\":\"integer\",\"store\":true},\"rank\":{\"type\":\"float\",\"store\":true},\"user\":{\"type\":\"keyword\",\"index\":false,\"store\":true}}}}}}\n";

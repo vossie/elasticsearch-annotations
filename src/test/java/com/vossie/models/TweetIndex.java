@@ -2,11 +2,6 @@ package com.vossie.models;
 
 import com.vossie.elasticsearch.annotations.ElasticsearchIndex;
 
-/**
- * Copyright (c) 2014 Carel Vosloo <code@bronzegate.com>
- * All rights reserved. No warranty, explicit or implicit, provided.
- * Created: 24/10/14 21:13 by carel
- */
 @ElasticsearchIndex(
         /** https://gist.github.com/clintongormley/780895
          *  http://gibrown.com/2013/04/17/mapping-wordpress-posts-to-elasticsearch/ */

@@ -2,13 +2,12 @@ package com.vossie.elasticsearch.annotations;
 
 import com.vossie.elasticsearch.annotations.enums.SettingsFormat;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-/**
- * Copyright (c) 2014 Carel Vosloo <code@bronzegate.com>
- * All rights reserved. No warranty, explicit or implicit, provided.
- * Created: 24/10/14 20:29 by carel
- */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited

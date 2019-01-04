@@ -10,14 +10,12 @@ import scala.Option;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-/**
- * Copyright © 2013 Carel Vosloo.
- * User: cvosloo
- * Date: 06/12/2013
- * Time: 09:33
- */
 public abstract class ElasticsearchMapping {
 
     private static final HashMap<Class<?>, ElasticsearchDocumentMetadata> mappingCache = new HashMap<>();

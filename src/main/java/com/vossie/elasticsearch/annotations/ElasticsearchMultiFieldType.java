@@ -10,10 +10,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Copyright © 2013 Carel Vosloo.
- * User: cvosloo
- * Date: 06/12/2013
- * Time: 09:28
  *
  * http://www.elasticsearch.org/guide/en/elasticsearch/reference/0.90/mapping-multi-field-type.html
  * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/_multi_fields.html

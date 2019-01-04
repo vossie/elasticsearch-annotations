@@ -3,12 +3,6 @@ package com.vossie.models;
 import com.vossie.elasticsearch.annotations.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
 
-/**
- * Copyright © 2013 Carel Vosloo.
- * com.vossie.models.User: cvosloo
- * Date: 06/12/2013
- * Time: 12:36
- */
 public class Location {
 
     @ElasticsearchType(type = FieldType.DOUBLE)

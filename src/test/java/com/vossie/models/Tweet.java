@@ -8,12 +8,7 @@ import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.FieldName;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
 
-/**
- * Copyright © 2013 Carel Vosloo.
- * com.vossie.models.User: cvosloo
- * Date: 06/12/2013
- * Time: 12:28
- */
+
 @ElasticsearchDocument /** required */(
         index = TweetIndex.class,
 //      type = "tweet"    /** optional, if not set it will use the simple class name in a lower hyphenated format */,

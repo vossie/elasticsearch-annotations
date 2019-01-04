@@ -1,11 +1,5 @@
 package com.vossie.elasticsearch.annotations.enums;
 
-/**
- * Copyright © 2013 Carel Vosloo.
- * User: cvosloo
- * Date: 12/12/2013
- * Time: 14:14
- */
 public enum FieldName {
 
     _UID {

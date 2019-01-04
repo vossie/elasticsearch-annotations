@@ -6,10 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Copyright © 2013 Carel Vosloo.
- * User: cvosloo
- * Date: 06/12/2013
- * Time: 09:28
  *
  * It is possible to control which field values are loaded into memory, which is particularly useful for faceting
  * on string fields, using fielddata filters, which are explained in detail in the Fielddata section.

@@ -7,12 +7,6 @@ import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
 import com.vossie.elasticsearch.annotations.enums.TermVector;
 
-/**
- * Copyright © 2013 Carel Vosloo.
- * com.vossie.models.User: cvosloo
- * Date: 06/12/2013
- * Time: 12:32
- */
 @ElasticsearchIndex(_indexName = "user")
 @ElasticsearchDocument(type = "twitterUser")
 public class UserWithInvalidAttribute {

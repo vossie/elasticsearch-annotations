@@ -8,12 +8,6 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
 
 import java.util.List;
 
-/**
- * Copyright © 2013 Carel Vosloo.
- * com.vossie.models.User: cvosloo
- * Date: 06/12/2013
- * Time: 12:32
- */
 @ElasticsearchIndex(_indexName = "user")
 @ElasticsearchDocument()
 public class User {

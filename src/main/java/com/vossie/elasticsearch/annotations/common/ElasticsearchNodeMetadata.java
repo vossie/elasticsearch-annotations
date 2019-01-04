@@ -10,12 +10,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Copyright © 2013 Carel Vosloo.
- * User: cvosloo
- * Date: 06/12/2013
- * Time: 09:36
- */
 public class ElasticsearchNodeMetadata {
 
     private boolean isArray;

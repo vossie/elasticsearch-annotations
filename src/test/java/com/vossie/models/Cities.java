@@ -5,12 +5,6 @@ import com.vossie.elasticsearch.annotations.ElasticsearchType;
 import com.vossie.elasticsearch.annotations.enums.BooleanValue;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
 
-/**
- * Copyright © 2013 Carel Vosloo.
- * User: cvosloo
- * Date: 11/12/2013
- * Time: 13:24
- */
 public class Cities {
 
     @ElasticsearchType(

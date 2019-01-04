@@ -9,12 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Copyright © 2013 Carel Vosloo.
- * User: cvosloo
- * Date: 11/12/2013
- * Time: 09:44
- */
 public class ESTypeAttributeConstraints {
 
     public static final String sourceFileName = "/ESAttributeConstraints.csv";

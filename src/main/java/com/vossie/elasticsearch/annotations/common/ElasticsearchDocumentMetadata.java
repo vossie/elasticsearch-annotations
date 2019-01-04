@@ -15,12 +15,6 @@ import java.util.Map;
 import static com.google.common.base.CaseFormat.LOWER_HYPHEN;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 
-/**
- * Copyright © 2013 Carel Vosloo.
- * User: cvosloo
- * Date: 06/12/2013
- * Time: 09:34
- */
 public class ElasticsearchDocumentMetadata {
 
     private final String typeName;
