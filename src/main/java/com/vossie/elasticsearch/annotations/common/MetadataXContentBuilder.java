@@ -40,14 +40,7 @@ public final class MetadataXContentBuilder {
 
                 for(String attributeName : field.getAttributes().keySet()) {
 
-                    if(fieldName.equals(FieldName._PARENT.toString()) && attributeName.equals("type")) {
-
-                        xbMapping.field(
-                                attributeName,
-                                elasticsearchDocumentMetadata.getParent().getTypeName()
-                        );
-                    }
-                    else if(field.getAttributes().get(attributeName).getClass().isArray()) {
+                    if(field.getAttributes().get(attributeName).getClass().isArray()) {
                         xbMapping.field(attributeName,field.getAttributes().get(attributeName));
                     }
                     else

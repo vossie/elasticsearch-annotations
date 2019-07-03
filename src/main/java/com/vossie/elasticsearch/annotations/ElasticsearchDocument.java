@@ -22,8 +22,10 @@ public @interface ElasticsearchDocument {
 
     /**
      * The object type name to index as.
+     * Deprecated and will be removed in next version
      * @return
      */
+    @Deprecated
     public String type() default Empty.NULL;
 
     /**

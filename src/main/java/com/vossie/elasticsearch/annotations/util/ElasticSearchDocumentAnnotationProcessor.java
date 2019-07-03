@@ -73,18 +73,4 @@ public class ElasticSearchDocumentAnnotationProcessor extends AbstractProcessor 
         return true;
     }
 
-    private void validateParentType(ElasticsearchDocument elasticsearchDocument) {
-
-        for (ElasticsearchField elasticsearchField : elasticsearchDocument._elasticsearchFields()) {
-            if (!elasticsearchField._fieldName().equals(FieldName._PARENT.toString()))
-                continue;
-
-            if(elasticsearchField.type().toString().equals(Empty.class.toString()))
-                break;
-
-            if(ElasticsearchMapping.get(elasticsearchField.type()) == null)
-                throw new RuntimeException("Invalid parent type specified");
-        }
-    }
-
 }

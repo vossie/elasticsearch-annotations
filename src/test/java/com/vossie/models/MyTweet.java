@@ -13,18 +13,11 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
 @ElasticsearchDocument(
         index = MyTweetIndex.class,
         type = "my-tweet",
-        _elasticsearchFields = {
-                @ElasticsearchField(
-                        _fieldName = FieldName._INDEX,
-                        enabled = BooleanValue.TRUE
-                )
-        }
+        _elasticsearchFields = @ElasticsearchField( _fieldName = FieldName._INDEX, enabled = BooleanValue.TRUE)
 )
 public class MyTweet extends Tweet {
-    @ElasticsearchType(
-            type = FieldType.TEXT,
-            index = BooleanValue.TRUE
-    )
+
+    @ElasticsearchType( type = FieldType.TEXT)
     private String myMessage;
 
     public String getUser() {

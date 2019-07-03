@@ -17,6 +17,7 @@ import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 
 public class ElasticsearchDocumentMetadata {
 
+    @Deprecated
     private final String typeName;
     private final ElasticsearchDocument elasticsearchDocument;
     private final Map<String,ElasticsearchNodeMetadata> elasticsearchTypes;
@@ -58,31 +59,10 @@ public class ElasticsearchDocumentMetadata {
      * If it is not set the class name will be changed from upper camel case to lower hyphen case.
      * @return
      */
+    @Deprecated
     public String getTypeName() {
         return this.typeName;
     }
-
-    /**
-     * Get the parent
-     * @return Parent
-     */
-    public ElasticsearchDocumentMetadata getParent()  {
-
-        Class<?> parentClass = (this.elasticsearchFields.get(FieldName._PARENT.toString()).getAttributes().containsKey("type"))
-                    ?(Class<?>) this.elasticsearchFields.get(FieldName._PARENT.toString()).getAttributes().get("type")
-                    : null;
-
-        if(parentClass != null)
-            return ElasticsearchMapping.get(parentClass);
-
-        return null;
-    }
-
-
-    public boolean hasParent() {
-        return (this.elasticsearchFields.containsKey(FieldName._PARENT.toString()));
-    }
-
 
     /**
      * Should we store the source data in the index.

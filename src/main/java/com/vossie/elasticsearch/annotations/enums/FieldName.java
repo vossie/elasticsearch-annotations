@@ -44,13 +44,6 @@ public enum FieldName {
         }
     },
 
-    _PARENT {
-        @Override
-        public String toString() {
-            return "_parent";
-        }
-    },
-
     _ROUTING {
         @Override
         public String toString() {

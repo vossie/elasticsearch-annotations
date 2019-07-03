@@ -14,8 +14,7 @@ import com.vossie.elasticsearch.types.ElasticsearchGeoShapePolygon;
  * Created by rpatadia on 03/01/2014.
  */
 @ElasticsearchIndex(_indexName = "myIndex")
-@ElasticsearchDocument(
-)
+@ElasticsearchDocument()
 public class Coordinates {
 
     @ElasticsearchType(type = FieldType.GEO_SHAPE, tree = "quadtree", precision = "1m")

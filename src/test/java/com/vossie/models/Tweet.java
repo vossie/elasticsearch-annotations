@@ -12,54 +12,26 @@ import com.vossie.elasticsearch.annotations.enums.FieldType;
 @ElasticsearchDocument /** required */(
         index = TweetIndex.class,
 //      type = "tweet"    /** optional, if not set it will use the simple class name in a lower hyphenated format */,
-        _elasticsearchFields = {
-                @ElasticsearchField(
-                    _fieldName = FieldName._SOURCE,
-                    enabled = BooleanValue.TRUE
-                ),
-                @ElasticsearchField(
-                        _fieldName = FieldName._PARENT,
-                        type = User.class
-                )
-        }
+        _elasticsearchFields =  @ElasticsearchField( _fieldName = FieldName._SOURCE, enabled = BooleanValue.TRUE)
 )
 public class Tweet {
 
-    @ElasticsearchType(
-            type = FieldType.KEYWORD,
-            index = BooleanValue.FALSE // Changing all index values to false for testing.
-    )
+    @ElasticsearchType( type = FieldType.KEYWORD, index = BooleanValue.FALSE /* Changing all index values to false for testing. */)
     private String user;
 
-    @ElasticsearchType(
-            type = FieldType.DATE,
-            format = "YYYY-MM-dd"
-    )
+    @ElasticsearchType( type = FieldType.DATE, format = "YYYY-MM-dd")
     private String postDate;
 
-    @ElasticsearchType(
-            type = FieldType.TEXT,
-            store = BooleanValue.TRUE,
-            index = BooleanValue.FALSE,
-            fields = {
-                    @ElasticsearchMultiFieldType(_name = "raw", index = BooleanValue.FALSE, type = FieldType.KEYWORD)
-            }
-    )
+    @ElasticsearchType( type = FieldType.TEXT, store = BooleanValue.TRUE, index = BooleanValue.FALSE, fields = @ElasticsearchMultiFieldType(_name = "raw", index = BooleanValue.FALSE, type = FieldType.KEYWORD) )
     private String message;
 
-    @ElasticsearchType(
-            type = FieldType.BOOLEAN
-    )
+    @ElasticsearchType( type = FieldType.BOOLEAN)
     private Boolean hes_my_special_tweet;
 
-    @ElasticsearchType(
-            type = FieldType.INTEGER
-    )
+    @ElasticsearchType( type = FieldType.INTEGER)
     private Integer priority;
 
-    @ElasticsearchType(
-            type = FieldType.FLOAT
-    )
+    @ElasticsearchType(type = FieldType.FLOAT)
     private Float rank;
 
     public String getUser() {

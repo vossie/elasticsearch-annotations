@@ -12,26 +12,16 @@ import java.util.List;
 @ElasticsearchDocument()
 public class User {
 
-    @ElasticsearchType(
-            type = FieldType.KEYWORD,
-            store = BooleanValue.TRUE
-    )
+    @ElasticsearchType(type = FieldType.KEYWORD, store = BooleanValue.TRUE)
     private String user;
 
-    @ElasticsearchType(
-            type = FieldType.DATE,
-            format = "dateOptionalTime"
-    )
+    @ElasticsearchType(type = FieldType.DATE, format = "dateOptionalTime")
     private String dateOfBirth;
 
-    @ElasticsearchType(
-            type = FieldType.GEO_POINT
-    )
+    @ElasticsearchType(type = FieldType.GEO_POINT)
     private Location location;
 
-    @ElasticsearchType(
-            type = FieldType.NESTED
-    )
+    @ElasticsearchType( type = FieldType.NESTED)
     private List<Cities> citiesVisited;
 
     public String getUser() {

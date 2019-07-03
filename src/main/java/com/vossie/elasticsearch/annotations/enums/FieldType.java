@@ -137,5 +137,10 @@ public enum FieldType {
         public String toString() {
             return "byte";
         }
+    },
+
+    JOIN {
+        @Override
+        public String toString() { return "join";}
     }
 }

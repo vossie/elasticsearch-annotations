@@ -4,7 +4,6 @@ import com.vossie.elasticsearch.annotations.ElasticsearchMapping;
 import com.vossie.elasticsearch.annotations.common.ElasticsearchDocumentMetadata;
 import com.vossie.elasticsearch.annotations.enums.FieldType;
 import com.vossie.elasticsearch.annotations.util.ESTypeAttributeConstraints;
-import com.vossie.models.InvalidParentTypeAnnotationTestClass;
 import com.vossie.models.LocationWithInnerClass;
 import com.vossie.models.LocationWithLocalClass;
 import com.vossie.models.LocationWithStaticInnerClass;
@@ -40,18 +39,12 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
     }
 
     @Test
-    public void testInvalidParentTypeSpecifiedException() {
-
-        ElasticsearchMapping.get(InvalidParentTypeAnnotationTestClass.class);
-    }
-
-    @Test
     public void testGettingTweetMapping() throws IOException, JSONException {
 
         ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.get(Tweet.class);
         String json = documentMetadata.toMapping();
 
-        String expected = "{\"tweet\":{\"_parent\":{\"type\":\"user\"},\"_source\":{\"enabled\":\"true\"},\"properties\":{\"postDate\":{\"format\":\"YYYY-MM-dd\",\"index\":\"true\",\"store\":\"true\",\"type\":\"date\"},\"hes_my_special_tweet\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"boolean\"},\"rank\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"float\"},\"message\":{\"index\":\"false\",\"store\":\"true\",\"type\":\"text\",\"fields\":{\"raw\":{\"index\":\"false\",\"type\":\"keyword\"}}},\"priority\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"integer\"},\"user\":{\"index\":\"false\",\"store\":\"true\",\"type\":\"keyword\"}}}}";
+        String expected = "{\"tweet\":{\"_source\":{\"enabled\":\"true\"},\"properties\":{\"postDate\":{\"format\":\"YYYY-MM-dd\",\"index\":\"true\",\"store\":\"true\",\"type\":\"date\"},\"hes_my_special_tweet\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"boolean\"},\"rank\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"float\"},\"message\":{\"index\":\"false\",\"store\":\"true\",\"fields\":{\"raw\":{\"index\":\"false\",\"type\":\"keyword\"}},\"type\":\"text\"},\"priority\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"integer\"},\"user\":{\"index\":\"false\",\"store\":\"true\",\"type\":\"keyword\"}}}}";
         JSONAssert.assertEquals(expected,json,true);
     }
 
@@ -111,14 +104,6 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
     }
 
     @Test
-    public void testGettingParentMappingFromChild() throws IOException, JSONException {
-
-        String json = ElasticsearchMapping.get(Tweet.class).getParent().toMapping();
-        String expected = "{\"user\":{\"properties\":{\"dateOfBirth\":{\"format\":\"dateOptionalTime\",\"index\":\"true\",\"store\":\"true\",\"type\":\"date\"},\"location\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"geo_point\",\"properties\":{\"lon\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"double\"},\"lat\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"double\"}}},\"citiesVisited\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"nested\",\"properties\":{\"name\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"text\",\"fields\":{\"raw\":{\"index\":\"true\",\"type\":\"keyword\"}}},\"location\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"geo_point\",\"properties\":{\"lon\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"double\"},\"lat\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"double\"}}}}},\"user\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"keyword\"}}}}";
-        JSONAssert.assertEquals(expected,json,true);
-    }
-
-    @Test
     public void testRead() throws Exception {
 
         new ESTypeAttributeConstraints();
@@ -168,7 +153,7 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
         AcknowledgedResponse deleteIndexResponse = client.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
         assertTrue(deleteIndexResponse.isAcknowledged());
 
-        String expected = "{\"twitter1\":{\"mappings\":{\"tweet\":{\"_parent\":{\"type\":\"user\"},\"_routing\":{\"required\":true},\"properties\":{\"hes_my_special_tweet\":{\"type\":\"boolean\",\"store\":true},\"message\":{\"type\":\"text\",\"index\":false,\"store\":true,\"fields\":{\"raw\":{\"type\":\"keyword\",\"index\":false}}},\"postDate\":{\"type\":\"date\",\"store\":true,\"format\":\"YYYY-MM-dd\"},\"priority\":{\"type\":\"integer\",\"store\":true},\"rank\":{\"type\":\"float\",\"store\":true},\"user\":{\"type\":\"keyword\",\"index\":false,\"store\":true}}}}}}\n";
+        String expected = "{\"twitter1\":{\"mappings\":{\"tweet\":{\"properties\":{\"hes_my_special_tweet\":{\"type\":\"boolean\",\"store\":true},\"message\":{\"type\":\"text\",\"index\":false,\"store\":true,\"fields\":{\"raw\":{\"type\":\"keyword\",\"index\":false}}},\"postDate\":{\"type\":\"date\",\"store\":true,\"format\":\"YYYY-MM-dd\"},\"priority\":{\"type\":\"integer\",\"store\":true},\"rank\":{\"type\":\"float\",\"store\":true},\"user\":{\"type\":\"keyword\",\"index\":false,\"store\":true}}}}}}\n";
 
         JSONAssert.assertEquals(expected,actualMapping,true);
     }
@@ -179,7 +164,7 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
      ******************/
 
     private String getMapping(ElasticsearchDocumentMetadata documentMetadata) throws IOException {
-        String typeMappingString = "http://localhost:9200/" + documentMetadata.getIndexName() + "/_mapping/" + documentMetadata.getTypeName();
+        String typeMappingString = "http://localhost:9200/" + documentMetadata.getIndexName() + "/_mapping/" + documentMetadata.getTypeName() + "?include_type_name=true";
 
         URL url = new URL(typeMappingString);
         HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();

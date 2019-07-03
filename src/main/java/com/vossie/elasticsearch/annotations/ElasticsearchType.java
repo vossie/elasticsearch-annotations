@@ -336,7 +336,6 @@ public @interface ElasticsearchType {
      */
     public BooleanValue compress() default BooleanValue.NULL;
 
-
     /**
      * Usage 1: new String[]{
      *                      "[
