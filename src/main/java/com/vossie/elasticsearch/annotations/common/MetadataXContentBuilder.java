@@ -19,7 +19,7 @@ public final class MetadataXContentBuilder {
 
     protected static XContentBuilder getXContentBuilder(ElasticsearchDocumentMetadata elasticsearchDocumentMetadata) {
 
-        String key = String.format("%s-%s", elasticsearchDocumentMetadata.getIndexName(), elasticsearchDocumentMetadata.getTypeName());
+        String key = String.format("%s", elasticsearchDocumentMetadata.getIndexName());
 
         // Return from cache if it has been previously parsed.
         if(cache.containsKey(key))
@@ -29,8 +29,8 @@ public final class MetadataXContentBuilder {
 
             /** Set the objects type name */
             XContentBuilder xbMapping = jsonBuilder()
-                    .startObject()
-                    .startObject(elasticsearchDocumentMetadata.getTypeName());
+                    .startObject();
+//                    .startObject(elasticsearchDocumentMetadata.getTypeName());
 
 
             for(String fieldName : elasticsearchDocumentMetadata.getFieldNames()) {
@@ -55,7 +55,7 @@ public final class MetadataXContentBuilder {
 
             // End
             xbMapping
-                    .endObject()
+//                    .endObject()
                     .endObject();
 
             // Add to local cache.

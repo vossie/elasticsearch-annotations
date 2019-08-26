@@ -10,14 +10,14 @@ import com.vossie.models.LocationWithStaticInnerClass;
 import com.vossie.models.MyTweet;
 import com.vossie.models.Tweet;
 import org.apache.http.HttpHost;
-import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
-import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.client.indices.CreateIndexResponse;
+import org.elasticsearch.client.indices.PutMappingRequest;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.test.ESIntegTestCase;
 import org.json.JSONException;
@@ -44,7 +44,7 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
         ElasticsearchDocumentMetadata documentMetadata = ElasticsearchMapping.get(Tweet.class);
         String json = documentMetadata.toMapping();
 
-        String expected = "{\"tweet\":{\"_source\":{\"enabled\":\"true\"},\"properties\":{\"postDate\":{\"format\":\"YYYY-MM-dd\",\"index\":\"true\",\"store\":\"true\",\"type\":\"date\"},\"hes_my_special_tweet\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"boolean\"},\"rank\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"float\"},\"message\":{\"index\":\"false\",\"store\":\"true\",\"fields\":{\"raw\":{\"index\":\"false\",\"type\":\"keyword\"}},\"type\":\"text\"},\"priority\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"integer\"},\"user\":{\"index\":\"false\",\"store\":\"true\",\"type\":\"keyword\"}}}}";
+        String expected = "{\"_source\":{\"enabled\":\"true\"},\"properties\":{\"postDate\":{\"format\":\"YYYY-MM-dd\",\"index\":\"true\",\"store\":\"true\",\"type\":\"date\"},\"hes_my_special_tweet\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"boolean\"},\"rank\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"float\"},\"message\":{\"index\":\"false\",\"store\":\"true\",\"type\":\"text\",\"fields\":{\"raw\":{\"index\":\"false\",\"type\":\"keyword\"}}},\"priority\":{\"index\":\"true\",\"store\":\"true\",\"type\":\"integer\"},\"user\":{\"index\":\"false\",\"store\":\"true\",\"type\":\"keyword\"}}}";
         JSONAssert.assertEquals(expected,json,true);
     }
 
@@ -139,7 +139,7 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
         assertEquals(documentMetadata.getIndexName(), indexResponse.index());
 
         // Put type mapping
-        PutMappingRequest putMappingRequest = new PutMappingRequest().indices(documentMetadata.getIndexName()).type(documentMetadata.getTypeName()).source(documentMetadata.toMapping(), XContentType.JSON);
+        PutMappingRequest putMappingRequest = new PutMappingRequest(documentMetadata.getIndexName()).source(documentMetadata.toMapping(), XContentType.JSON);
         AcknowledgedResponse mappingResponse = client.indices().putMapping(putMappingRequest, RequestOptions.DEFAULT);
         assertTrue(mappingResponse.isAcknowledged());
 
@@ -153,7 +153,7 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
         AcknowledgedResponse deleteIndexResponse = client.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
         assertTrue(deleteIndexResponse.isAcknowledged());
 
-        String expected = "{\"twitter1\":{\"mappings\":{\"tweet\":{\"properties\":{\"hes_my_special_tweet\":{\"type\":\"boolean\",\"store\":true},\"message\":{\"type\":\"text\",\"index\":false,\"store\":true,\"fields\":{\"raw\":{\"type\":\"keyword\",\"index\":false}}},\"postDate\":{\"type\":\"date\",\"store\":true,\"format\":\"YYYY-MM-dd\"},\"priority\":{\"type\":\"integer\",\"store\":true},\"rank\":{\"type\":\"float\",\"store\":true},\"user\":{\"type\":\"keyword\",\"index\":false,\"store\":true}}}}}}\n";
+        String expected = "{\"twitter1\":{\"mappings\":{\"properties\":{\"hes_my_special_tweet\":{\"type\":\"boolean\",\"store\":true},\"message\":{\"type\":\"text\",\"index\":false,\"store\":true,\"fields\":{\"raw\":{\"type\":\"keyword\",\"index\":false}}},\"postDate\":{\"type\":\"date\",\"store\":true,\"format\":\"YYYY-MM-dd\"},\"priority\":{\"type\":\"integer\",\"store\":true},\"rank\":{\"type\":\"float\",\"store\":true},\"user\":{\"type\":\"keyword\",\"index\":false,\"store\":true}}}}}\n";
 
         JSONAssert.assertEquals(expected,actualMapping,true);
     }
@@ -164,7 +164,7 @@ public class TestElasticsearchMapping extends ESIntegTestCase {
      ******************/
 
     private String getMapping(ElasticsearchDocumentMetadata documentMetadata) throws IOException {
-        String typeMappingString = "http://localhost:9200/" + documentMetadata.getIndexName() + "/_mapping/" + documentMetadata.getTypeName() + "?include_type_name=true";
+        String typeMappingString = "http://localhost:9200/" + documentMetadata.getIndexName() + "/_mapping/";
 
         URL url = new URL(typeMappingString);
         HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();

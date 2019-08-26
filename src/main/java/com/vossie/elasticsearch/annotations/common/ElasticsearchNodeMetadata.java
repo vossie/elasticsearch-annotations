@@ -51,7 +51,7 @@ public class ElasticsearchNodeMetadata {
             String attributeName = AttributeNameHelper.getAttributeName(annotation, key);
             Object value = allAttributes.get(key);
 
-            if(key.toString() == "_fieldName")
+            if(key.equals("_fieldName"))
                 continue;
 
             if (value.getClass().isArray()){

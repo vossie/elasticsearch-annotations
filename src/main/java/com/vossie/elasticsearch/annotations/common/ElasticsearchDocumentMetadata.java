@@ -170,7 +170,7 @@ public class ElasticsearchDocumentMetadata {
 
         Map<String,FieldType> response = new HashMap<>();
 
-        response.put(getTypeName(),FieldType.OBJECT);
+        response.put(getIndexName(),FieldType.OBJECT);
 
 
         for (String field : this.getElasticsearchProperties().keySet()) {
@@ -178,7 +178,7 @@ public class ElasticsearchDocumentMetadata {
 
             ElasticsearchNodeMetadata nodeMetadata = this.getElasticsearchProperties().get(field);
 
-            String prefix=getTypeName() +"."+ nodeMetadata.getFieldName();
+            String prefix=getIndexName() +"."+ nodeMetadata.getFieldName();
             response.put(prefix, (FieldType) nodeMetadata.getAttributes().get("type"));
 
             loopThroughFields(response,prefix,nodeMetadata);
