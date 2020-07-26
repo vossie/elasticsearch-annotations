@@ -1,7 +1,7 @@
-import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
-import com.vossie.elasticsearch.annotations.ElasticsearchIndex;
-import com.vossie.elasticsearch.annotations.ElasticsearchType;
-import com.vossie.elasticsearch.annotations.enums.FieldType;
+import org.vossie.elasticsearch.annotations.ElasticsearchDocument;
+import org.vossie.elasticsearch.annotations.ElasticsearchIndex;
+import org.vossie.elasticsearch.annotations.ElasticsearchType;
+import org.vossie.elasticsearch.annotations.enums.FieldType;
 
 @ElasticsearchIndex(_indexName = "myIndex")
 @ElasticsearchDocument()
