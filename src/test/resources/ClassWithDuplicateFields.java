@@ -1,11 +1,11 @@
-package com.vossie.test;
+package org.vossie.test;
 
-import com.vossie.elasticsearch.annotations.ElasticsearchDocument;
-import com.vossie.elasticsearch.annotations.ElasticsearchField;
-import com.vossie.elasticsearch.annotations.ElasticsearchIndex;
-import com.vossie.elasticsearch.annotations.ElasticsearchType;
-import com.vossie.elasticsearch.annotations.enums.FieldName;
-import com.vossie.elasticsearch.annotations.enums.FieldType;
+import org.vossie.elasticsearch.annotations.ElasticsearchDocument;
+import org.vossie.elasticsearch.annotations.ElasticsearchField;
+import org.vossie.elasticsearch.annotations.ElasticsearchIndex;
+import org.vossie.elasticsearch.annotations.ElasticsearchType;
+import org.vossie.elasticsearch.annotations.enums.FieldName;
+import org.vossie.elasticsearch.annotations.enums.FieldType;
 
 /**
  * Created by rpatadia on 16/12/2013.

@@ -1,3 +1,5 @@
+package org.vossie.models;
+
 import org.vossie.elasticsearch.annotations.ElasticsearchDocument;
 import org.vossie.elasticsearch.annotations.ElasticsearchField;
 import org.vossie.elasticsearch.annotations.ElasticsearchIndex;
@@ -20,10 +22,19 @@ import org.vossie.elasticsearch.annotations.enums.FieldType;
                         excludes = {
                                 "pat3.*"
                         }
+                ),
+                @ElasticsearchField(
+                        _fieldName = FieldName._SOURCE,
+                        includes = {
+                                "path1.*", "path2.*"
+                        },
+                        excludes = {
+                                "pat3.*"
+                        }
                 )
         }
 )
-public class ClassWithValidFields {
+public class myType {
 
     @ElasticsearchType(type = FieldType.KEYWORD)
     private String myValue;

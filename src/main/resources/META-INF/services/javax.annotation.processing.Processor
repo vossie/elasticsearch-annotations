@@ -1,2 +1,2 @@
-com.vossie.elasticsearch.annotations.util.ElasticSearchDocumentAnnotationProcessor
-com.vossie.elasticsearch.annotations.util.ElasticSearchTypeAnnotationProcessor
+org.vossie.elasticsearch.annotations.util.ElasticSearchDocumentAnnotationProcessor
+org.vossie.elasticsearch.annotations.util.ElasticSearchTypeAnnotationProcessor
