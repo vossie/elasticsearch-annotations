@@ -229,8 +229,3 @@ First level of the json is a set of document metadata, followed by properties wh
 ### Testing
 
 The library has been unit tested with a combination of metadata usage, for example, saving to elasticsearch, inner class annotations, sub class annotations, geoshape annotations, etc.
-
-
-### Version
-
-Current stable version of elasticsearch-annotations is <a href="https://github.com/vossie/elasticsearch-annotations/commit/3dd7259b5d75b4d818ef19027802f8ab09caad5c" target="_blank">1.13</a>
